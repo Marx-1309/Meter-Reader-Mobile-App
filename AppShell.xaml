@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="SampleMauiMvvmApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:SampleMauiMvvmApp.Views"
+    xmlns:view="clr-namespace:SampleMauiMvvmApp.Views"
+    xmlns:viewmodel="clr-namespace:SampleMauiMvvmApp.ViewModels"
+    Shell.FlyoutBehavior="Flyout"
+    >
+
+    <ShellContent
+        ContentTemplate="{DataTemplate local:LoadingPage}"
+        Route="LoadingPage" FlyoutItemIsVisible="False"/>
+
+    <FlyoutItem Route="MonthCustomerTabPage" FlyoutDisplayOptions="AsMultipleItems">
+        <ShellContent Title="Months" Icon="month_tabbed_icon.png" ContentTemplate="{DataTemplate view:MonthPage}" ></ShellContent>
+
+        <ShellContent Title="Captured" Icon="data_entry_icon.jpg" ContentTemplate="{DataTemplate view:CapturedReadingsPage}"></ShellContent>
+
+        <ShellContent Title="Not Captured" Icon="water_tap_thick.png" ContentTemplate="{DataTemplate view:UncapturedReadingsPage}"></ShellContent>
+
+
+    </FlyoutItem>
+    
+    
+   
+
+    <!--<Shell.FlyoutHeader>
+        <StackLayout Padding="20">
+           <Image Source="user_profile.png" HeightRequest="150" WidthRequest="150" />
+            <StackLayout Orientation="Vertical" Padding="10" >
+                <HorizontalStackLayout>
+                    <Label x:Name="lblUsername"  FontAttributes="Bold" TextColor="Red"></Label>
+                    <Label Text="Role" TextColor="Black"  ></Label>
+                    
+                </HorizontalStackLayout>
+                <Label x:Name="lblRole" TextColor="Black" FontAttributes="Bold" ></Label>
+            </StackLayout>
+        </StackLayout>
+    </Shell.FlyoutHeader>-->
+    
+    <Shell.FlyoutFooter>
+        <StackLayout Padding="20" VerticalOptions="End">
+            <Button Command="{Binding LogoutCommand}"  BackgroundColor="Red" Text="Logout" TextColor="White" FontAttributes="Bold" FontSize="18"></Button>
+            <ActivityIndicator
+            HorizontalOptions="Fill"
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
+            Color="{StaticResource Primary}"
+            VerticalOptions="Center"
+            WidthRequest="30"
+            HeightRequest="30"
+             />
+            
+        </StackLayout>
+    </Shell.FlyoutFooter>
+    
+</Shell>

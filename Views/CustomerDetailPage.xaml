@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:Class="SampleMauiMvvmApp.Views.CustomerDetailPage"
+    xmlns:model="clr-namespace:SampleMauiMvvmApp.Models"
+    xmlns:modelwrapper="clr-namespace:SampleMauiMvvmApp.ModelWrappers"
+    xmlns:viewmodel="clr-namespace:SampleMauiMvvmApp.ViewModels"
+    x:DataType="viewmodel:CustomerDetailViewModel"
+    Title="{Binding Customer.ModelTitle}"
+>
+    <Grid
+        Padding="2,0,2,5"
+        ColumnDefinitions="*"
+        ColumnSpacing="0"
+        RowDefinitions="Auto,*,Auto"
+        BackgroundColor="LightGray">
+        <VerticalStackLayout Grid.Row="0">
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="15" Margin="10">
+                <VerticalStackLayout Grid.Row="0">
+                    <StackLayout Orientation="Vertical" Padding="40,10,10,10" HorizontalOptions="StartAndExpand">
+                        <Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="AREA" />
+                        <Label FontSize="22" Text="{Binding CustStateErf}" TextColor="CornflowerBlue" FontAttributes="Bold" />
+
+                        <Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="METER NO" />
+                        <Label FontSize="22" FontAttributes="Bold" Text="{Binding MeterNumber}" TextColor="CornflowerBlue" />
+                        <!--<Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="ROUTE NO" />
+                            <Label FontSize="22" Text="{Binding RouteNumber}" TextColor="CornflowerBlue" />-->
+
+                        <Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="PREVIOUS READING" />
+                        <Label FontSize="22" FontAttributes="Bold" Text="{Binding CustPrevReading}" TextColor="Blue" />
+                        <Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="CURRENT READING" />
+                        <Label FontSize="22" FontAttributes="Bold" Text="{Binding CustCurrentReading}" TextColor="Blue" />
+                    </StackLayout>
+                    <StackLayout Orientation="Vertical" Spacing="5" HorizontalOptions="CenterAndExpand">
+                        <Entry Grid.Row="0" BackgroundColor="LightGrey" Placeholder="Enter new reading here"  WidthRequest="300" IsTextPredictionEnabled="True" IsSpellCheckEnabled="True" Text="{Binding VmReading.C_reading}" Keyboard="Numeric"/>
+                        <toolkit:Expander>
+                            <toolkit:Expander.Header>
+                                <Label HorizontalOptions="CenterAndExpand" Text="Leave a comment..." FontAttributes="Italic" FontSize="Medium"/>
+
+                            </toolkit:Expander.Header>
+                            <HorizontalStackLayout Padding="10">
+                                <Grid ColumnDefinitions="*,*" RowDefinitions="*" >
+                                    <HorizontalStackLayout Spacing="10">
+                                        <Entry Grid.Column="0" BackgroundColor="WhiteSmoke" Placeholder="Enter comment here..." WidthRequest="250"
+                                           HeightRequest="75" VerticalOptions="Center" IsTextPredictionEnabled="True" IsSpellCheckEnabled="True"
+                                           Text="{Binding VmReading.Comment}"  />
+                                        <Button
+                                                CornerRadius="10"
+                                                BackgroundColor="Grey"
+                                                Command="{Binding TakePhotoClickedCommand}"
+                                                HorizontalOptions="Center"
+                                                Text="Camera" />
+                                    </HorizontalStackLayout>
+                                </Grid>
+
+
+
+                            </HorizontalStackLayout>
+                        </toolkit:Expander>
+                        <Button Grid.Row="2" CornerRadius="20" WidthRequest="200" Text="Create New Reading" Command="{Binding CreateReadingCommand}" />
+                    </StackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+
+        </VerticalStackLayout>
+
+        <VerticalStackLayout VerticalOptions="EndAndExpand" Grid.Row="1" Padding="10">
+            <ScrollView   HeightRequest="115" >
+
+                <ContentView>
+                    <CollectionView
+                                    BackgroundColor="Transparent"
+                                    ItemsSource="{Binding Customer.Readings}"
+                                    SelectionMode="None"
+                                    EmptyView="No reading data"
+                                >
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="modelwrapper:ReadingWrapper">
+                                <Grid Padding="2" HorizontalOptions="Fill" >
+                                    <Frame HeightRequest="110" CornerRadius="10">
+                                        <Grid Padding="0,0,0,0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" RowDefinitions="Auto,Auto,*" RowSpacing="10">
+
+
+                                            <Frame Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Padding="3" CornerRadius="5" WidthRequest="50" HeightRequest="30" BackgroundColor="LimeGreen" VerticalOptions="Center" IsVisible="{Binding IsNew}">
+                                                <Label Text="New" HorizontalTextAlignment="Center" Style="{StaticResource TinyLabel}" />
+                                            </Frame>
+                                            <VerticalStackLayout>
+                                                <HorizontalStackLayout>
+                                                    <Label Grid.Row="2" FontSize="Medium" FontAttributes="Bold" Grid.ColumnSpan="3" Text="{Binding MonthID, StringFormat='Month : {0}'}" />
+                                                </HorizontalStackLayout>
+                                                <HorizontalStackLayout>
+                                                    <Label Grid.Row="2" TextColor="Blue" FontAttributes="Bold" FontSize="Subtitle" Grid.ColumnSpan="3" Text="{Binding Current_reading, StringFormat='Reading : {0}'}" />
+                                                </HorizontalStackLayout>
+                                            </VerticalStackLayout>
+
+                                        </Grid>
+                                    </Frame>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ContentView>
+
+            </ScrollView>
+        </VerticalStackLayout>
+
+        <Button Grid.Row="2" CornerRadius="15" WidthRequest="405" Text="Go Back" Command="{Binding GoBackCommand}" />
+    </Grid>
+</ContentPage>
+

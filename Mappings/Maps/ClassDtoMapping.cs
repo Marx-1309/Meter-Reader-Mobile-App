@@ -1,0 +1,17 @@
+﻿using AutoMapper;
+using SampleMauiMvvmApp.Mappings.Dto_s;
+using SampleMauiMvvmApp.Models;
+
+namespace SampleMauiMvvmApp.Mappings.Maps
+{
+    public class ClassDtoMapping : Profile
+    {
+        public ClassDtoMapping() 
+        {
+            CreateMap<Reading,ReadingDto>().ReverseMap();
+            CreateMap<Customer,CustomerDto>().ReverseMap();
+            CreateMap<Reading, UpdateReadingDto>().ReverseMap();
+
+        }
+    }
+}

@@ -17,4 +17,9 @@ public partial class UncapturedReadingsPage : ContentPage
         base.OnAppearing();
         _viewModel.GetUncapturedReadingsCommand.Execute(null);
     }
+
+    protected override bool OnBackButtonPressed()
+    {
+        return true;
+    }
 }

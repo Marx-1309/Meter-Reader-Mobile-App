@@ -7,6 +7,9 @@
              x:Class="SampleMauiMvvmApp.Views.UncapturedReadingsPage"
              Title="All Readings"
              x:DataType="viewmodel:ReadingViewModel">
+            <Shell.BackButtonBehavior>
+                <BackButtonBehavior IsEnabled="False" IsVisible="False"></BackButtonBehavior>
+            </Shell.BackButtonBehavior>
     <!--<ContentPage.ToolbarItems>
         <ToolbarItem Text="Add item"
                  IconImageSource="add.png" />
@@ -14,7 +17,7 @@
 
     <Shell.SearchHandler>
         <searchHandlers:CustomerSearchHandler 
-            Placeholder="Search By Erf/Name"
+            Placeholder="Search By Erf,Name or Meter No"
             ShowsResults="True"
             QueryIcon="search"
             ClearIcon="clear"

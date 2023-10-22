@@ -4,6 +4,7 @@ using Microsoft.Maui;
 using Newtonsoft.Json;
 using SampleMauiMvvmApp.Fakers;
 using SampleMauiMvvmApp.Models;
+using SampleMauiMvvmApp.Views;
 using System.Net.Http.Json;
 
 namespace SampleMauiMvvmApp.Services
@@ -198,10 +199,16 @@ namespace SampleMauiMvvmApp.Services
                         var newApiReadings = JsonConvert.DeserializeObject<List<Reading>>(responseContent3);
 
 
+                        //ensuring that r.WaterReadingExportID is greater than the WaterReadingExportID of currentExportItem.
+                        //This means that only items with an WaterReadingExportID greater than the current one will be included in the newExportToInsert list.
+
+                        ReadingExport currentExportItem = await dbContext.Database.Table<ReadingExport>().FirstOrDefaultAsync();
+
                         // Filter the items to get only the ones that do not exist in the SQLite database
                         var newExportToInsert = newApiReadingExports
-                            .Where(r => !existingExportIds.Contains(r.WaterReadingExportID))
+                            .Where(r => !existingExportIds.Contains(r.WaterReadingExportID) && r.WaterReadingExportID > currentExportItem?.WaterReadingExportID)
                             .ToList();
+
 
                         var newCustomerToInsert = newApiCustomers
                             .Where(r => !existingCustomerIds.Contains(r.CUSTNMBR))
@@ -221,6 +228,17 @@ namespace SampleMauiMvvmApp.Services
                         //Insert Non-Existing Exports
                         if (newExportToInsert.Any())
                         {
+                            await Shell.Current.DisplayAlert("New Reading Exports Found!",$"We Are Updating The App!", "OK");
+                            await Shell.Current.GoToAsync($"{nameof(SynchronizationPage)}");
+
+
+                            List <ReadingExport> exportsItemsToDelete = await dbContext.Database.Table<ReadingExport>().ToListAsync();
+
+                            foreach (var item in exportsItemsToDelete)
+                            {
+                               await dbContext.Database.DeleteAsync(item);
+                            }
+
                             LatestExportList.Clear();
                             LatestExportList.AddRange(newExportToInsert);
                             // Insert the new items into the SQLite database
@@ -238,110 +256,112 @@ namespace SampleMauiMvvmApp.Services
 
                                 await dbContext.Database.InsertAsync(readingExport);
                             }
-                        }
-                        else { return; };
 
-
-
-                        //Insert Non-Existing Customers
-                        if (newCustomerToInsert.Any())
-                        {
-                            LatestCustomerList.Clear();
-                            LatestCustomerList.AddRange(newCustomerToInsert);
-                            // Insert the new items into the SQLite database
-                            //var response2 = await dbContext.Database.InsertAllAsync(newItemsToInsert);
-
-
-                            List<Customer> CustomerList = new();
-                            foreach (var item in newCustomerToInsert)
+                            //Insert Non-Existing Customers
+                            if (newCustomerToInsert.Any())
                             {
-                                Customer customer = new()
+                                LatestCustomerList.Clear();
+                                LatestCustomerList.AddRange(newCustomerToInsert);
+                                // Insert the new items into the SQLite database
+                                //var response2 = await dbContext.Database.InsertAllAsync(newItemsToInsert);
+
+
+                                List<Customer> CustomerList = new();
+                                foreach (var item in newCustomerToInsert)
                                 {
-                                    CUSTNMBR = item.CUSTNMBR,
-                                    CUSTNAME = item.CUSTNAME,
-                                    CUSTCLAS = item.CUSTCLAS,
-                                    STATE = item.STATE,
-                                    ZIP = item.ZIP,
-                                };
-                                CustomerList.Clear();
-                                CustomerList.Add(customer);
+                                    Customer customer = new()
+                                    {
+                                        CUSTNMBR = item.CUSTNMBR,
+                                        CUSTNAME = item.CUSTNAME,
+                                        CUSTCLAS = item.CUSTCLAS,
+                                        STATE = item.STATE,
+                                        ZIP = item.ZIP,
+                                    };
+                                    CustomerList.Clear();
+                                    CustomerList.Add(customer);
+                                }
+                                await dbContext.Database.InsertAllAsync(CustomerList);
                             }
-                            await dbContext.Database.InsertAllAsync(CustomerList);
-                        }
 
-                        //Insert Non-Existing Readings
-                        if (newReadingToInsert.Any())
-                        {
-                            LatestReadingList.Clear();
-                            LatestReadingList.AddRange(newReadingToInsert);
-
-                            //var response2 = await dbContext.Database.InsertAllAsync(newItemsToInsert);
-
-                            // Insert the new items into the SQLite database
-                            foreach (var item in newReadingToInsert)
+                            //Insert Non-Existing Readings
+                            if (newReadingToInsert.Any())
                             {
-                                Reading reading = new()
+                                LatestReadingList.Clear();
+                                LatestReadingList.AddRange(newReadingToInsert);
+
+                                //var response2 = await dbContext.Database.InsertAllAsync(newItemsToInsert);
+
+                                // Insert the new items into the SQLite database
+                                foreach (var item in newReadingToInsert)
                                 {
-                                    WaterReadingExportDataID = item.WaterReadingExportDataID,
-                                    CURRENT_READING = item.CURRENT_READING,
-                                    PREVIOUS_READING = item.PREVIOUS_READING,
-                                    Comment = string.Empty,
-                                    READING_DATE = string.Empty,
-                                    MonthID = item.MonthID,
-                                    Year = item.Year,
+                                    Reading reading = new()
+                                    {
+                                        WaterReadingExportDataID = item.WaterReadingExportDataID,
+                                        CURRENT_READING = item.CURRENT_READING,
+                                        PREVIOUS_READING = item.PREVIOUS_READING,
+                                        Comment = string.Empty,
+                                        READING_DATE = string.Empty,
+                                        MonthID = item.MonthID,
+                                        Year = item.Year,
 
-                                };
-                                await dbContext.Database.InsertAsync(reading);
+                                    };
+                                    await dbContext.Database.InsertAsync(reading);
 
-                            }
-                        }
-
-                        //Update Existing Readings
-                        // Update Existing Readings
-                        if (newReadingToUpdate.Any())
-                        {
-                            List<Reading> ReadingList = new List<Reading>();
-
-                            //Get the latest export items to assign  to readings during update
-                            var lastExportItem = await dbContext.Database.Table<ReadingExport>()
-                                      .OrderByDescending(r => r.WaterReadingExportID)
-                                      .FirstOrDefaultAsync();
-
-                            foreach (var item in newReadingToUpdate)
-                            {
-                                // Retrieve the record to update
-                                Reading recordToUpdate = await dbContext.Database.Table<Reading>()
-                                    .Where(r => r.WaterReadingExportDataID == item.WaterReadingExportDataID)
-                                    .FirstOrDefaultAsync();
-
-                                if (recordToUpdate != null)
-                                {
-                                    // Update the properties of the record
-                                    recordToUpdate.WaterReadingExportID = lastExportItem.WaterReadingExportID;
-                                    recordToUpdate.CUSTOMER_NUMBER = item.CUSTOMER_NUMBER;
-                                    recordToUpdate.CUSTOMER_NAME = item.CUSTOMER_NAME;
-                                    recordToUpdate.AREA = item.AREA;
-                                    recordToUpdate.CUSTOMER_ZONING = item.CUSTOMER_ZONING;
-                                    recordToUpdate.ERF_NUMBER = item.ERF_NUMBER;
-                                    recordToUpdate.RouteNumber = item.RouteNumber;
-                                    recordToUpdate.METER_NUMBER = item.METER_NUMBER;
-                                    recordToUpdate.CURRENT_READING = item.CURRENT_READING;
-                                    recordToUpdate.PREVIOUS_READING = item.PREVIOUS_READING;
-                                    recordToUpdate.ReadingSync = false;
-                                    recordToUpdate.ReadingTaken = false;
-                                    recordToUpdate.Comment = string.Empty;
-                                    recordToUpdate.READING_DATE = string.Empty;
-                                    recordToUpdate.MonthID = lastExportItem.MonthID;
-                                    recordToUpdate.Year = lastExportItem.Year;
-
-                                    ReadingList.Add(recordToUpdate);
                                 }
                             }
 
-                            // Update the records in the database
-                            await dbContext.Database.UpdateAllAsync(ReadingList);
-                        }
+                            //Update Existing Readings
+                            // Update Existing Readings
+                            if (newReadingToUpdate.Any())
+                            {
+                                List<Reading> ReadingList = new List<Reading>();
 
+                                //Get the latest export items to assign  to readings during update
+                                var lastExportItem = await dbContext.Database.Table<ReadingExport>()
+                                          .OrderByDescending(r => r.WaterReadingExportID)
+                                          .FirstOrDefaultAsync();
+
+                                foreach (var item in newReadingToUpdate)
+                                {
+                                    // Retrieve the record to update
+                                    Reading recordToUpdate = await dbContext.Database.Table<Reading>()
+                                        .Where(r => r.WaterReadingExportDataID == item.WaterReadingExportDataID)
+                                        .FirstOrDefaultAsync();
+
+                                    if (recordToUpdate != null)
+                                    {
+                                        // Update the properties of the record
+                                        recordToUpdate.WaterReadingExportID = lastExportItem.WaterReadingExportID;
+                                        recordToUpdate.CUSTOMER_NUMBER = item.CUSTOMER_NUMBER;
+                                        recordToUpdate.CUSTOMER_NAME = item.CUSTOMER_NAME;
+                                        recordToUpdate.AREA = item.AREA;
+                                        recordToUpdate.CUSTOMER_ZONING = item.CUSTOMER_ZONING;
+                                        recordToUpdate.ERF_NUMBER = item.ERF_NUMBER;
+                                        recordToUpdate.RouteNumber = item.RouteNumber;
+                                        recordToUpdate.METER_NUMBER = item.METER_NUMBER;
+                                        recordToUpdate.CURRENT_READING = item.CURRENT_READING;
+                                        recordToUpdate.PREVIOUS_READING = item.PREVIOUS_READING;
+                                        recordToUpdate.ReadingSync = false;
+                                        recordToUpdate.ReadingTaken = false;
+                                        recordToUpdate.Comment = string.Empty;
+                                        recordToUpdate.READING_DATE = string.Empty;
+                                        recordToUpdate.MonthID = lastExportItem.MonthID;
+                                        recordToUpdate.Year = lastExportItem.Year;
+
+                                        ReadingList.Add(recordToUpdate);
+                                    }
+                                }
+
+                                // Update the records in the database
+                                await dbContext.Database.UpdateAllAsync(ReadingList);
+                                await Shell.Current.DisplayAlert("Done!", $"finished downloading new data!", "OK");
+                                await Shell.Current.GoToAsync($"{nameof(UncapturedReadingsPage)}");
+                            }
+                        }
+                        else
+                        {
+                            return;
+                        }
                     }
 
                 }

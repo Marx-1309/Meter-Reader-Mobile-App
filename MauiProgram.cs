@@ -6,6 +6,7 @@ using SampleMauiMvvmApp.Services;
 using SampleMauiMvvmApp.ViewModels;
 using SampleMauiMvvmApp.Views;
 using SampleMauiMvvmApp.Views.SecurityPages;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 using SQLite;
 
 namespace SampleMauiMvvmApp;
@@ -17,6 +18,7 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
+            .UseSkiaSharp()
             .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
 			{
@@ -51,6 +53,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<ListOfReadingByMonthPage>();
 
         builder.Services.AddSingleton<LoadingPage>();
+        builder.Services.AddSingleton<SynchronizationPage>();
         builder.Services.AddSingleton<LoadingViewModel>();
 
         builder.Services.AddSingleton<LoginPage>();

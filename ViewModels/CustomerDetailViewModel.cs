@@ -102,8 +102,7 @@ namespace SampleMauiMvvmApp.ViewModels
                 CustCurrentReading = reading.CURRENT_READING;
                 MeterNumber = reading.METER_NUMBER;
                 RouteNumber = reading.RouteNumber;
-                ErfNumber = reading.ERF_NUMBER;
-                CustStateErf = $"{reading.AREA.Trim()}\n({reading.ERF_NUMBER.Trim()})";
+                CustStateErf = $"{reading.AREA.Trim()}\n(ERF : {reading.ERF_NUMBER.Trim()})";
             }
 
             bool isExist = await readingService.IsReadingExistForMonthId(Customer.Custnmbr);

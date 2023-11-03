@@ -41,7 +41,7 @@ namespace SampleMauiMvvmApp.Models
         public int? WaterReadingTypeId { get; set; }
 
         [ForeignKey(typeof(User), Name = "Username")]
-        public string? Meter_Reader { get; set; }
+        public string? METER_READER { get; set; }
 
         [DataType(DataType.Date)]
         public string READING_DATE { get; set; } = DateTime.Now.ToLongDateString();
@@ -82,7 +82,7 @@ namespace SampleMauiMvvmApp.Models
                 Year = wrapper.Year,
                 CUSTOMER_ZONING = wrapper.Customer_zoning,
                 RouteNumber = wrapper.RouteNumber,
-                Meter_Reader = wrapper.MeterReader,
+                METER_READER = wrapper.MeterReader,
                 READING_DATE = wrapper.ReadingDate,
                 ReadingTaken = wrapper.ReadingTaken,
                 ReadingNotTaken = wrapper.ReadingNotTaken,

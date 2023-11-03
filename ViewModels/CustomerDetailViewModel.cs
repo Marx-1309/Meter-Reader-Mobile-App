@@ -13,6 +13,7 @@ using SampleMauiMvvmApp.Models;
 using SampleMauiMvvmApp.ModelWrappers;
 using SampleMauiMvvmApp.Services;
 using SampleMauiMvvmApp.Views;
+using SkiaSharp;
 
 namespace SampleMauiMvvmApp.ViewModels
 {
@@ -53,7 +54,7 @@ namespace SampleMauiMvvmApp.ViewModels
         int currentMonth;
         [ObservableProperty]
         public static bool isExist;
-        private int selectedCompressionQuality;
+        private int selectedCompressionQuality = 25;
         ReadingMedia capturedImage = new();
 
         public CustomerDetailViewModel(DbContext _dbContext, ReadingService readingService,
@@ -102,7 +103,7 @@ namespace SampleMauiMvvmApp.ViewModels
                 CustCurrentReading = reading.CURRENT_READING;
                 MeterNumber = reading.METER_NUMBER;
                 RouteNumber = reading.RouteNumber;
-                CustStateErf = $"{reading.AREA.Trim()}\n(ERF : {reading.ERF_NUMBER.Trim()})";
+                CustStateErf = $"{reading.AREA.Trim()}\n({reading.ERF_NUMBER.Trim()})";
             }
 
             bool isExist = await readingService.IsReadingExistForMonthId(Customer.Custnmbr);
@@ -129,8 +130,8 @@ namespace SampleMauiMvvmApp.ViewModels
                     }
                     else
                     {
-                        // Handle the case where the string cannot be parsed as an integer
-                        // You can raise an exception, log an error, or handle it in another way
+                        await Shell.Current.DisplayAlert($"Error",
+                                                        $"Something went wrong while converting reading to int", "OK");
                     }
                 }
                 else
@@ -141,7 +142,7 @@ namespace SampleMauiMvvmApp.ViewModels
                 }
 
                 CurrentMonthReading.Comment = VmReading.Comment;
-                CurrentMonthReading.Meter_Reader = loggedInUser.Username;
+                //CurrentMonthReading.Meter_Reader = loggedInUser.Username;
                 CurrentMonthReading.ReadingTaken = true;
                 CurrentMonthReading.ReadingNotTaken = false;
                 CurrentMonthReading.ReadingSync = false;
@@ -226,18 +227,14 @@ namespace SampleMauiMvvmApp.ViewModels
             var result = await CrossMedia.Current.TakePhotoAsync(options);
             if (result is null) return;
 
-
-
             var fileInfo = new FileInfo(result?.Path);
             var fileLength = fileInfo.Length;
 
-
-
-            //Convert the image to Base64 string
+            // Convert the image to Base64 string
             byte[] imageData = File.ReadAllBytes(result?.Path);
             string base64Image = Convert.ToBase64String(imageData);
 
-            //Save the data to db
+            // Save the data to the database
             var latestExportItem = await dbContext.Database.Table<ReadingExport>()
                        .OrderByDescending(r => r.WaterReadingExportID)
                        .FirstOrDefaultAsync();
@@ -245,30 +242,29 @@ namespace SampleMauiMvvmApp.ViewModels
             int currentExportId = latestExportItem.WaterReadingExportID;
 
             Reading reading = await dbContext.Database.Table<Reading>()
-                .Where(r=>r.CUSTOMER_NUMBER == Customer.Custnmbr && r.WaterReadingExportID == currentExportId)
+                .Where(r => r.CUSTOMER_NUMBER == Customer.Custnmbr && r.WaterReadingExportID == currentExportId)
                 .FirstOrDefaultAsync();
 
-            List<ReadingMedia> existingImage = await dbContext.Database.Table<ReadingMedia>().Where(r=>r.WaterReadingExportId == currentExportId).ToListAsync();
+            List<ReadingMedia> existingImage = await dbContext.Database.Table<ReadingMedia>().Where(r => r.WaterReadingExportDataId == reading.WaterReadingExportDataID).ToListAsync();
+            List<ReadingMedia> existingImages = await dbContext.Database.Table<ReadingMedia>().ToListAsync();
 
             ReadingMedia capturedImage = new()
             {
                 WaterReadingExportDataId = reading.WaterReadingExportDataID,
                 WaterReadingExportId = reading.WaterReadingExportID,
                 Title = result.OriginalFilename,
-                Data = base64Image,
+                MeterImage = base64Image,
                 DateTaken = DateTime.UtcNow.ToLongDateString(),
             };
 
             if (existingImage.Any())
             {
-                foreach (var image in existingImage)
+                foreach (var img in existingImage)
                 {
-                    await dbContext.Database.DeleteAsync(image);
+                    await dbContext.Database.DeleteAsync(img);
                 }
             }
-
             await dbContext.Database.InsertAsync(capturedImage);
-            
         }
 
         public bool IsValid()

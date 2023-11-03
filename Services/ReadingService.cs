@@ -291,9 +291,8 @@ namespace SampleMauiMvvmApp.Services
             return null;
         }
 
-        public static int allItemsByCount;
-
-        public async Task<int> SyncByMonthIdAsync(int Id)
+        public static int allReadingsItemsByCount=0;
+        public async Task<int> SyncReadingsByMonthIdAsync(int Id)
         {
             try
             {
@@ -303,18 +302,19 @@ namespace SampleMauiMvvmApp.Services
                         .Where(r => r.MonthID == Id && r.ReadingSync == false && r.CURRENT_READING != 0 && r.WaterReadingExportDataID != 0)
                         .OrderBy(r => r.READING_DATE).ToListAsync();
 
-                    var loggedInUser = await dbContext.Database.Table<LoginHistory>().OrderByDescending(r => r.LoginId).FirstAsync();
+                    //var loggedInUser = await dbContext.Database.Table<LoginHistory>().OrderByDescending(r => r.LoginId).FirstAsync();
 
                     var response = _mapper.Map<List<UpdateReadingDto>>(r);
 
-                    if (response != null)
+                    if (response.Count>0)
                     {
                         // Initialize a count variable to keep track of the number of items processed.
                         int itemCount = 0;
 
                         foreach (var item in response)
                         {
-                            item.Meter_Reader = App.UserInfo?.Username;
+                            //item.METER_READER = loggedInUser.Username;
+                            item.Comment = item.Comment;
                             // Perform the update for each item in 'response'.
                             var IsSyncSuccess = await _httpClient.PutAsJsonAsync(Constants.PutReading, item);
                             StatusMessage = IsSyncSuccess.ReasonPhrase.ToString();
@@ -346,9 +346,14 @@ namespace SampleMauiMvvmApp.Services
                             }
                         }
 
+                        
+                        await SyncImages();
+
                         // After processing all items, store the count in the static variable.
-                        allItemsByCount = itemCount;
-                        return allItemsByCount;
+                        allReadingsItemsByCount = itemCount;
+                        return allReadingsItemsByCount;
+
+                        
                     }
                 }
             }
@@ -358,7 +363,80 @@ namespace SampleMauiMvvmApp.Services
             }
 
             // Return the default value of allItemsByCount if no items are processed.
-            return allItemsByCount;
+            return allReadingsItemsByCount;
+        }
+
+
+        public static int allImageItemsByCount=0;
+        public async Task<int> SyncImages()
+        {
+            int Count = 0;
+            try
+            {
+                var lastExportItem = await dbContext.Database.Table<ReadingExport>()
+                                     .OrderByDescending(r => r.WaterReadingExportID)
+                                     .FirstOrDefaultAsync();
+
+                var images = await dbContext.Database
+                    .Table<ReadingMedia>()
+                    .Where(r => r.WaterReadingExportId == lastExportItem.WaterReadingExportID && r.IsSynced != true)
+                    .ToArrayAsync();
+
+                var response = _mapper.Map<List<ImageSyncDto>>(images);
+
+                if (response.Count>0)
+                {
+                    // Initialize a count variable to keep track of the number of items processed.
+                    int itemCount = 0;
+
+                    foreach (var item in response)
+                    {
+                        var IsSyncSuccess = await _httpClient.PutAsJsonAsync(Constants.SyncImages, item);
+                        StatusMessage = IsSyncSuccess.ReasonPhrase.ToString();
+
+                        if (IsSyncSuccess.IsSuccessStatusCode)
+                        {
+                            // Update the item in the local database.
+                            var updatedItem = await dbContext.Database.Table<ReadingMedia>()
+                                .Where(r => r.WaterReadingExportDataId == item.WaterReadingExportDataId)
+                                .FirstOrDefaultAsync();
+
+
+                            if (updatedItem != null)
+                            {
+                                updatedItem.IsSynced = true;
+
+                                // Save the changes to the local database.
+                                await dbContext.Database.UpdateAsync(updatedItem);
+                            }
+
+                            // Increment the count for each successfully processed item.
+                            itemCount++;
+                        }
+                        else
+                        {
+                            StatusMessage = IsSyncSuccess.IsSuccessStatusCode.ToString();
+                            // Handle any failure cases here, if needed.
+                        }
+                    }
+                    var imagesToDelete = await dbContext.Database.Table<ReadingMedia>().Where(i => i.IsSynced == true).ToListAsync();
+
+                    foreach (var i in imagesToDelete)
+                    {
+                        await dbContext.Database.DeleteAsync(i);
+                    }
+
+                    // After processing all items, store the count in the static variable.
+                    allImageItemsByCount = itemCount;
+                    return allImageItemsByCount;
+                }
+                return allImageItemsByCount;
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = ex.Message.ToString();
+            }
+            return allImageItemsByCount;
         }
 
 

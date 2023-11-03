@@ -97,13 +97,6 @@ namespace SampleMauiMvvmApp.ViewModels
             }
         }
 
-        //[RelayCommand]
-        //async Task GoToListOfReadingsByMonth(Month month)
-        //{
-
-        //    await Shell.Current.GoToAsync(nameof(ListOfReadingByMonthPage),true, new Dictionary<string, object> { { "Month", month } });
-        //}
-
         [RelayCommand]
         public async Task GoToListOfReadingsByMonth (Month monthId)
         {
@@ -153,12 +146,15 @@ namespace SampleMauiMvvmApp.ViewModels
             try { 
             if (IsBusy) return;
             IsBusy = true;
-            var response = await ReadingService.SyncByMonthIdAsync(CMonth);
+            var response = await ReadingService.SyncReadingsByMonthIdAsync(CMonth);
                 message = ReadingService.StatusMessage;
-            if (response == null) return;
+            if (response !> 1) return;
             IsBusy = false;
-            int syncedItemCount = ReadingService.allItemsByCount;
-                await Shell.Current.DisplayAlert($"{syncedItemCount} Reading(s) Synced ", SMonth, "OK");
+                int syncedReadingsItemCount = ReadingService.allReadingsItemsByCount;
+                int syncedImagesItemCount = ReadingService.allImageItemsByCount;
+                await Shell.Current.DisplayAlert($"{syncedReadingsItemCount} Reading(s) Synced ", SMonth, "OK");
+                await Shell.Current.DisplayAlert($"{syncedImagesItemCount} Image(s) Synced ", SMonth, "OK");
+
             await Task.Delay(500);
             await GoBackAsync();
             }

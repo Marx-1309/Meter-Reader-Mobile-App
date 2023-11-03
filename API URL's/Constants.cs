@@ -8,7 +8,7 @@ namespace SampleMauiMvvmApp.API_URL_s
 {
     public static class Constants
     {
-        public const string HOST = ListOfUrl.OkahaoHomeWifi;
+        public const string HOST = ListOfUrl.SamsungA51;
         //Month
         public const string GetMonth = HOST+"/api/Month";
         public const string PostMonth = HOST + "/api/Month";
@@ -31,6 +31,8 @@ namespace SampleMauiMvvmApp.API_URL_s
         public const string GetReadingById = HOST+"/api/Reading/{id}";
         public const string PutReading = HOST+"/api/Reading/{id}";
         public const string DeleteReading = HOST+"/api/Reading/{id}";
+        public const string SyncImages = HOST+"/api/Reading/Image/{id}";
+
         //Users
         public const string GetUser = HOST+"/api/Users";
         public const string GetUserById = HOST+"/api/Users/{id}";
@@ -57,11 +59,13 @@ namespace SampleMauiMvvmApp.API_URL_s
         //Home Wi-Fi
         public const string OkahaoHomeWifi = "http://192.168.178.78:82";
         //My Phone
-        public const string SamsungA51 = "http://192.168.59.175:88";
+        public const string SamsungA51 = "http://192.168.137.175:88";
 
         public const string RTCOFRuacanaTcWifi = "http://192.168.178.5:81";
 
         public const string RTCOFAPIWifi = "http://192.168.118.251:84";
-        
+
+        public const string OkahaoTC = "http://192.168.1.94:88";
+
     }
 }

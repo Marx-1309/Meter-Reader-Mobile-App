@@ -25,7 +25,7 @@ namespace SampleMauiMvvmApp.ModelWrappers
                 Year = (int)readingModel.Year;
                 Customer_zoning = readingModel.CUSTOMER_ZONING;
                 RouteNumber = readingModel.RouteNumber;
-                MeterReader = readingModel.Meter_Reader;
+                MeterReader = readingModel.METER_READER;
                 //ReadingDate = (DateTime)readingModel.READING_DATE;
                 Comment = readingModel.Comment;
                 ReadingNotTaken = (bool)readingModel.ReadingNotTaken;

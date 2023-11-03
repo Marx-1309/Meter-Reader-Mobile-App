@@ -186,6 +186,10 @@ namespace SampleMauiMvvmApp.Services
                            .Select(r => r.WaterReadingExportDataID)
                            .ToList();
 
+                    var existingCustomerReadingIds = readingList
+                           .Select(r => r.CUSTOMER_NUMBER)
+                           .ToList();
+
                     if (responseSql1.IsSuccessStatusCode && responseSql2.IsSuccessStatusCode && responseSql3.IsSuccessStatusCode)
                     {
                         // Read the response content as a string
@@ -210,10 +214,12 @@ namespace SampleMauiMvvmApp.Services
                             .ToList();
 
 
-                        var newCustomerToInsert = newApiCustomers
+                        var newCustomers = newApiCustomers
                             .Where(r => !existingCustomerIds.Contains(r.CUSTNMBR))
                             .ToList();
-
+                        //Firstly i filtered out the new customers that do not exist in the customer's table 
+                        //Here filter out the new customers from the APi that do have existing readings in the readings table and save them
+                        var newCustomersToInsert = newCustomers.Where(r=> existingCustomerReadingIds.Contains(r.CUSTNMBR)).ToList();
                         //Here check if the newCustomerToInsert have an existing reading in Readings from the API (use customerNumber)
 
 
@@ -258,16 +264,16 @@ namespace SampleMauiMvvmApp.Services
                             }
 
                             //Insert Non-Existing Customers
-                            if (newCustomerToInsert.Any())
+                            if (newCustomersToInsert.Any())
                             {
                                 LatestCustomerList.Clear();
-                                LatestCustomerList.AddRange(newCustomerToInsert);
+                                LatestCustomerList.AddRange(newCustomersToInsert);
                                 // Insert the new items into the SQLite database
                                 //var response2 = await dbContext.Database.InsertAllAsync(newItemsToInsert);
 
 
                                 List<Customer> CustomerList = new();
-                                foreach (var item in newCustomerToInsert)
+                                foreach (var item in newCustomersToInsert)
                                 {
                                     Customer customer = new()
                                     {
@@ -292,6 +298,7 @@ namespace SampleMauiMvvmApp.Services
                                 //var response2 = await dbContext.Database.InsertAllAsync(newItemsToInsert);
 
                                 // Insert the new items into the SQLite database
+                                List<Reading> ReadingList = new();
                                 foreach (var item in newReadingToInsert)
                                 {
                                     Reading reading = new()
@@ -305,9 +312,10 @@ namespace SampleMauiMvvmApp.Services
                                         Year = item.Year,
 
                                     };
-                                    await dbContext.Database.InsertAsync(reading);
-
+                                    ReadingList.Clear();
+                                    ReadingList.Add(reading);
                                 }
+                                await dbContext.Database.InsertAsync(ReadingList);
                             }
 
                             //Update Existing Readings
@@ -375,16 +383,6 @@ namespace SampleMauiMvvmApp.Services
             // Return the ReadingExport list, even if it's null (client code should handle this)
             return;
         }
-
-
-
-
-
-
-
-
-
-
 
 
         List<ReadingExport> latestExport { get; set; } = new List<ReadingExport>(); // Initialize the list
@@ -516,7 +514,7 @@ namespace SampleMauiMvvmApp.Services
                     //reading.Year = await _readingService.GetLatestExportItemYear() ?? reading.Year;
                     //reading.READING_DATE = DateTime.UtcNow.ToLongDateString();
                     reading.WaterReadingExportID = currentExportId;
-                    reading.Meter_Reader = string.Empty;
+                    reading.METER_READER = string.Empty;
                     reading.ReadingSync = false;
                     reading.ReadingNotTaken = false;
 

@@ -17,7 +17,6 @@ namespace SampleMauiMvvmApp.Services
         protected readonly ReadingExportService _readingExportService;
 
         public string StatusMessage;
-        HttpClient _httpClient;
 
         public BaseService(DbContext dbContext)
         {
@@ -120,7 +119,7 @@ namespace SampleMauiMvvmApp.Services
                     //reading.Year = await _readingService.GetLatestExportItemYear() ?? reading.Year;
                     //reading.READING_DATE = DateTime.UtcNow.ToLongDateString();
                     reading.WaterReadingExportID = currentExportId;
-                    reading.Meter_Reader = string.Empty;
+                    reading.METER_READER = string.Empty;
                     reading.ReadingSync = false;
                     reading.ReadingNotTaken = false;
 

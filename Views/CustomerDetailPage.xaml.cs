@@ -11,7 +11,6 @@ namespace SampleMauiMvvmApp.Views;
 //[QueryProperty("CustomerId", "id")]
 public partial class CustomerDetailPage : ContentPage
 {
-    private int selectedCompressionQuality = 50;
     //public Customer CustomerId { get; set; }
     private CustomerDetailViewModel _viewModel;
     public CustomerDetailPage(CustomerDetailViewModel viewModel)

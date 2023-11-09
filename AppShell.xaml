@@ -14,11 +14,11 @@
         Route="LoadingPage" FlyoutItemIsVisible="False"/>
 
     <FlyoutItem Route="MonthCustomerTabPage" FlyoutDisplayOptions="AsMultipleItems">
+        <ShellContent Title="Not Captured" Icon="water_tap_thick.png" ContentTemplate="{DataTemplate view:UncapturedReadingsPage}"></ShellContent>
+        <ShellContent Title="Captured" Icon="data_entry_icon.jpg" ContentTemplate="{DataTemplate view:CapturedReadingsPage}"></ShellContent>
         <ShellContent Title="Months" Icon="month_tabbed_icon.png" ContentTemplate="{DataTemplate view:MonthPage}" ></ShellContent>
 
-        <ShellContent Title="Captured" Icon="data_entry_icon.jpg" ContentTemplate="{DataTemplate view:CapturedReadingsPage}"></ShellContent>
-
-        <ShellContent Title="Not Captured" Icon="water_tap_thick.png" ContentTemplate="{DataTemplate view:UncapturedReadingsPage}"></ShellContent>
+        <ShellContent Title="Add New" Icon="add_readings_maually.jpg"  ContentTemplate="{DataTemplate view:UnregReadingListPage}"></ShellContent>
 
 
     </FlyoutItem>
@@ -40,20 +40,6 @@
         </StackLayout>
     </Shell.FlyoutHeader>-->
     
-    <Shell.FlyoutFooter>
-        <StackLayout Padding="20" VerticalOptions="End">
-            <Button Command="{Binding LogoutCommand}"  BackgroundColor="Red" Text="Logout" TextColor="White" FontAttributes="Bold" FontSize="18"></Button>
-            <ActivityIndicator
-            HorizontalOptions="Fill"
-            IsRunning="{Binding IsBusy}"
-            IsVisible="{Binding IsBusy}"
-            Color="{StaticResource Primary}"
-            VerticalOptions="Center"
-            WidthRequest="30"
-            HeightRequest="30"
-             />
-            
-        </StackLayout>
-    </Shell.FlyoutFooter>
+  
     
 </Shell>

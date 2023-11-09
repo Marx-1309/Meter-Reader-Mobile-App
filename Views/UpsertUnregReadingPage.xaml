@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SampleMauiMvvmApp.Views.UpsertUnregReadingPage"
+             Title="           Insert/Update">
+    
+        <StackLayout Margin="10" Spacing="15">
+            <VerticalStackLayout>
+            <Label Text="Erf Number/Name" FontSize="Title" />
+            <Entry Text="{Binding ReadingDetail.ErfNo}" Placeholder="Erf Number/Name" BackgroundColor="Gray" FontSize="Large" TextColor="White" />
+                <BoxView HeightRequest="0.8" Color="Gray" />
+            </VerticalStackLayout>
+
+
+            <VerticalStackLayout>
+            <Label Text="Meter Number" FontSize="Title" />
+            <Entry  Text="{Binding ReadingDetail.MeterNo}" Placeholder="Meter Number" Keyboard="Numeric" BackgroundColor="Gray" TextColor="White" FontSize="Large" />
+                <BoxView HeightRequest="0.8" Color="Gray" />
+            </VerticalStackLayout>
+
+
+            <VerticalStackLayout>
+            <Label Text="Reading" FontSize="Title" />
+            <Entry Text="{Binding ReadingDetail.current_Reading}" Placeholder="Current Reading" BackgroundColor="Gray" TextColor="White" Keyboard="Numeric" FontSize="Large"/>
+                <BoxView HeightRequest="0.8" Color="Gray" />
+            </VerticalStackLayout>
+
+
+        <Button Text="Save" FontAttributes="Bold" FontSize="Large" Command="{Binding UpsertReadingCommand}"/>
+        </StackLayout>
+</ContentPage>

@@ -20,6 +20,8 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(LoadingPage), typeof(LoadingPage));
         Routing.RegisterRoute(nameof(CapturedReadingsPage), typeof(CapturedReadingsPage));
         Routing.RegisterRoute(nameof(UncapturedReadingsPage), typeof(UncapturedReadingsPage));
+        Routing.RegisterRoute(nameof(UpsertUnregReadingPage), typeof(UpsertUnregReadingPage));
+        Routing.RegisterRoute(nameof(UnregReadingListPage), typeof(UnregReadingListPage));
         Routing.RegisterRoute(nameof(SynchronizationPage), typeof(SynchronizationPage));
         Routing.RegisterRoute(nameof(AppShell), typeof(AppShell));
 

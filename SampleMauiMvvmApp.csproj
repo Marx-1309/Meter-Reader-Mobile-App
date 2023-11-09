@@ -12,7 +12,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 
 		<!-- Display name -->
-		<ApplicationTitle>SampleMauiMvvmApp</ApplicationTitle>
+		<ApplicationTitle>Meter Reader</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.samplemauimvvmapp</ApplicationId>
@@ -49,6 +49,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Images\add_readings_maually.jpg" />
 	  <None Remove="Resources\Images\cloudsync.gif" />
 	  <None Remove="Resources\Raw\emptyview_animation.json" />
 	  <None Remove="Resources\Raw\sync_animation.json" />
@@ -59,8 +60,8 @@
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Bogus" Version="34.0.2" />
-    <PackageReference Include="CommunityToolkit.Maui" Version="5.3.0" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="6.1.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Humanizer.Core" Version="2.14.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.12" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
@@ -104,6 +105,12 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\UncapturedReadingsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\UnregReadingListPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\UpsertUnregReadingPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

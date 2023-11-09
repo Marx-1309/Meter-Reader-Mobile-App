@@ -240,10 +240,21 @@ namespace SampleMauiMvvmApp.Services
 
                             List <ReadingExport> exportsItemsToDelete = await dbContext.Database.Table<ReadingExport>().ToListAsync();
 
-                            foreach (var item in exportsItemsToDelete)
+                            foreach (var exportItem in exportsItemsToDelete)
                             {
-                               await dbContext.Database.DeleteAsync(item);
+                               await dbContext.Database.DeleteAsync(exportItem);
                             }
+
+                            List<UnregReadings> unregReadingsToDelete = await dbContext.Database.Table<UnregReadings>().ToListAsync();
+
+                            if (unregReadingsToDelete.Any()) 
+                            {
+                                foreach (var unregReadingitem in unregReadingsToDelete)
+                                {
+                                    await dbContext.Database.DeleteAsync(unregReadingitem);
+                                }
+                            }
+                            
 
                             LatestExportList.Clear();
                             LatestExportList.AddRange(newExportToInsert);
@@ -292,31 +303,34 @@ namespace SampleMauiMvvmApp.Services
                             //Insert Non-Existing Readings
                             if (newReadingToInsert.Any())
                             {
+                                // Clear the existing LatestReadingList and add the new readings
                                 LatestReadingList.Clear();
                                 LatestReadingList.AddRange(newReadingToInsert);
 
-                                //var response2 = await dbContext.Database.InsertAllAsync(newItemsToInsert);
+                                // Create a list to store Reading objects
+                                List<Reading> ReadingList = new List<Reading>();
 
-                                // Insert the new items into the SQLite database
-                                List<Reading> ReadingList = new();
+                                // Loop through newReadingToInsert and create Reading objects
                                 foreach (var item in newReadingToInsert)
                                 {
-                                    Reading reading = new()
+                                    Reading reading = new Reading
                                     {
                                         WaterReadingExportDataID = item.WaterReadingExportDataID,
                                         CURRENT_READING = item.CURRENT_READING,
                                         PREVIOUS_READING = item.PREVIOUS_READING,
-                                        Comment = string.Empty,
-                                        READING_DATE = string.Empty,
+                                        Comment = item.Comment, // Set Comment from item if available
+                                        READING_DATE = item.READING_DATE, // Set READING_DATE from item if available
                                         MonthID = item.MonthID,
-                                        Year = item.Year,
-
+                                        Year = item.Year
                                     };
-                                    ReadingList.Clear();
-                                    ReadingList.Add(reading);
+
+                                    ReadingList.Add(reading); // Add each reading to the list
                                 }
-                                await dbContext.Database.InsertAsync(ReadingList);
+
+                                // Insert the list of readings into the SQLite database
+                                await dbContext.Database.InsertAllAsync(ReadingList);
                             }
+
 
                             //Update Existing Readings
                             // Update Existing Readings

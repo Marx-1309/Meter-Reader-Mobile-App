@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CommunityToolkit.Mvvm.Input;
 using SampleMauiMvvmApp.API_URL_s;
 using SampleMauiMvvmApp.Mappings.Dto_s;
 using SampleMauiMvvmApp.Models;
@@ -347,10 +348,14 @@ namespace SampleMauiMvvmApp.Services
                         }
 
                         
-                        await SyncImages();
+                        var syncImageCount = await SyncImages();
 
                         // After processing all items, store the count in the static variable.
                         allReadingsItemsByCount = itemCount;
+                        await Shell.Current.DisplayAlert($"{allReadingsItemsByCount} Reading(s) Synced ","Successfully", "OK");
+                        await Shell.Current.DisplayAlert($"{syncImageCount} Image(s) Synced ", "Successfully", "OK");
+                        await Task.Delay(500);
+                        await Shell.Current.GoToAsync("..");
                         return allReadingsItemsByCount;
 
                         
@@ -365,6 +370,7 @@ namespace SampleMauiMvvmApp.Services
             // Return the default value of allItemsByCount if no items are processed.
             return allReadingsItemsByCount;
         }
+
 
 
         public static int allImageItemsByCount=0;

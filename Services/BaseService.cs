@@ -51,7 +51,8 @@ namespace SampleMauiMvvmApp.Services
                 , typeof(SampleMauiMvvmApp.Models.RM00303)
                 , typeof(SampleMauiMvvmApp.Models.LoginHistory)
                 , typeof(SampleMauiMvvmApp.Models.ReadingMedia)
-                , typeof(SampleMauiMvvmApp.Models.Customer));
+                , typeof(SampleMauiMvvmApp.Models.Customer)
+                , typeof(SampleMauiMvvmApp.Models.UnregReadings));
 
 
 

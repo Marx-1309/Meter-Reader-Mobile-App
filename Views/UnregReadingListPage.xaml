@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:SampleMauiMvvmApp.Models"
+             xmlns:viewModels="clr-namespace:SampleMauiMvvmApp.ViewModels"
+             x:DataType="viewModels:UnregReadingsListViewModel"
+             x:Class="SampleMauiMvvmApp.Views.UnregReadingListPage"
+             Title="Unregistered Readings">
+    <ScrollView>
+    <StackLayout Margin="10">
+
+        <Button Text="Add New Reading" Command="{Binding AddUpdateUnregReadingCommand}" HorizontalOptions="EndAndExpand" />
+        
+        <CollectionView ItemsSource="{Binding Readings}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:UnregReadings">
+                    <SwipeView>
+                        <SwipeView.LeftItems>
+                            <SwipeItems>
+                                <SwipeItemView>
+                                    <VerticalStackLayout  BackgroundColor="LightBlue">
+                                        <Label Text="Edit" 
+                                           HorizontalTextAlignment="Center" 
+                                           VerticalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+                                    </VerticalStackLayout>
+                                </SwipeItemView>
+                                <SwipeItemView>
+                                    <VerticalStackLayout BackgroundColor="Red">
+                                        <Label Text="Delete" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+                                    </VerticalStackLayout>
+                                </SwipeItemView>
+                                <!--<SwipeItem Text="Edit" IconImageSource="dotnet_bot" BackgroundColor="LightBlue" 
+                                       CommandParameter="{Binding .}"
+                                       Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewModels:StudentListPageViewModel}},Path=EditStudentCommand}" />
+                            <SwipeItem Text="Delete" IconImageSource="dotnet_bot" BackgroundColor="Red"  CommandParameter="{Binding .}"
+                                       Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewModels:StudentListPageViewModel}},Path=DeleteStudentCommand}" />-->
+                            </SwipeItems>
+                        </SwipeView.LeftItems>
+                            <Frame Margin="10" Padding="10" CornerRadius="10" BorderColor="LightGray" BackgroundColor="White">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Row 1: Labels -->
+                                    <Label Grid.Row="0" Grid.Column="0" Text="METER NO" FontAttributes="Italic" />
+                                    <Label Grid.Row="0" Grid.Column="1" Text="ERF NO/NAME" FontAttributes="Italic"  />
+                                    
+
+                                    <!-- Row 2: Values -->
+                                    <Label Grid.Row="1" Grid.Column="0" Text="{Binding MeterNo}" FontSize="Medium" FontAttributes="Bold" />
+                                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding ErfNo}" FontSize="Medium" FontAttributes="Bold" TextColor="Red" />
+                                    <Label Grid.RowSpan="3" Grid.Column="2" Text="{Binding Reading}" TextColor="Blue" FontSize="Large" FontAttributes="Bold"  />
+                                </Grid>
+
+                                <!-- Tap Gesture -->
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewModels:UnregReadingsListViewModel}},Path=DisplayActionCommand}"
+                                    CommandParameter="{Binding .}" />
+                                </Frame.GestureRecognizers>
+                            </Frame>
+
+
+
+
+
+                        </SwipeView>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+       
+    </StackLayout> 
+</ScrollView>
+</ContentPage>

@@ -18,5 +18,10 @@
         <ShellContent
         Title="Uncaptured" Icon="water_tap_thick.png"
         ContentTemplate="{DataTemplate view:UncapturedReadingsPage}"/>
+
+        <ShellContent
+        Title="Uncaptured" Icon="add_readings_maually.jpg"
+        ContentTemplate="{DataTemplate view:UnregReadingListPage}"/>
+
     </TabBar>
 </Shell>

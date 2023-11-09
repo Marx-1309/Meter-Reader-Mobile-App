@@ -143,20 +143,20 @@ namespace SampleMauiMvvmApp.ViewModels
         public async Task SyncByMonthIdAsync()
         {
 
-            try { 
-            if (IsBusy) return;
-            IsBusy = true;
-            var response = await ReadingService.SyncReadingsByMonthIdAsync(CMonth);
+            try {
+                if (IsBusy) return;
+                IsBusy = true;
+                var response = await ReadingService.SyncReadingsByMonthIdAsync(CMonth);
                 message = ReadingService.StatusMessage;
-            if (response !> 1) return;
-            IsBusy = false;
+                if (response! > 1) return;
+                IsBusy = false;
                 int syncedReadingsItemCount = ReadingService.allReadingsItemsByCount;
                 int syncedImagesItemCount = ReadingService.allImageItemsByCount;
                 await Shell.Current.DisplayAlert($"{syncedReadingsItemCount} Reading(s) Synced ", SMonth, "OK");
                 await Shell.Current.DisplayAlert($"{syncedImagesItemCount} Image(s) Synced ", SMonth, "OK");
 
-            await Task.Delay(500);
-            await GoBackAsync();
+                await Task.Delay(500);
+                await GoBackAsync();
             }
             catch
             {

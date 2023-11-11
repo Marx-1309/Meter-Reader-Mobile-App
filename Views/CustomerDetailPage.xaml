@@ -8,7 +8,7 @@
     xmlns:modelwrapper="clr-namespace:SampleMauiMvvmApp.ModelWrappers"
     xmlns:viewmodel="clr-namespace:SampleMauiMvvmApp.ViewModels"
     x:DataType="viewmodel:CustomerDetailViewModel"
-    Title="{Binding Customer.ModelTitle}"
+    Title="{Binding Title}"
 >
     <Grid
         Padding="2,0,2,5"

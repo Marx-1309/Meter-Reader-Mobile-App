@@ -59,7 +59,7 @@ namespace SampleMauiMvvmApp.API_URL_s
         //Home Wi-Fi
         public const string OkahaoHomeWifi = "http://192.168.178.78:82";
         //My Phone
-        public const string SamsungA51 = "http://192.168.129.175:88";
+        public const string SamsungA51 = "http://192.168.240.175:88";
 
         public const string RTCOFRuacanaTcWifi = "http://192.168.178.5:81";
 

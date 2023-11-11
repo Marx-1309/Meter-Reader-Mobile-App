@@ -55,7 +55,6 @@ namespace SampleMauiMvvmApp.ViewModels
         [ObservableProperty]
         public static bool isExist;
         private int selectedCompressionQuality = 25;
-        ReadingMedia capturedImage = new();
 
         public CustomerDetailViewModel(DbContext _dbContext, ReadingService readingService,
             CustomerService _customerService, MonthService _monthService, IConnectivity _connectivity)
@@ -93,8 +92,6 @@ namespace SampleMauiMvvmApp.ViewModels
         [RelayCommand]
         async Task CustDisplayDetailsAsync()
         {
-            //LastReadingByIdAsync
-            int PrevMonthId = (int)await readingService.GetLatestExportItemMonthId();
 
             var reading = await readingService.GetLastReadingByIdAsync(Customer.Custnmbr);
             if (reading != null)
@@ -104,6 +101,7 @@ namespace SampleMauiMvvmApp.ViewModels
                 MeterNumber = reading.METER_NUMBER;
                 RouteNumber = reading.RouteNumber;
                 CustStateErf = $"{reading.AREA.Trim()}\n({reading.ERF_NUMBER.Trim()})";
+                Title = $"{reading.CUSTOMER_NAME.Trim()}";
             }
 
             bool isExist = await readingService.IsReadingExistForMonthId(Customer.Custnmbr);

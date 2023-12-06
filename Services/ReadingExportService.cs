@@ -319,7 +319,7 @@ namespace SampleMauiMvvmApp.Services
                                         CURRENT_READING = item.CURRENT_READING,
                                         PREVIOUS_READING = item.PREVIOUS_READING,
                                         Comment = item.Comment, // Set Comment from item if available
-                                        READING_DATE = item.READING_DATE, // Set READING_DATE from item if available
+                                        ReadingDate = item.ReadingDate, // Set READING_DATE from item if available
                                         MonthID = item.MonthID,
                                         Year = item.Year
                                     };
@@ -366,7 +366,7 @@ namespace SampleMauiMvvmApp.Services
                                         recordToUpdate.ReadingSync = false;
                                         recordToUpdate.ReadingTaken = false;
                                         recordToUpdate.Comment = string.Empty;
-                                        recordToUpdate.READING_DATE = string.Empty;
+                                        //recordToUpdate.READING_DATE = string.Empty;
                                         recordToUpdate.MonthID = lastExportItem.MonthID;
                                         recordToUpdate.Year = lastExportItem.Year;
 

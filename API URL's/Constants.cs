@@ -8,7 +8,7 @@ namespace SampleMauiMvvmApp.API_URL_s
 {
     public static class Constants
     {
-        public const string HOST = ListOfUrl.SamsungA51;
+        public const string HOST = ListOfUrl.KineticWifi;
         //Month
         public const string GetMonth = HOST+"/api/Month";
         public const string PostMonth = HOST + "/api/Month";
@@ -54,12 +54,10 @@ namespace SampleMauiMvvmApp.API_URL_s
         public const string LocalIIS = "http://127.0.0.1";
         //TN Card
         public const string TnWifi = "http://192.168.8.118:86";
-        //Humu Phone
-        public const string HumuHotspot = "http://192.168.43.132:86";
         //Home Wi-Fi
         public const string OkahaoHomeWifi = "http://192.168.178.78:82";
         //My Phone
-        public const string SamsungA51 = "http://192.168.240.175:88";
+        public const string SamsungA51 = "http://192.168.104.175:88";
 
         public const string RTCOFRuacanaTcWifi = "http://192.168.178.5:81";
 

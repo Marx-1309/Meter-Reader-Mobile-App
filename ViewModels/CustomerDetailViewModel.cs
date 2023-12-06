@@ -1,9 +1,11 @@
 ﻿using Ardalis.GuardClauses;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Maui.Graphics.Text;
+using Microsoft.VisualBasic;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 //using Plugin.Media;
@@ -13,7 +15,7 @@ using SampleMauiMvvmApp.Models;
 using SampleMauiMvvmApp.ModelWrappers;
 using SampleMauiMvvmApp.Services;
 using SampleMauiMvvmApp.Views;
-using SkiaSharp;
+
 
 namespace SampleMauiMvvmApp.ViewModels
 {
@@ -55,9 +57,9 @@ namespace SampleMauiMvvmApp.ViewModels
         [ObservableProperty]
         public static bool isExist;
         private int selectedCompressionQuality = 25;
-
+        IGeolocation geolocation;
         public CustomerDetailViewModel(DbContext _dbContext, ReadingService readingService,
-            CustomerService _customerService, MonthService _monthService, IConnectivity _connectivity)
+            CustomerService _customerService, MonthService _monthService, IConnectivity _connectivity, IGeolocation geolocation)
         {
             Title = "Customer Detail Page";
             this.dbContext = _dbContext;
@@ -65,6 +67,7 @@ namespace SampleMauiMvvmApp.ViewModels
             this.connectivity = _connectivity;
             this.customerService = _customerService;
             this.monthService = _monthService;
+            this.geolocation = geolocation;
 
             WeakReferenceMessenger.Default.Register<ReadingCreateMessage>(this, (obj, handler) =>
             {
@@ -96,12 +99,13 @@ namespace SampleMauiMvvmApp.ViewModels
             var reading = await readingService.GetLastReadingByIdAsync(Customer.Custnmbr);
             if (reading != null)
             {
-                CustPrevReading = reading.PREVIOUS_READING;
-                CustCurrentReading = reading.CURRENT_READING;
+                CustPrevReading = (decimal)reading.PREVIOUS_READING;
+                CustCurrentReading = (decimal)reading.CURRENT_READING;
                 MeterNumber = reading.METER_NUMBER;
                 RouteNumber = reading.RouteNumber;
-                CustStateErf = $"{reading.AREA.Trim()}\n({reading.ERF_NUMBER.Trim()})";
+                CustStateErf = $"{reading.AREA.Trim()} - (ERF {reading.ERF_NUMBER.Replace("ERF","").Trim()})";
                 Title = $"{reading.CUSTOMER_NAME.Trim()}";
+
             }
 
             bool isExist = await readingService.IsReadingExistForMonthId(Customer.Custnmbr);
@@ -118,7 +122,7 @@ namespace SampleMauiMvvmApp.ViewModels
                 IsValid();
                 var CurrentMonthReading = await readingService.GetCurrentMonthReadingByCustIdAsync(Customer.Custnmbr);
                 var customerInfo = await customerService.GetCustomerDetails(Customer.Custnmbr);
-                var loggedInUser = await dbContext.Database.Table<LoginHistory>()?.OrderByDescending(r => r.LoginId).FirstAsync();
+                //var loggedInUser = await dbContext.Database.Table<LoginHistory>()?.OrderByDescending(r => r.LoginId).FirstAsync();
 
                 if (!VmReading.C_reading.IsNullOrEmpty())
                 {
@@ -138,8 +142,9 @@ namespace SampleMauiMvvmApp.ViewModels
                                                         $"Please enter a valid reading!", "OK");
                     return;
                 }
-
+                
                 CurrentMonthReading.Comment = VmReading.Comment;
+                //CurrentMonthReading.READING_DATE = DateTime.Now.ToString();
                 //CurrentMonthReading.Meter_Reader = loggedInUser.Username;
                 CurrentMonthReading.ReadingTaken = true;
                 CurrentMonthReading.ReadingNotTaken = false;
@@ -186,7 +191,7 @@ namespace SampleMauiMvvmApp.ViewModels
                     CurrentMonthReading.ReadingTaken = false;
                 }
 
-
+                //GetLocation();
 
                 var newReading = await readingService.InsertReading(Models.Reading.GenerateNewFromWrapper(new ReadingWrapper(CurrentMonthReading)));
                 IsExist = true;
@@ -219,7 +224,7 @@ namespace SampleMauiMvvmApp.ViewModels
         }
 
         [RelayCommand]
-        public async Task OnTakePhotoClicked()
+        public async Task OnTakePhotoClicked(CancellationToken xToken)
         {
             var options = new StoreCameraMediaOptions { CompressionQuality = selectedCompressionQuality };
             var result = await CrossMedia.Current.TakePhotoAsync(options);
@@ -249,7 +254,7 @@ namespace SampleMauiMvvmApp.ViewModels
             ReadingMedia capturedImage = new()
             {
                 WaterReadingExportDataId = reading.WaterReadingExportDataID,
-                WaterReadingExportId = reading.WaterReadingExportID,
+                WaterReadingExportId = (int)reading.WaterReadingExportID,
                 Title = result.OriginalFilename,
                 MeterImage = base64Image,
                 DateTaken = DateTime.UtcNow.ToLongDateString(),
@@ -265,7 +270,31 @@ namespace SampleMauiMvvmApp.ViewModels
             await dbContext.Database.InsertAsync(capturedImage);
         }
 
-        public bool IsValid()
+
+        #region Get Current Location
+        public async void GetLocation()
+
+        {
+
+            var location = await geolocation.GetLastKnownLocationAsync();
+            if (location == null)
+
+            {
+                location = await geolocation.GetLocationAsync(new GeolocationRequest
+                {
+                    DesiredAccuracy = GeolocationAccuracy.Medium,
+                    Timeout = TimeSpan.FromSeconds(10)
+                    ,RequestFullAccuracy = true,
+
+                });
+                await Shell.Current.DisplayAlert($"Current Location!", $"Longitude is {location.Longitude} , Latitude {location.Latitude}", "OK");
+            }
+            return;
+        } 
+
+    #endregion
+
+    public bool IsValid()
         {
             try
             {

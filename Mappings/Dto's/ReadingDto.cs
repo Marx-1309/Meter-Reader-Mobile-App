@@ -10,8 +10,8 @@ namespace SampleMauiMvvmApp.Mappings.Dto_s
         public int WaterReadingExportDataID { get; set; }
         public string CUSTOMER_NUMBER { get; set; }
         public string? METER_NUMBER { get; set; }
-        public decimal CURRENT_READING { get; set; }
-        public decimal PREVIOUS_READING { get; set; }
+        public decimal? CURRENT_READING { get; set; }
+        public decimal? PREVIOUS_READING { get; set; }
         public int MonthID { get; set; }
         public int Year { get; set; }
         public int WaterReadingExportID { get; set; }
@@ -25,8 +25,7 @@ namespace SampleMauiMvvmApp.Mappings.Dto_s
         public decimal? CURRENT_READING { get; set; }
         public string? Comment { get; set; }
         public string? METER_READER { get; set; }
-        public byte[]? MeterImage { get; set; }
-        //public DateTime? READING_DATE { get; set; }
+        public string? ReadingDate { get; set; }
     }
 
     public class ImageSyncDto

@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using Bogus.Bson;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.Networking;
+using Newtonsoft.Json;
 using SampleMauiMvvmApp.API_URL_s;
 using SampleMauiMvvmApp.Mappings.Dto_s;
 using SampleMauiMvvmApp.Models;
@@ -13,14 +16,16 @@ namespace SampleMauiMvvmApp.Services
         private readonly IMapper _mapper;
         AuthenticationService _authenticationService;
         MonthService _monthService;
+        IConnectivity connectivity;
         public ReadingService(DbContext dbContext, IMapper mapper,
-            AuthenticationService authenticationService, MonthService monthService) : base(dbContext)
+            AuthenticationService authenticationService, MonthService monthService, IConnectivity _connectivity) : base(dbContext)
         {
             this._httpClient = new HttpClient();
             this._mapper = mapper;
             this._authenticationService = authenticationService;
             this._monthService = monthService;
             string StatusMessage = String.Empty;
+            this.connectivity = _connectivity;
         }
 
 
@@ -76,6 +81,8 @@ namespace SampleMauiMvvmApp.Services
         {
             try
             {
+                reading.ReadingDate = DateTime.Now.ToString("dd MMM yyyy h:mm tt");
+
                 await dbContext.Database.UpdateAsync(reading);
 
                 return reading;
@@ -295,17 +302,28 @@ namespace SampleMauiMvvmApp.Services
         public static int allReadingsItemsByCount=0;
         public async Task<int> SyncReadingsByMonthIdAsync(int Id)
         {
+            if (connectivity.NetworkAccess != NetworkAccess.Internet)
+            {
+                await Shell.Current.DisplayAlert("Failed to upload readings!",
+                    $"Please ensure connectivity and try again.", "OK");
+                return 0;
+            }
+
             try
             {
+                
                 if (Id != 0 || Id < 0)
                 {
                     var r = await dbContext.Database.Table<Reading>()
                         .Where(r => r.MonthID == Id && r.ReadingSync == false && r.CURRENT_READING != 0 && r.WaterReadingExportDataID != 0)
-                        .OrderBy(r => r.READING_DATE).ToListAsync();
+                        .OrderBy(r => r.ReadingDate).ToListAsync();
 
                     //var loggedInUser = await dbContext.Database.Table<LoginHistory>().OrderByDescending(r => r.LoginId).FirstAsync();
 
+
                     var response = _mapper.Map<List<UpdateReadingDto>>(r);
+
+                    
 
                     if (response.Count>0)
                     {
@@ -316,6 +334,7 @@ namespace SampleMauiMvvmApp.Services
                         {
                             //item.METER_READER = loggedInUser.Username;
                             item.Comment = item.Comment;
+
                             // Perform the update for each item in 'response'.
                             var IsSyncSuccess = await _httpClient.PutAsJsonAsync(Constants.PutReading, item);
                             StatusMessage = IsSyncSuccess.ReasonPhrase.ToString();
@@ -808,12 +827,17 @@ namespace SampleMauiMvvmApp.Services
                     }
                     else
                     {
+                        
                         var response = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetReading);
 
                         if (response.IsSuccessStatusCode)
                         {
                             // Read and deserialize the response to a List<Reading>
-                            var readingsFromSqlServer = await response.Content.ReadFromJsonAsync<List<ReadingDto>>();
+                            var readingsFromSqlServer = await response.Content.ReadAsStringAsync();
+                            //var readingsFromSqlServer = await response.Content.ReadFromJsonAsync<List<ReadingDto>>();
+
+                            var DeserializedReadingsFromSqlServer = JsonConvert.DeserializeObject<List<ReadingDto>>(readingsFromSqlServer);
+
                             var lastExportItemx = await dbContext.Database.Table<ReadingExport>()
                           .OrderByDescending(r => r.WaterReadingExportID)
                           .FirstOrDefaultAsync();
@@ -827,7 +851,7 @@ namespace SampleMauiMvvmApp.Services
                                 currentMonth = 12;
                                 lastExportItemx.Year -= 1;
                             }
-                            var currentExportReadings = readingsFromSqlServer.Where(r => r.MonthID == currentMonth && r.PREVIOUS_READING > 0).ToList();
+                            var currentExportReadings = DeserializedReadingsFromSqlServer.Where(r => r.MonthID == currentMonth && r.PREVIOUS_READING > 0).ToList();
 
                             List<Reading> readingsToUpdateToSqlite = new();
                             List<Reading> readingsToDeleteFromSqlite = new();
@@ -895,7 +919,7 @@ namespace SampleMauiMvvmApp.Services
                 .Where(r => r.WaterReadingExportID == lastExportItem.WaterReadingExportID
                 && r.MonthID == lastExportItem.MonthID && r.WaterReadingExportDataID != 0
                )
-                .OrderBy(r => r.READING_DATE)
+                .OrderBy(r => r.ReadingDate)
                 .ThenBy(r => r.CUSTOMER_NUMBER)
                 .ToListAsync();
             if (ListOfAllReading.Count > 0)

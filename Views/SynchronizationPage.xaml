@@ -4,20 +4,120 @@
              xmlns:skia="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
              x:Class="SampleMauiMvvmApp.Views.SynchronizationPage"
              Shell.FlyoutBehavior="Disabled"
-             Shell.NavBarIsVisible="False">
+             Shell.NavBarIsVisible="False"
+             Title="Scan For Exports">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsEnabled="False" IsVisible="False"></BackButtonBehavior>
     </Shell.BackButtonBehavior>
+
+  
+
     <Grid
-       ColumnDefinitions="*"
-       RowDefinitions="*,Auto">
-        <skia:SKLottieView
-                Source="sync_animation.json"
-                RepeatCount="-1"
-                SemanticProperties.Description="Be patient while we load your data!"
-                HeightRequest="350"
-                WidthRequest="350"
-                HorizontalOptions="Center" />
- 
+    ColumnDefinitions="*,*"
+    ColumnSpacing="5"
+    RowDefinitions="*,Auto"
+    RowSpacing="0"
+    BackgroundColor="White">
+
+        <ScrollView Grid.ColumnSpan="2">
+        <StackLayout
+        Grid.ColumnSpan="2"
+            Padding="15,10,15,50">
+            <!--<ScrollView>
+  <StackLayout VerticalOptions="FillAndExpand" Padding="20">
+
+      -->
+            <!-- Instructions Section -->
+            
+      <Label Text="Before Invoking the Data Synchronization"
+             FontAttributes="Bold"
+             FontSize="Large"
+             TextColor="#333333"
+             Margin="0,0,0,10"/>
+
+      <Label Text="Initialization:"
+             FontAttributes="Bold"
+             FontSize="Medium"
+             TextColor="#555555"
+             Margin="0,0,0,5"/>
+      <Label Text="No manual initialization is required. The synchronization process is managed by the DataSynchronizationManager class."
+             FontSize="Small"
+             TextColor="#777777"
+             Margin="0,0,0,10"/>
+
+      <Label Text="Check Internet Connection:"
+             FontAttributes="Bold"
+             FontSize="Medium"
+             TextColor="#555555"
+             Margin="0,0,0,5"/>
+      <Label Text="Ensure that your device is connected to the internet before initiating the synchronization process. The class checks for internet connectivity to proceed with data synchronization."
+             FontSize="Small"
+             TextColor="#777777"
+             Margin="0,0,0,20"/>
+
+      <Label Text="Initiating Data Synchronization"
+             FontAttributes="Bold"
+             FontSize="Medium"
+             TextColor="#555555"
+             Margin="0,0,0,5"/>
+      <Label Text="The data synchronization process is initiated automatically at appropriate intervals or events. You do not need to trigger it manually."
+             FontSize="Small"
+             TextColor="#777777"
+             Margin="0,0,0,20"/>
+
+      <Label Text="During the Synchronization Process"
+             FontAttributes="Bold"
+             FontSize="Medium"
+             TextColor="#555555"
+             Margin="0,0,0,5"/>
+      <Label Text="Connectivity Alert:"
+             FontAttributes="Bold"
+             FontSize="Small"
+             TextColor="#777777"
+             Margin="0,0,0,5"/>
+      <Label Text="If your device is not connected to the internet during synchronization, an alert will be displayed. Please check your internet connection and wait for synchronization to resume automatically."
+             FontSize="Small"
+             TextColor="#777777"
+             Margin="0,0,0,5"/>
+
+      <Label Text="New Data Alerts:"
+             FontAttributes="Bold"
+             FontSize="Small"
+             TextColor="#777777"
+             Margin="0,0,0,5"/>
+      <Label Text="If new data is found during the synchronization process, you will receive alerts notifying you of the data update. These alerts keep you informed about the ongoing synchronization status."
+             FontSize="Small"
+             TextColor="#777777"
+             Margin="0,0,0,5"/>
+
+      <Label Text="Observing Update Status:"
+             FontAttributes="Bold"
+             FontSize="Small"
+             TextColor="#777777"
+             Margin="0,0,0,5"/>
+      <Label Text="Keep an eye on alerts or messages displayed by the application. Successful synchronization will be indicated through relevant alerts."
+             FontSize="Small"
+             TextColor="#777777"
+             Margin="0,0,0,20"/>
+            <StackLayout>
+
+            </StackLayout>
+      </StackLayout>
+        </ScrollView>
+
+
+        <Button
+        Grid.Row="1"
+        Grid.ColumnSpan="2"
+        Margin="8"
+        CornerRadius="25"
+        Text="Scan Exports" />
+
+
+        <ActivityIndicator
+        Grid.RowSpan="2"
+        Grid.ColumnSpan="2"
+        HorizontalOptions="Fill"
+        VerticalOptions="Center" />
     </Grid>
 </ContentPage>

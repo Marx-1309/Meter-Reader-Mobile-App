@@ -30,7 +30,7 @@ namespace SampleMauiMvvmApp.Models
         public string ERF_NUMBER { get; set; }
         public string? METER_NUMBER { get; set; }
         public decimal CURRENT_READING { get; set; } 
-        public decimal PREVIOUS_READING { get; set; }
+        public decimal? PREVIOUS_READING { get; set; }
         [ForeignKey(typeof(Month), Name = "Id")]
         public int MonthID { get; set; }
         public int Year { get; set; }
@@ -42,9 +42,7 @@ namespace SampleMauiMvvmApp.Models
 
         [ForeignKey(typeof(User), Name = "Username")]
         public string? METER_READER { get; set; }
-
-        [DataType(DataType.Date)]
-        public string READING_DATE { get; set; } = DateTime.Now.ToLongDateString();
+        public string? ReadingDate { get; set; }  /*= DateTime.UtcNow.ToLocalTime();*/
         public bool? ReadingTaken { get; set; }
         [Ignore]
         public bool ReadingNotTaken { get; set; }
@@ -83,7 +81,7 @@ namespace SampleMauiMvvmApp.Models
                 CUSTOMER_ZONING = wrapper.Customer_zoning,
                 RouteNumber = wrapper.RouteNumber,
                 METER_READER = wrapper.MeterReader,
-                READING_DATE = wrapper.ReadingDate,
+                //READING_DATE = wrapper.ReadingDate,
                 ReadingTaken = wrapper.ReadingTaken,
                 ReadingNotTaken = wrapper.ReadingNotTaken,
                 ReadingSync = wrapper.ReadingSync,

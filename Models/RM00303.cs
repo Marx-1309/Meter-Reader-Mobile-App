@@ -1,9 +1,6 @@
-﻿using SQLite;
-using SQLiteNetExtensions.Attributes;
-
+﻿
 namespace SampleMauiMvvmApp.Models
 {
-    [Table("RM00303")]
     public class RM00303
     {
         [PrimaryKey]

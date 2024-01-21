@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace SampleMauiMvvmApp.API_URL_s
 {
     public static class Constants
@@ -29,6 +24,7 @@ namespace SampleMauiMvvmApp.API_URL_s
         public const string SyncListOfReadingsToSql = HOST+ "/api/Reading/list";
         public const string SyncReadingByCustomerId = HOST + "api/reading/{id}";
         public const string GetReadingById = HOST+"/api/Reading/{id}";
+        public const string GetWaterReadingExportDataID = HOST+ "/api/Reading/{WaterReadingExportDataID}";
         public const string PutReading = HOST+"/api/Reading/{id}";
         public const string DeleteReading = HOST+"/api/Reading/{id}";
         public const string SyncImages = HOST+"/api/Reading/Image/{id}";
@@ -55,7 +51,7 @@ namespace SampleMauiMvvmApp.API_URL_s
         //TN Card
         public const string TnWifi = "http://192.168.8.118:86";
         //Home Wi-Fi
-        public const string OkahaoHomeWifi = "http://192.168.178.78:82";
+        public const string OkahaoHomeWifi = "http://192.168.178.78:88";
         //My Phone
         public const string SamsungA51 = "http://192.168.104.175:88";
 
@@ -63,7 +59,12 @@ namespace SampleMauiMvvmApp.API_URL_s
 
         public const string RTCOFAPIWifi = "http://192.168.118.251:84";
 
-        public const string OkahaoTC = "http://192.168.1.94:88";
+        public const string OkahaoTC = "http://192.168.1.24:88";
+
+        public const string OkahaoTCStaff = "http://192.168.1.4:8088";
+        public const string RuacanaTcLocalPcDb = "http://192.168.178.72:88";
+
+
 
 
     }

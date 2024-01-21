@@ -1,9 +1,4 @@
-﻿using SQLite;
-using SQLiteNetExtensions.Attributes;
-using SampleMauiMvvmApp.ModelWrappers;
-using System.Text.Json.Serialization;
-using System.ComponentModel.DataAnnotations.Schema;
-
+﻿
 namespace SampleMauiMvvmApp.Models
 {
 

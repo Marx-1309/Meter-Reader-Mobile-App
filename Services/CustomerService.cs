@@ -1,13 +1,18 @@
-﻿using Newtonsoft.Json;
-using SampleMauiMvvmApp.Mappings.Dto_s;
-using SampleMauiMvvmApp.Models;
-using System.Net.Http.Json;
-
-
+﻿
 namespace SampleMauiMvvmApp.Services
 {
+    public interface ICustomerService
+    {
+        Task<List<Customer>> GetAllCustomers();
+        Task<Customer> GetCustomerByReading(Reading reading);
+        Task<Customer> GetCustomerByReadingId(string CustomerIdFromReading);
+        Task<Customer> GetCustomerDetails(string customerId);
+        Task<List<Customer>> GetListOfCustomerFromSql();
+        Task SetAuthToken();
+    }
+
     // https://www.youtube.com/watch?v=XFP8Np-uRWc&ab_channel=JamesMontemagno
-    public class CustomerService : BaseService
+    public class CustomerService : BaseService, ICustomerService
     {
         readonly ReadingService _readingService;
         HttpClient _httpClient;
@@ -134,7 +139,7 @@ namespace SampleMauiMvvmApp.Services
                 {
                     // 1. Retrieve the list of customers & readings from SQL Server and compare to get a list of customers that have existing readings in SQL..
                     var response = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetCustomer);
-                    var response2 = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetReading);
+                    var response2 = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetWaterReadingExportDataID);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -175,9 +180,9 @@ namespace SampleMauiMvvmApp.Services
                             await dbContext.Database.InsertAllAsync(newCustomersNotInSQLite);
                             //await _readingService.GetListOfPrevMonthReadingFromSql();
                         }
-                        else {return null; }
-                        
-                        
+                        else { return null; }
+
+
 
 
                         // Update the CustomerList with the combined list

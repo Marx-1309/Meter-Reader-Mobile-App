@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using SampleMauiMvvmApp.Mappings.Dto_s;
-using SampleMauiMvvmApp.Models;
-
+﻿
 namespace SampleMauiMvvmApp.Mappings.Maps
 {
     public class ClassDtoMapping : Profile

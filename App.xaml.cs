@@ -1,7 +1,4 @@
-﻿using SampleMauiMvvmApp.Models;
-using SampleMauiMvvmApp.Services;
-
-namespace SampleMauiMvvmApp;
+﻿namespace SampleMauiMvvmApp;
 
 public partial class App : Application
 {

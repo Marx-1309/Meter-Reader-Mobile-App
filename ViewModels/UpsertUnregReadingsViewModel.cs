@@ -1,14 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.IdentityModel.Tokens;
-using SampleMauiMvvmApp.Models;
-using SampleMauiMvvmApp.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace SampleMauiMvvmApp.ViewModels
 {
     [QueryProperty(nameof(ReadingDetail), "ReadingDetail")]

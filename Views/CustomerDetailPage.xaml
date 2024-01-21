@@ -32,12 +32,17 @@
                         <Label FontSize="22" FontAttributes="Bold" Text="{Binding CustPrevReading}" TextColor="Blue" />
                         <Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="CURRENT READING" />
                         <Label FontSize="22" FontAttributes="Bold" Text="{Binding CustCurrentReading}" TextColor="Blue" />
+
+                        <Label FontSize="12" IsVisible="{Binding IsCurrentReading}" TextColor="Grey" FontAttributes="Italic,Bold" Text="Total Usage" />
+                        <Label FontSize="22" IsVisible="{Binding IsCurrentReading}" FontAttributes="Bold" Text="{Binding TotalUsage}" TextColor="Blue" />
+                        
                     </StackLayout>
                     <StackLayout Orientation="Vertical" Spacing="5" HorizontalOptions="CenterAndExpand">
                         <Entry Grid.Row="0" BackgroundColor="LightGrey" Placeholder="Enter new reading here"  WidthRequest="300" IsTextPredictionEnabled="True" IsSpellCheckEnabled="True" Text="{Binding VmReading.C_reading}" Keyboard="Numeric"/>
                         <toolkit:Expander>
                             <toolkit:Expander.Header>
-                                <Label HorizontalOptions="CenterAndExpand" Text="Leave a comment..." FontAttributes="Italic" FontSize="Medium"/>
+                                <Label HorizontalOptions="CenterAndExpand" Text="Leave a comment..." FontAttributes="Italic" FontSize="Medium">
+                                </Label>
 
                             </toolkit:Expander.Header>
                             <HorizontalStackLayout Padding="10">
@@ -59,7 +64,23 @@
 
                             </HorizontalStackLayout>
                         </toolkit:Expander>
-                        <Button Grid.Row="2" CornerRadius="20" WidthRequest="200" Text="Create New Reading" Command="{Binding CreateReadingCommand}" />
+                        <Button Grid.Row="2"
+                                CornerRadius="20"
+                                WidthRequest="200"
+                                Text="Create New Reading"
+                                Command="{Binding CreateReadingCommand}">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button"
+                                 Binding="{Binding IsUpdate}"
+                                 Value="true">  
+                                 <Setter Property="Text" Value="Update Reading"></Setter>
+                                  <Setter Property="BackgroundColor"  Value="OrangeRed"></Setter>
+                                   <Setter Property="TextColor" Value="White"></Setter>
+                                   <Setter Property="FontAttributes" Value="Bold"></Setter>
+
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
                     </StackLayout>
                 </VerticalStackLayout>
             </Frame>

@@ -1,13 +1,4 @@
-﻿using SampleMauiMvvmApp.Models;
-using SampleMauiMvvmApp.ModelWrappers;
-using SampleMauiMvvmApp.Services;
-using SampleMauiMvvmApp.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace SampleMauiMvvmApp.SearchHandlers 
 {
     public partial class CustomerSearchHandler : SearchHandler

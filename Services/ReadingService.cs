@@ -1,16 +1,40 @@
-﻿using AutoMapper;
-using Bogus.Bson;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.Maui.Networking;
-using Newtonsoft.Json;
-using SampleMauiMvvmApp.API_URL_s;
-using SampleMauiMvvmApp.Mappings.Dto_s;
-using SampleMauiMvvmApp.Models;
-using System.Net.Http.Json;
+﻿
+
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace SampleMauiMvvmApp.Services
 {
-    public class ReadingService : BaseService
+    public interface IReadingService
+    {
+        Task<int> CountReadingsByCustomerId(string customerId);
+        Task<Reading> DeleteReading(Reading reading);
+        Task<List<Reading>> GetAllCaptureAndUncapturedReadings();
+        Task<List<Reading>> GetAllCapturedReadings();
+        Task<List<Reading>> GetAllUncapturedByIdAsync(Customer customerId);
+        Task<List<Reading>> GetAllUncapturedReadings();
+        Task<Reading> GetCurrentMonthReadingByCustIdAsync(string Id);
+        Task<Reading> GetLastReadingByIdAsync(string Id);
+        Task<int?> GetLatestExportItemId();
+        Task<int?> GetLatestExportItemMonthId();
+        Task<int?> GetLatestExportItemYear();
+        Task<List<Reading>> GetListOfCapturedReadings();
+        Task<List<ReadingDto>> GetListOfPrevMonthReadingFromSql();
+        Task<List<ReadingExport>> GetListOfReadingExportFromSql();
+        Task<List<ReadingDto>> GetListOfReadingFromSql();
+        Task<List<Reading>> GetListOfReadingsNotSynced();
+        Task<List<Reading>> GetListOfUncapturedReadings();
+        Task<List<Reading>> GetListOfUncapturedReadingsByMonthId(int MonthId);
+        Task<List<Reading>> GetReadingsByCustomerId(string customerId);
+        Task<List<Reading>> GetReadingsByMonthId(int monthId);
+        Task<Reading> InsertReading(Reading reading);
+        Task<bool> IsPrevMonthReadingsExist();
+        Task<bool> IsReadingExistForMonthId(string customer);
+        Task<int> SyncImages();
+        Task<int> SyncReadingsByMonthIdAsync(int Id);
+        Task<Reading> UpdateReading(Reading reading);
+    }
+
+    public class ReadingService : BaseService, IReadingService
     {
         HttpClient _httpClient;
         private readonly IMapper _mapper;
@@ -60,6 +84,69 @@ namespace SampleMauiMvvmApp.Services
             return null;
         }
 
+        public async Task<List<Reading>> GetUncapturedReadingsByArea(LocationReadings? x ,string c = "CBD")
+        {
+            try
+            {
+                if (x.AREANAME != null)
+                {
+                    
+                    //Check if the area is unknown
+
+                    var trimmedArea = x.AREANAME.Trim();
+
+                    var b = await dbContext.Database.Table<Reading>()
+                        .ToListAsync();
+
+                    List<Reading> trimmedR = await TrimObjProperties(b);
+                    //List<Reading> readings = trimmedArea;
+
+                    var areas =  trimmedR
+                        .Where(x => x.AREA == trimmedArea && x.CURRENT_READING == 0)
+                        .ToList();
+
+
+
+
+                    if (areas.Count == 0)
+                    {
+                        StatusMessage = $"All reading captured for {trimmedArea}";
+                    }
+
+                    return areas;
+                }
+                
+                else
+                {
+                    StatusMessage = "Invalid area parameter (null).";
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Failed to retrieve data. {ex.Message}";
+            }
+
+            return new List<Reading>();
+        }
+
+        public async Task<List<Reading>> TrimObjProperties(List<Reading> readings)
+        {
+            try
+            {
+               foreach(var i in readings)
+                {
+                    i.AREA = i.AREA?.Trim();
+                }
+                return readings;
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Failed to retrieve data. {ex.Message}";
+            }
+
+            return new List<Reading>();
+        }
+
         public async Task<int> CountReadingsByCustomerId(string customerId)
         {
             try
@@ -81,6 +168,7 @@ namespace SampleMauiMvvmApp.Services
         {
             try
             {
+                var token = await SecureStorage.GetAsync("Token");
                 reading.ReadingDate = DateTime.Now.ToString("dd MMM yyyy h:mm tt");
 
                 await dbContext.Database.UpdateAsync(reading);
@@ -299,19 +387,19 @@ namespace SampleMauiMvvmApp.Services
             return null;
         }
 
-        public static int allReadingsItemsByCount=0;
+        public static int allReadingsItemsByCount = 0;
         public async Task<int> SyncReadingsByMonthIdAsync(int Id)
         {
-            if (connectivity.NetworkAccess != NetworkAccess.Internet)
-            {
-                await Shell.Current.DisplayAlert("Failed to upload readings!",
-                    $"Please ensure connectivity and try again.", "OK");
-                return 0;
-            }
+            //if (connectivity.NetworkAccess != NetworkAccess.Internet)
+            //{
+            //    await Shell.Current.DisplayAlert("Failed to upload readings!",
+            //        $"Please ensure connectivity and try again.", "OK");
+            //    return 0;
+            //}
 
             try
             {
-                
+
                 if (Id != 0 || Id < 0)
                 {
                     var r = await dbContext.Database.Table<Reading>()
@@ -320,65 +408,76 @@ namespace SampleMauiMvvmApp.Services
 
                     //var loggedInUser = await dbContext.Database.Table<LoginHistory>().OrderByDescending(r => r.LoginId).FirstAsync();
 
-
-                    var response = _mapper.Map<List<UpdateReadingDto>>(r);
-
-                    
-
-                    if (response.Count>0)
+                    if (r.Count>0)
                     {
-                        // Initialize a count variable to keep track of the number of items processed.
-                        int itemCount = 0;
+                        var response = _mapper.Map<List<UpdateReadingDto>>(r);
 
-                        foreach (var item in response)
+
+
+                        if (response.Count > 0)
                         {
-                            //item.METER_READER = loggedInUser.Username;
-                            item.Comment = item.Comment;
+                            // Initialize a count variable to keep track of the number of items processed.
+                            int itemCount = 0;
+                            var meterReader = Preferences.Default.Get("username", "Unknown");
 
-                            // Perform the update for each item in 'response'.
-                            var IsSyncSuccess = await _httpClient.PutAsJsonAsync(Constants.PutReading, item);
-                            StatusMessage = IsSyncSuccess.ReasonPhrase.ToString();
-
-                            if (IsSyncSuccess.IsSuccessStatusCode)
+                            foreach (var item in response)
                             {
-                                // Update the item in the local database.
-                                var updatedItem = await dbContext.Database.Table<Reading>()
-                                    .Where(r => r.WaterReadingExportDataID == item.WaterReadingExportDataID)
-                                    .FirstOrDefaultAsync();
+                                
+                                item.METER_READER = meterReader;
+                                item.Comment = item.Comment;
 
+                                // Perform the update for each item in 'response'.
+                                var IsSyncSuccess = await _httpClient.PutAsJsonAsync(Constants.PutReading, item);
+                                StatusMessage = IsSyncSuccess.RequestMessage.ToString();
 
-                                if (updatedItem != null)
+                                if (IsSyncSuccess.IsSuccessStatusCode)
                                 {
-                                    updatedItem.ReadingTaken = true;
-                                    updatedItem.ReadingSync = true;
+                                    // Update the item in the local database.
+                                    var updatedItem = await dbContext.Database.Table<Reading>()
+                                        .Where(r => r.WaterReadingExportDataID == item.WaterReadingExportDataID)
+                                        .FirstOrDefaultAsync();
 
-                                    // Save the changes to the local database.
-                                    await dbContext.Database.UpdateAsync(updatedItem);
+
+                                    if (updatedItem != null)
+                                    {
+                                        updatedItem.ReadingTaken = true;
+                                        updatedItem.ReadingSync = true;
+
+                                        // Save the changes to the local database.
+                                        await dbContext.Database.UpdateAsync(updatedItem);
+                                    }
+
+                                    // Increment the count for each successfully processed item.
+                                    itemCount++;
                                 }
-
-                                // Increment the count for each successfully processed item.
-                                itemCount++;
+                                else
+                                {
+                                    StatusMessage = IsSyncSuccess.IsSuccessStatusCode.ToString();
+                                    await Shell.Current.DisplayAlert($"Uups ,something went wrong while syncing readings.", $"{StatusMessage}", "OK");
+                                }
                             }
-                            else
+
+                            //Check if there are any existing images
+                            List<ReadingMedia> readingMedias = new();
+                            readingMedias = await dbContext.Database.Table<ReadingMedia>().ToListAsync();
+                            if (readingMedias.Any())
                             {
-                                StatusMessage = IsSyncSuccess.IsSuccessStatusCode.ToString();
-                                // Handle any failure cases here, if needed.
+                                await SyncImages();
                             }
+
+                            // After processing asyncImageCountll items, store the count in the static variable.
+                            allReadingsItemsByCount = itemCount;
+                            await Shell.Current.DisplayAlert($"{allReadingsItemsByCount} Reading(s) Synced ", "Successfully", "OK");
+                            await Shell.Current.DisplayAlert($"{readingMedias.Count} Image(s) Synced ", "Successfully", "OK");
+                            await Task.Delay(500);
+                            await Shell.Current.GoToAsync("..");
+                            return allReadingsItemsByCount;
+
+
                         }
-
-                        
-                        var syncImageCount = await SyncImages();
-
-                        // After processing all items, store the count in the static variable.
-                        allReadingsItemsByCount = itemCount;
-                        await Shell.Current.DisplayAlert($"{allReadingsItemsByCount} Reading(s) Synced ","Successfully", "OK");
-                        await Shell.Current.DisplayAlert($"{syncImageCount} Image(s) Synced ", "Successfully", "OK");
-                        await Task.Delay(500);
-                        await Shell.Current.GoToAsync("..");
-                        return allReadingsItemsByCount;
-
-                        
                     }
+                    await Shell.Current.DisplayAlert("No readings to be synced. ", "Add new readings and try again !", "OK");
+
                 }
             }
             catch (Exception ex)
@@ -392,10 +491,9 @@ namespace SampleMauiMvvmApp.Services
 
 
 
-        public static int allImageItemsByCount=0;
+        public static int allImageItemsByCount = 0;
         public async Task<int> SyncImages()
         {
-            int Count = 0;
             try
             {
                 var lastExportItem = await dbContext.Database.Table<ReadingExport>()
@@ -409,7 +507,7 @@ namespace SampleMauiMvvmApp.Services
 
                 var response = _mapper.Map<List<ImageSyncDto>>(images);
 
-                if (response.Count>0)
+                if (response.Count > 0)
                 {
                     // Initialize a count variable to keep track of the number of items processed.
                     int itemCount = 0;
@@ -485,12 +583,12 @@ namespace SampleMauiMvvmApp.Services
                     .OrderByDescending(r => r.WaterReadingExportID)
                     .FirstOrDefaultAsync();
 
-
+            var lor = await dbContext.Database.Table<Reading>()
+               .ToListAsync();
 
             var ListOfAllReading = await dbContext.Database.Table<Reading>()
                 .Where(r => r.WaterReadingExportID == lastExportItem.WaterReadingExportID
                 && r.MonthID == lastExportItem.MonthID
-
                 && r.CURRENT_READING == 0)
                 .OrderBy(r => r.ERF_NUMBER)
                 //.ThenBy(r=>r.CUSTOMER_NUMBER)
@@ -516,11 +614,18 @@ namespace SampleMauiMvvmApp.Services
                 .OrderBy(r => r.ERF_NUMBER)
                 //.ThenBy(r=>r.CUSTOMER_NUMBER)
                 .ToListAsync();
+
+            var x = await dbContext.Database.Table<Reading>()
+                .Where(r=>r.CURRENT_READING > 0)
+                //.ThenBy(r=>r.CUSTOMER_NUMBER)
+                .ToListAsync();
+
+
             if (ListOfAllReading.Count > 0)
             {
                 return ListOfAllReading;
             }
-            return null;
+            return new List<Reading>();
         }
 
         #region GetListOfReadingFromSql
@@ -538,7 +643,7 @@ namespace SampleMauiMvvmApp.Services
                         // Retrieve all the IDs of the existing Reading items in the SQLite database
                         var existingIds = readingsCount.Select(r => r.WaterReadingExportDataID).ToList();
 
-                        var response = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetReading);
+                        var response = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetWaterReadingExportDataID);
 
                         if (response.IsSuccessStatusCode)
                         {
@@ -790,7 +895,6 @@ namespace SampleMauiMvvmApp.Services
 
 
         #region Download Prev Month Readings 
-        List<Reading> prevMonthReadings;
         List<Reading> NonMatchingReadings = new();
         public async Task<List<ReadingDto>> GetListOfPrevMonthReadingFromSql()
         {
@@ -827,8 +931,8 @@ namespace SampleMauiMvvmApp.Services
                     }
                     else
                     {
-                        
-                        var response = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetReading);
+
+                        var response = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetWaterReadingExportDataID);
 
                         if (response.IsSuccessStatusCode)
                         {
@@ -851,7 +955,7 @@ namespace SampleMauiMvvmApp.Services
                                 currentMonth = 12;
                                 lastExportItemx.Year -= 1;
                             }
-                            var currentExportReadings = DeserializedReadingsFromSqlServer.Where(r => r.MonthID == currentMonth && r.PREVIOUS_READING > 0).ToList();
+                            var currentExportReadings = DeserializedReadingsFromSqlServer.Where(r => r.MonthID == currentMonth && r.PREVIOUS_READING >= 0).ToList();
 
                             List<Reading> readingsToUpdateToSqlite = new();
                             List<Reading> readingsToDeleteFromSqlite = new();
@@ -861,7 +965,7 @@ namespace SampleMauiMvvmApp.Services
 
                                 // Find matching records in SQLite
                                 var matchingRecords = await dbContext.Database.Table<Reading>()
-                                    .Where(r => r.CUSTOMER_NUMBER == readingDto.CUSTOMER_NUMBER && r.MonthID == currentMonth && r.CURRENT_READING == 0)
+                                    .Where(r => r.CUSTOMER_NUMBER == readingDto.CUSTOMER_NUMBER && r.MonthID == currentMonth && r.Year == prevYearIdx /*&& r.CURRENT_READING == 0*/)
                                     .ToListAsync();
                                 if (matchingRecords.Count != 0)
                                 {
@@ -871,7 +975,14 @@ namespace SampleMauiMvvmApp.Services
                                         record.WaterReadingExportDataID = readingDto.WaterReadingExportDataID;
                                         record.METER_NUMBER = readingDto.METER_NUMBER.Trim();
                                         record.PREVIOUS_READING = readingDto.PREVIOUS_READING;
-
+                                        record.CURRENT_READING = (decimal)readingDto.CURRENT_READING;
+                                        record.AREA = readingDto.AREA;
+                                        
+                                        if (record.CURRENT_READING > 0)
+                                        {
+                                            record.ReadingSync = true;
+                                        }
+  
                                         readingsToUpdateToSqlite.Add(record);
                                         // Update other properties as needed.
                                     }
@@ -928,6 +1039,53 @@ namespace SampleMauiMvvmApp.Services
             }
             return null;
         }
+
+        public async Task<List<LocationReadings>> GetListOfLocations()
+        {
+            try
+            {
+                var allReadings = await dbContext.Database.Table<Reading>().Where(r=> r.CURRENT_READING == 0).ToListAsync();
+
+                var distinctLocations = allReadings.Select(r => r.AREA?.Trim()).Distinct().ToList();
+
+                var listOfLocations = new List<LocationReadings>();
+                foreach (var location in distinctLocations)
+                {
+                    var count = allReadings.Count(r => r.AREA?.Trim() == location && r.CURRENT_READING >=0);
+    
+
+                    LocationReadings loc = new LocationReadings();
+
+                    if (string.IsNullOrEmpty(location)|| location.Equals("NULL") || location == null )
+                    {
+                        loc.AREANAME = "Unknown Area";
+                        loc.NumberOfReadings = count;
+                    }
+                    else
+                    {
+                        loc.AREANAME = location;
+                        loc.NumberOfReadings = count;
+                    }
+
+                    
+                    loc.IsAllCaptured = false;
+                    loc.IsAllNotCaptured = !loc.IsAllCaptured;
+
+                    // Add all the location to the list 
+                    listOfLocations.Add(loc);
+
+                    StatusMessage = "Looks like all the locations are captured!";
+                }
+
+                return listOfLocations;
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = ex.Message;
+                return new List<LocationReadings>();
+            }
+        }
+
 
     }
 }

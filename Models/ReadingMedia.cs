@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿global using Newtonsoft.Json;
 using SQLite;
 using System;
 using System.Collections.Generic;

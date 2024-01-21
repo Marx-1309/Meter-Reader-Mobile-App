@@ -1,5 +1,3 @@
-using SampleMauiMvvmApp.ViewModels;
-
 namespace SampleMauiMvvmApp.Views;
 
 public partial class UpsertUnregReadingPage : ContentPage

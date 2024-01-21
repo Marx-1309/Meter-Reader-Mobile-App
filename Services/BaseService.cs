@@ -1,11 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Newtonsoft.Json;
-using SampleMauiMvvmApp.Fakers;
-using SampleMauiMvvmApp.Models;
-using SQLite;
-using System.Net.Http.Json;
-
-
+﻿
 namespace SampleMauiMvvmApp.Services
 {
     public class BaseService : ObservableObject
@@ -66,7 +59,7 @@ namespace SampleMauiMvvmApp.Services
                     await _readingService.GetListOfPrevMonthReadingFromSql();
                 }
                 //Check if all the existing readings are synced!
-                await _readingExportService.ScanForNewExports();
+                //await _readingExportService.ScanForNewExports();
             }
         }
 
@@ -112,11 +105,12 @@ namespace SampleMauiMvvmApp.Services
                     reading.CUSTOMER_NUMBER = customer.CUSTNMBR;
                     reading.CUSTOMER_NAME = customer.CUSTNAME;
                     reading.ERF_NUMBER = customer.ZIP;
-                    reading.AREA = customer.STATE;
+                    //reading.AREA = customer.STATE;
                     reading.CUSTOMER_ZONING = customer.CUSTCLAS;
                     reading.CURRENT_READING = 0;
                     reading.Comment = string.Empty;
                     reading.MonthID = currentMonthId;
+                    reading.Year = currentYearId;
                     //reading.Year = await _readingService.GetLatestExportItemYear() ?? reading.Year;
                     //reading.READING_DATE = DateTime.UtcNow.ToLongDateString();
                     reading.WaterReadingExportID = currentExportId;

@@ -1,13 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using SampleMauiMvvmApp.Models;
-using SampleMauiMvvmApp.ModelWrappers;
-using SampleMauiMvvmApp.Services;
-using SampleMauiMvvmApp.Views;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-
+﻿
 namespace SampleMauiMvvmApp.ViewModels
 {
     public partial class MonthViewModel : BaseViewModel

@@ -1,6 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-
-namespace SampleMauiMvvmApp.ViewModels
+﻿namespace SampleMauiMvvmApp.ViewModels
 {
     public partial class BaseViewModel : ObservableObject
     {

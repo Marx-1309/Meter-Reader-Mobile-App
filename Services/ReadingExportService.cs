@@ -1,15 +1,18 @@
-﻿using Bogus;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Maui;
-using Newtonsoft.Json;
-using SampleMauiMvvmApp.Fakers;
-using SampleMauiMvvmApp.Models;
-using SampleMauiMvvmApp.Views;
-using System.Net.Http.Json;
+﻿
 
 namespace SampleMauiMvvmApp.Services
 {
-    public class ReadingExportService
+    public interface IReadingExportService
+    {
+        Task<List<ReadingExport>> CheckForNewExportInSql();
+        Task CheckNewExports();
+        Task DeleteOldReadings();
+        Task GetLatestExportItemIntoSqlite();
+        Task ScanForNewExports();
+        Task SeedData(DbContext dbContext);
+    }
+
+    public class ReadingExportService : IReadingExportService
     {
         HttpClient _httpClient;
         public string StatusMessage;
@@ -163,7 +166,7 @@ namespace SampleMauiMvvmApp.Services
                     //Get lists from APi
                     var responseSql1 = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.ReadingExport);
                     var responseSql2 = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetCustomer);
-                    var responseSql3 = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetReading);
+                    var responseSql3 = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetWaterReadingExportDataID);
 
                     //Get Lists
                     var exportsList = await dbContext.Database.Table<ReadingExport>().ToListAsync();
@@ -219,7 +222,7 @@ namespace SampleMauiMvvmApp.Services
                             .ToList();
                         //Firstly i filtered out the new customers that do not exist in the customer's table 
                         //Here filter out the new customers from the APi that do have existing readings in the readings table and save them
-                        var newCustomersToInsert = newCustomers.Where(r=> existingCustomerReadingIds.Contains(r.CUSTNMBR)).ToList();
+                        var newCustomersToInsert = newCustomers.Where(r => existingCustomerReadingIds.Contains(r.CUSTNMBR)).ToList();
                         //Here check if the newCustomerToInsert have an existing reading in Readings from the API (use customerNumber)
 
 
@@ -234,27 +237,27 @@ namespace SampleMauiMvvmApp.Services
                         //Insert Non-Existing Exports
                         if (newExportToInsert.Any())
                         {
-                            await Shell.Current.DisplayAlert("New Reading Exports Found!",$"We Are Updating The App!", "OK");
+                            await Shell.Current.DisplayAlert("New Reading Exports Found!", $"We Are Updating The App!", "OK");
                             await Shell.Current.GoToAsync($"{nameof(SynchronizationPage)}");
 
 
-                            List <ReadingExport> exportsItemsToDelete = await dbContext.Database.Table<ReadingExport>().ToListAsync();
+                            List<ReadingExport> exportsItemsToDelete = await dbContext.Database.Table<ReadingExport>().ToListAsync();
 
                             foreach (var exportItem in exportsItemsToDelete)
                             {
-                               await dbContext.Database.DeleteAsync(exportItem);
+                                await dbContext.Database.DeleteAsync(exportItem);
                             }
 
                             List<UnregReadings> unregReadingsToDelete = await dbContext.Database.Table<UnregReadings>().ToListAsync();
 
-                            if (unregReadingsToDelete.Any()) 
+                            if (unregReadingsToDelete.Any())
                             {
                                 foreach (var unregReadingitem in unregReadingsToDelete)
                                 {
                                     await dbContext.Database.DeleteAsync(unregReadingitem);
                                 }
                             }
-                            
+
 
                             LatestExportList.Clear();
                             LatestExportList.AddRange(newExportToInsert);
@@ -382,7 +385,7 @@ namespace SampleMauiMvvmApp.Services
                         }
                         else
                         {
-                            return;
+                            await Shell.Current.DisplayAlert("No New Exports Found!", $"You Can Proceed Using The App! ", "OK");
                         }
                     }
 
@@ -408,12 +411,12 @@ namespace SampleMauiMvvmApp.Services
                 try
                 {
 
-                    if (connectivity.NetworkAccess != NetworkAccess.Internet)
-                    {
-                        await Shell.Current.DisplayAlert("No connectivity!",
-                            $"Please check internet and try again.", "OK");
-                        return null;
-                    }
+                    //if (connectivity.NetworkAccess != NetworkAccess.Internet)
+                    //{
+                    //    await Shell.Current.DisplayAlert("No connectivity!",
+                    //        $"Please check internet and try again.", "OK");
+                    //    return null;
+                    //}
                     //Get lists from APi
                     var responseSql1 = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.ReadingExport);
 
@@ -464,6 +467,7 @@ namespace SampleMauiMvvmApp.Services
                     // Handle any other exception that might occur during the API call
                     StatusMessage = $"Error." + ex.Message;
                 }
+
             }
 
             // Return the ReadingExport list, even if it's null (client code should handle this)

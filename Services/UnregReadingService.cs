@@ -1,13 +1,16 @@
-﻿using SampleMauiMvvmApp.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace SampleMauiMvvmApp.Services
 {
-    public class UnregReadingService 
+    public interface IUnregReadingService
+    {
+        Task<int> AddUnregReading(UnregReadings readingModel);
+        Task<bool> CheckExistingReadingListById(int Id);
+        Task<int> DeleteUnregReading(UnregReadings readingModel);
+        Task<List<UnregReadings>> GetUnregReadingList();
+        Task<int> UpdateUnregReading(UnregReadings readingModel);
+    }
+
+    public class UnregReadingService : IUnregReadingService
     {
         protected readonly DbContext _dbConnection;
         public UnregReadingService(DbContext dbContext)
@@ -41,7 +44,7 @@ namespace SampleMauiMvvmApp.Services
                 .Where(r => r.MeterNo == i)
                 .ToListAsync();
 
-            if(readingListById.Any())
+            if (readingListById.Any())
             {
                 return true;
             };

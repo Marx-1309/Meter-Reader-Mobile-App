@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace SampleMauiMvvmApp.Services
 {
     public class DatabaseConstants
     {
-        public const string DatabaseFileName = "RTCOF24.db3";
+        public const string DatabaseFileName = "RTCOF201.db3";
 
         public const SQLite.SQLiteOpenFlags Flags =
             // open the database in read/write mode

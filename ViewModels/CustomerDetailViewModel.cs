@@ -1,41 +1,17 @@
-﻿using Ardalis.GuardClauses;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Maui.Graphics.Text;
-using Microsoft.VisualBasic;
-using Plugin.Media;
-using Plugin.Media.Abstractions;
-//using Plugin.Media;
-//using Plugin.Media.Abstractions;
-using SampleMauiMvvmApp.Messages;
-using SampleMauiMvvmApp.Models;
-using SampleMauiMvvmApp.ModelWrappers;
-using SampleMauiMvvmApp.Services;
-using SampleMauiMvvmApp.Views;
-
-
-namespace SampleMauiMvvmApp.ViewModels
+﻿namespace SampleMauiMvvmApp.ViewModels
 {
     [QueryProperty("Customer", "Customer")]
     [QueryProperty("Reading", "Reading")]
     public partial class CustomerDetailViewModel : BaseViewModel
     {
         DbContext dbContext;
-        HttpClient client;
         ReadingService readingService;
         MonthService monthService;
         CustomerService customerService;
-        IConnectivity connectivity;
-
         [ObservableProperty]
         CustomerWrapper customer;
-
         [ObservableProperty]
         ReadingWrapper reading;
-
         [ObservableProperty]
         string erfNumber;
         [ObservableProperty]
@@ -45,7 +21,7 @@ namespace SampleMauiMvvmApp.ViewModels
         [ObservableProperty]
         decimal custCurrentReading;
         [ObservableProperty]
-        string percentageChange;
+        string totalUsage;
         [ObservableProperty]
         string meterNumber;
         [ObservableProperty]
@@ -56,15 +32,19 @@ namespace SampleMauiMvvmApp.ViewModels
         int currentMonth;
         [ObservableProperty]
         public static bool isExist;
+        [ObservableProperty]
+        bool isUpdate;
+        [ObservableProperty]
+        bool isCurrentReading;
+
         private int selectedCompressionQuality = 25;
         IGeolocation geolocation;
         public CustomerDetailViewModel(DbContext _dbContext, ReadingService readingService,
-            CustomerService _customerService, MonthService _monthService, IConnectivity _connectivity, IGeolocation geolocation)
+            CustomerService _customerService, MonthService _monthService, IGeolocation geolocation)
         {
             Title = "Customer Detail Page";
             this.dbContext = _dbContext;
             this.readingService = readingService;
-            this.connectivity = _connectivity;
             this.customerService = _customerService;
             this.monthService = _monthService;
             this.geolocation = geolocation;
@@ -89,7 +69,7 @@ namespace SampleMauiMvvmApp.ViewModels
         [RelayCommand]
         public async Task GoBackAsync()
         {
-            await Shell.Current.GoToAsync("..");
+            await Shell.Current.GoToAsync("../..");
         }
 
         [RelayCommand]
@@ -103,7 +83,39 @@ namespace SampleMauiMvvmApp.ViewModels
                 CustCurrentReading = (decimal)reading.CURRENT_READING;
                 MeterNumber = reading.METER_NUMBER;
                 RouteNumber = reading.RouteNumber;
-                CustStateErf = $"{reading.AREA.Trim()} - (ERF {reading.ERF_NUMBER.Replace("ERF","").Trim()})";
+                TotalUsage = $"{((decimal?)reading.CURRENT_READING >= (decimal?)reading.PREVIOUS_READING ? (decimal?)reading.CURRENT_READING - (decimal?)reading.PREVIOUS_READING : 0)}";
+                bool isCurrentReading = IsCurrentReadingCaptured(reading.CURRENT_READING);
+                if (isCurrentReading)
+                {
+                    IsCurrentReading = true;
+                }
+                else
+                {
+                    IsCurrentReading = false;
+                }
+
+
+                //CustStateErf = $"{reading.AREA.Trim()} - (ERF {reading.ERF_NUMBER.Replace("ERF","").Trim()})" ?? "NO ERF";
+                bool result = IsUpdateMode(CustCurrentReading);
+                if (result)
+                {
+                    IsUpdate = true;
+                }
+                else
+                {
+                    IsUpdate = false;
+                }
+
+                if (string.IsNullOrEmpty(reading.AREA) || !Regex.IsMatch(reading.ERF_NUMBER, @"\d") || reading.AREA is null)
+                {
+                    
+                    CustStateErf = $"{reading?.AREA?.Trim()} - NO ERF";
+                }
+                else
+                {
+                    CustStateErf = $"{reading.AREA.Trim()} - (ERF {reading.ERF_NUMBER.Replace("ERF", "").Trim()})";
+                }
+
                 Title = $"{reading.CUSTOMER_NAME.Trim()}";
 
             }
@@ -200,7 +212,14 @@ namespace SampleMauiMvvmApp.ViewModels
                 if (newReading != null)
                 {
                     var latestMonthName = await monthService.GetMonthNameById();
-                    await Shell.Current.DisplayAlert($"Success!", $"A reading for {latestMonthName} Created!", "OK");
+                    if(IsUpdate) 
+                    {
+                        await Shell.Current.DisplayAlert($"Success!", $"A reading for {CurrentMonthReading.CUSTOMER_NAME.Substring(0,15).Trim()}... Updated!", "OK");
+                    }
+                    else
+                    {
+                        await Shell.Current.DisplayAlert($"Success!", $"A reading for {CurrentMonthReading.CUSTOMER_NAME.Substring(0,15).Trim() ?? $"customer"} Created!", "OK");
+                    }
 
                     // Propagate the new reading to the main reading page.
                     WeakReferenceMessenger.Default.Send(new ReadingCreateMessage(newReading));
@@ -294,7 +313,7 @@ namespace SampleMauiMvvmApp.ViewModels
 
     #endregion
 
-    public bool IsValid()
+        public bool IsValid()
         {
             try
             {
@@ -309,6 +328,30 @@ namespace SampleMauiMvvmApp.ViewModels
             }
 
             return true;
+        }
+
+        public bool IsCurrentReadingCaptured(decimal? Currreading)
+        {
+            if ((decimal?)Currreading > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool IsUpdateMode(decimal existingReading)
+        {
+            if (existingReading > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         [RelayCommand]

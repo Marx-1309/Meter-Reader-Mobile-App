@@ -1,7 +1,4 @@
-﻿using Bogus;
-using Microsoft.Maui;
-using SampleMauiMvvmApp.Models;
-
+﻿
 namespace SampleMauiMvvmApp.Fakers
 {
     public class ReadingFaker : Faker<Reading>

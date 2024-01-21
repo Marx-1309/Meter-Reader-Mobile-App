@@ -4,9 +4,9 @@ namespace SampleMauiMvvmApp.Views;
 
 public partial class LoadNewExportPage : ContentPage
 {
-	LoadingViewModel _viewModel;
+	OnboardingViewModel _viewModel;
 
-    public LoadNewExportPage(LoadingViewModel viewModel)
+    public LoadNewExportPage(OnboardingViewModel viewModel)
 	{
 		InitializeComponent();
         _viewModel = viewModel;

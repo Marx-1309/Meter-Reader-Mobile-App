@@ -1,15 +1,4 @@
-﻿using AutoMapper;
-using CommunityToolkit.Maui;
-using Microsoft.Extensions.Logging;
-using SampleMauiMvvmApp.Mappings.Maps;
-using SampleMauiMvvmApp.Services;
-using SampleMauiMvvmApp.ViewModels;
-using SampleMauiMvvmApp.Views;
-using SampleMauiMvvmApp.Views.SecurityPages;
-using SkiaSharp.Views.Maui.Controls.Hosting;
-using SQLite;
-
-namespace SampleMauiMvvmApp;
+﻿namespace SampleMauiMvvmApp;
 
 public static class MauiProgram
 {
@@ -20,6 +9,7 @@ public static class MauiProgram
 			.UseMauiApp<App>()
             .UseSkiaSharp()
             .UseMauiCommunityToolkit()
+            //.UseLocalNotification()
             .ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -40,9 +30,9 @@ public static class MauiProgram
         builder.Services.AddSingleton<MonthService>();
         builder.Services.AddSingleton<AuthenticationService>();
 
-        builder.Services.AddSingleton<LoadingPage>();
+        builder.Services.AddSingleton<OnboardingPage>();
         builder.Services.AddSingleton<SynchronizationPage>();
-        builder.Services.AddSingleton<LoadingViewModel>();
+        builder.Services.AddSingleton<OnboardingViewModel>();
         builder.Services.AddSingleton<UnregReadingListPage>();
         builder.Services.AddTransient<UpsertUnregReadingPage>();
         builder.Services.AddSingleton<LoginPage>();
@@ -53,6 +43,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<MonthPage>();
         builder.Services.AddTransient<CustomerDetailPage>();
         builder.Services.AddSingleton<CapturedReadingsPage>();
+        builder.Services.AddTransient<UncapturedReadingsByAreaPage>();
+        builder.Services.AddTransient<LocationPage>();
 
         builder.Services.AddSingleton<LoginViewModel>();
         builder.Services.AddSingleton<LogoutViewModel>();

@@ -1,15 +1,18 @@
-﻿using Newtonsoft.Json;
-using SampleMauiMvvmApp.API_URL_s;
-using SampleMauiMvvmApp.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 namespace SampleMauiMvvmApp.Services
 {
-    public partial class MonthService : BaseService
+    public interface IMonthService
+    {
+        Task<int?> GetLatestExportItemMonthId();
+        Task<string> GetLatestExportItemMonthName();
+        Task<List<Month>> GetListOfMonthsFromSql();
+        Task<List<Month>> GetListOfMonthsFromSqlite();
+        Task<string> GetMonthNameById();
+        Task<List<Month>> GetMonths();
+        Task<List<Reading>> GetReadingsByMonthIdAsync(int MonthId);
+    }
+
+    public partial class MonthService : BaseService, IMonthService
     {
         HttpClient httpClient;
         public MonthService(DbContext dbContext) : base(dbContext)
@@ -132,14 +135,14 @@ namespace SampleMauiMvvmApp.Services
                         if (response.IsSuccessStatusCode)
                         {
                             listMonths = await response.Content.ReadFromJsonAsync<List<Month>>();
-                            foreach(var item in listMonths)
+                            foreach (var item in listMonths)
                             {
                                 item.MonthID = item.MonthID;
-                                item.MonthName= item.MonthName.Trim();
-                                
+                                item.MonthName = item.MonthName.Trim();
+
                                 var response2 = await dbContext.Database.InsertAsync(item);
                             }
-                            
+
                         }
                         else
                         {
@@ -160,6 +163,7 @@ namespace SampleMauiMvvmApp.Services
         }
 
 
+
         public async Task<List<Month>> GetListOfMonthsFromSqlite()
         {
             try
@@ -167,7 +171,7 @@ namespace SampleMauiMvvmApp.Services
                 await GetListOfMonthsFromSql();
                 var listOfMonths = await dbContext.Database.Table<Month>().ToListAsync();
                 if (listOfMonths.Count > 0)
-                { 
+                {
                     return listOfMonths;
                 }
 

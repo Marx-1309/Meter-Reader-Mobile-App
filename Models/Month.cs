@@ -1,8 +1,4 @@
-﻿using Newtonsoft.Json;
-using SampleMauiMvvmApp.Models;
-using SQLite;
-using SQLiteNetExtensions.Attributes;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace SampleMauiMvvmApp.Models
 {
@@ -13,9 +9,6 @@ namespace SampleMauiMvvmApp.Models
         public int MonthID { get; set; }
         [JsonProperty]
         public string MonthName { get; set; }
-
-
-
         public string TitleProp => $"{MonthName} ";
     }
 

@@ -1,8 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using SampleMauiMvvmApp.Models;
-using SQLite;
-using System.ComponentModel.DataAnnotations.Schema;
-
+﻿
 namespace SampleMauiMvvmApp.ModelWrappers
 {
     public partial class ReadingWrapper : ObservableObject

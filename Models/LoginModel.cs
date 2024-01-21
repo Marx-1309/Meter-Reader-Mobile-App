@@ -1,8 +1,4 @@
-﻿using Newtonsoft.Json;
-using SampleMauiMvvmApp.Models;
-using SQLite;
-using System.Text.Json.Serialization;
-
+﻿
 namespace SampleMauiMvvmApp.Models
 {
     [Table("LoginModel")]

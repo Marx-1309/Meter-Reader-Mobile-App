@@ -1,25 +1,15 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-//using SampleMauiMvvmApp.Helpers;
-using SampleMauiMvvmApp.Models;
-using SampleMauiMvvmApp.Services;
-using SampleMauiMvvmApp.Views;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace SampleMauiMvvmApp.ViewModels
 {
+    [QueryProperty(nameof(IsFirstTime), nameof(IsFirstTime))]
     public partial class LoginViewModel : BaseViewModel
     {
         public LoginViewModel(AuthenticationService _authenticationService )
         {
             this.authenticationService = _authenticationService; 
         }
+        [ObservableProperty]
+        private bool _isFirstTime;
 
         [ObservableProperty]
         string username;
@@ -59,16 +49,12 @@ namespace SampleMauiMvvmApp.ViewModels
                     var jsonToken = new JwtSecurityTokenHandler().ReadToken(response.Token) as
                         JwtSecurityToken;
 
-                    var role = jsonToken.Claims.FirstOrDefault(q =>q.Type.Equals(ClaimTypes.Role))?.Value;
+                    string userId = jsonToken.Claims.First(claim => claim.Type == "sub")?.Value;
+                    string email = jsonToken.Claims.First(claim => claim.Type == "email")?.Value;
 
-                    
-
-                    App.UserInfo = new UserInfo()
-                    {
-                        Username = Username,
-                        Role = role,
-                    };
-
+                    // Set a string value:
+                    Preferences.Default.Set("userId", userId);
+                    Preferences.Default.Set("username", email);
 
                     //You can use this to access details of the logged_in user//commented out 
                     //App.UserInfo = userInfo;

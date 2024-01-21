@@ -1,15 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using SampleMauiMvvmApp.Models;
-using SampleMauiMvvmApp.Services;
-using SampleMauiMvvmApp.Views;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace SampleMauiMvvmApp.ViewModels
 {
     public partial class UnregReadingsListViewModel : ObservableObject

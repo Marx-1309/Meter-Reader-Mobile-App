@@ -1,6 +1,4 @@
-﻿using Bogus;
-using SampleMauiMvvmApp.Models;
-
+﻿
 namespace SampleMauiMvvmApp.Fakers
 {
     // https://github.com/bchavez/Bogus

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SampleMauiMvvmApp.Views.LocationPage"
+	xmlns:model="clr-namespace:SampleMauiMvvmApp.Models"
+	xmlns:viewmodel="clr-namespace:SampleMauiMvvmApp.ViewModels"
+             x:DataType="viewmodel:ReadingViewModel"
+    Title="My Locations">
+
+    <Grid
+       ColumnDefinitions="*,*"
+        ColumnSpacing="1"
+        RowDefinitions="*,Auto"
+        RowSpacing="0"
+        Padding="4"
+         BackgroundColor="LightGrey">
+        <RefreshView
+            Grid.ColumnSpan="2"
+            Command="{Binding GetLocationsCommand}"
+            IsRefreshing="{Binding IsRefreshing}">
+            <ContentView>
+                <CollectionView
+                    ItemsSource="{Binding AllLocation}"
+                    SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:LocationReadings">
+                            <Grid Padding="1" HorizontalOptions="Fill">
+                                <Frame HeightRequest="120"
+                                       CornerRadius="10">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer 
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ReadingViewModel}}, Path=GoToListOfUncapturedReadingsByAreaCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                    </Frame.GestureRecognizers>
+                                    <Grid Padding="-38" VerticalOptions="Fill"  ColumnDefinitions="150,300,*">
+
+                                        <!--If using tablet use Height of 75 , if pc then use height of 100 else ERRORS might occur when adding the objects to the collection in the VM--> 
+                                        <Image
+                                            HeightRequest="75"
+                                            Source="uncapturedlocation_logo.png"
+                                            WidthRequest="75"
+                                        >
+
+                                        </Image>
+
+                                        <VerticalStackLayout
+                                                VerticalOptions="Center"
+                                                Grid.Column="1"
+                                                Padding="10">
+                                            <Label Style="{StaticResource LargeLabel}" HorizontalOptions="Start" TextColor="Black" Text="{Binding AREANAME}" />
+                                            <!--<Label Style="{StaticResource MediumLabel}" Text="{Binding Year}" TextColor="Gray" />-->
+                                        </VerticalStackLayout>
+
+                                        <VerticalStackLayout
+                                            VerticalOptions="Center"
+                                            HorizontalOptions="StartAndExpand"
+                                            Grid.Column="2"
+                                            Padding="10">
+                                            <Label Style="{StaticResource LargeLabel}" TextColor="Red" FontAttributes="Bold" Text="{Binding NumberOfReadings}"/>
+                                            <!--<Label Style="{StaticResource MediumLabel}" Text="{Binding Year}" TextColor="Gray" />-->
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Frame>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ContentView>
+        </RefreshView>
+        <!--<Button
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="8"
+             CornerRadius="0"
+            Command="{Binding GetMonthsCommand}"
+            IsEnabled="{Binding IsNotBusy}"
+            Text="Get Month" /><Button
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="8"
+             CornerRadius="0"
+             Command="{Binding GoToAllCustomersCommand}"
+            IsEnabled="{Binding IsNotBusy}"
+            Text="All Customers" />-->
+        <ActivityIndicator
+            Grid.RowSpan="2"
+            Grid.ColumnSpan="2"
+            HorizontalOptions="Fill"
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
+            Color="{StaticResource Primary}"
+            VerticalOptions="Center" />
+    </Grid>
+</ContentPage>

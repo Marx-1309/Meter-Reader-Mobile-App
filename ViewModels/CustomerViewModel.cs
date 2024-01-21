@@ -1,17 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using JetBrains.Annotations;
-using SampleMauiMvvmApp.Messages;
-using SampleMauiMvvmApp.Models;
-using SampleMauiMvvmApp.ModelWrappers;
-using SampleMauiMvvmApp.Services;
-using SampleMauiMvvmApp.ViewModels;
-using SampleMauiMvvmApp.Views;
-
-namespace SampleMauiMvvmApp.ViewModels
+﻿namespace SampleMauiMvvmApp.ViewModels
 {
     public partial class CustomerViewModel : BaseViewModel
     {

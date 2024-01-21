@@ -2,13 +2,11 @@ namespace SampleMauiMvvmApp.Views;
 
 public partial class SynchronizationPage : ContentPage
 {
-	public SynchronizationPage()
+    ReadingViewModel viewModel;
+	public SynchronizationPage(ReadingViewModel _viewModel)
 	{
 		InitializeComponent();
+        viewModel = _viewModel;
+        BindingContext = _viewModel;
 	}
-
-    protected override bool OnBackButtonPressed()
-    {
-        return true;
-    }
 }

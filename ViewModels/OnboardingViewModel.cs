@@ -1,25 +1,10 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using Newtonsoft.Json;
-//using SampleMauiMvvmApp.Helpers;
-using SampleMauiMvvmApp.Models;
-using SampleMauiMvvmApp.Services;
-using SampleMauiMvvmApp.Views;
-using SampleMauiMvvmApp.Views.SecurityPages;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SampleMauiMvvmApp.ViewModels
+﻿namespace SampleMauiMvvmApp.ViewModels
 {
-    public partial class LoadingViewModel : BaseViewModel
+    public partial class OnboardingViewModel : BaseViewModel
     {
         public ReadingService readingService;
         public ReadingExportService readingExportService;
-        public LoadingViewModel(ReadingService _readingService, ReadingExportService _readingExportService)
+        public OnboardingViewModel(ReadingService _readingService, ReadingExportService _readingExportService)
         {
             this.readingService = _readingService;
             CheckUserLoginDetails();
@@ -63,12 +48,58 @@ namespace SampleMauiMvvmApp.ViewModels
             //Evaluate Token if token isValid
         }
 
+
+
+        public async Task CheckIfValidToken()
+        {
+            await Task.Delay(1000);
+            IsBusy = true;
+            //Retrieve Token from internal Secure Storage
+            var token = await SecureStorage.GetAsync("Token");
+            //temp code
+            SecureStorage.Remove("Token");
+            Preferences.Default.Clear();
+
+            if (string.IsNullOrEmpty(token))
+            {
+                IsBusy = false;
+                await GoToLoginPage();
+            }
+            else
+            {
+                var jsonToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
+
+                if (jsonToken.ValidTo < DateTime.UtcNow)
+                {
+                    SecureStorage.Remove("Token");
+                    Preferences.Default.Clear();
+                    await GoToLoginPage();
+                }
+                else
+                {
+                    string userId = jsonToken.Claims.First(claim => claim.Type == "sub").Value;
+                    string email = jsonToken.Claims.First(claim => claim.Type == "email").Value;
+
+                    App.UserInfo = new UserInfo()
+                    {
+                        Id = jsonToken.Claims.First(claim => claim.Type == "sub").Value,
+                        Username = jsonToken.Claims.First(claim => claim.Type == "email").Value
+                    };
+
+                    IsBusy = false;
+                    await GoToMainPage();
+                }
+            }
+        }
+
         [RelayCommand]
         public async Task GetInitializationData()
         {
+            await CheckIfValidToken();
             return;
+            
             //await readingService.GetListOfReadingExportFromSql();
-           
+
         }
 
         [RelayCommand]

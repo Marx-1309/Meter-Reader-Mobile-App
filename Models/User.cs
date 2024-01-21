@@ -1,11 +1,4 @@
-﻿using SQLite;
-using SQLiteNetExtensions.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace SampleMauiMvvmApp.Models
 {
     [Table("User")]
@@ -19,7 +12,7 @@ namespace SampleMauiMvvmApp.Models
         public string Email { get; set; }
         public string Mobile { get; set; }
         public bool Active { get; set; }
-        [OneToMany]
-        public List<Device> Devices { get; set; }
+        //[OneToMany]
+        //public List<Device> Devices { get; set; }
     }
 }

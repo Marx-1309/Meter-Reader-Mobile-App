@@ -20,8 +20,8 @@
         ContentTemplate="{DataTemplate view:UncapturedReadingsPage}"/>
 
         <ShellContent
-        Title="Uncaptured" Icon="add_readings_maually.jpg"
-        ContentTemplate="{DataTemplate view:UnregReadingListPage}"/>
+        Title="My Locations" Icon="add_readings_maually.jpg"
+        ContentTemplate="{DataTemplate view:UncapturedReadingsByAreaPage}"/>
 
     </TabBar>
 </Shell>

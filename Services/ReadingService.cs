@@ -419,7 +419,7 @@ namespace SampleMauiMvvmApp.Services
                             // Initialize a count variable to keep track of the number of items processed.
                             int itemCount = 0;
                             var meterReader = Preferences.Default.Get("username", "Unknown");
-
+                            var iii = await dbContext.Database.Table<ReadingExport>().ToListAsync();
                             foreach (var item in response)
                             {
                                 
@@ -429,7 +429,6 @@ namespace SampleMauiMvvmApp.Services
                                 // Perform the update for each item in 'response'.
                                 var IsSyncSuccess = await _httpClient.PutAsJsonAsync(Constants.PutReading, item);
                                 StatusMessage = IsSyncSuccess.RequestMessage.ToString();
-
                                 if (IsSyncSuccess.IsSuccessStatusCode)
                                 {
                                     // Update the item in the local database.

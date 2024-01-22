@@ -5,7 +5,7 @@ public partial class AppShell : Shell
     public AppShell()
 	{
         InitializeComponent();
-        _ = DisplayLoggedInUserInfo();
+        //_ = DisplayLoggedInUserInfo();
         //Routes
         Routing.RegisterRoute(nameof(CustomerDetailPage), typeof(CustomerDetailPage));
         Routing.RegisterRoute(nameof(MonthPage), typeof(MonthPage));
@@ -18,7 +18,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(UncapturedReadingsPage), typeof(UncapturedReadingsPage));
         Routing.RegisterRoute(nameof(UpsertUnregReadingPage), typeof(UpsertUnregReadingPage));
         Routing.RegisterRoute(nameof(UnregReadingListPage), typeof(UnregReadingListPage));
-        Routing.RegisterRoute(nameof(SynchronizationPage), typeof(SynchronizationPage));
+        //Routing.RegisterRoute(nameof(SynchronizationPage), typeof(SynchronizationPage));
         Routing.RegisterRoute(nameof(OnboardingPage), typeof(OnboardingPage));
         Routing.RegisterRoute(nameof(LocationPage), typeof(LocationPage));
         Routing.RegisterRoute(nameof(UncapturedReadingsByAreaPage), typeof(UncapturedReadingsByAreaPage));
@@ -26,18 +26,13 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(AppShell), typeof(AppShell));
     }
 
-    private async Task DisplayLoggedInUserInfo()
-    {
-        await Task.Delay(1000);
-        IsBusy = true;
-        //Retrieve Token from internal Secure Storage
-                
-                lblUsername.Text = Preferences.Default.Get("username", "Not logged in");
-                lblRole.Text = "Meter Reader" ?? "Meter Reader";
-
-                IsBusy = false;
-                await GoToMainPage();
-    }
+    //private async Task DisplayLoggedInUserInfo()
+    //{
+    //    await Task.Delay(1000);
+    //    IsBusy = true;
+    //    await CheckIfValidToken();
+    //            IsBusy = false;
+    //}
 
     private async Task GoToLoginPage()
     {
@@ -47,5 +42,50 @@ public partial class AppShell : Shell
     private async Task GoToMainPage()
     {
         await Shell.Current.GoToAsync($"//{nameof(MonthCustomerTabPage)}"); ;
+    }
+
+    public async Task CheckIfValidToken()
+    {
+        await Task.Delay(1000);
+        IsBusy = true;
+        //Retrieve Token from internal Secure Storage
+        var token = await SecureStorage.GetAsync("Token");
+        //temp code
+        //SecureStorage.Remove("Token");
+        //Preferences.Default.Clear();
+
+        if (string.IsNullOrEmpty(token))
+        {
+            IsBusy = false;
+            await GoToLoginPage();
+        }
+        else
+        {
+            //lblUsername.Text = Preferences.Default.Get("username", "Not logged in");
+            //lblRole.Text = "Meter Reader" ?? "Meter Reader";
+
+            var jsonToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
+
+            if (jsonToken.ValidTo < DateTime.UtcNow)
+            {
+                SecureStorage.Remove("Token");
+                Preferences.Default.Clear();
+                await GoToLoginPage();
+            }
+            else
+            {
+                string userId = jsonToken.Claims.First(claim => claim.Type == "sub").Value;
+                string email = jsonToken.Claims.First(claim => claim.Type == "email").Value;
+
+                App.UserInfo = new UserInfo()
+                {
+                    Id = jsonToken.Claims.First(claim => claim.Type == "sub").Value,
+                    Username = jsonToken.Claims.First(claim => claim.Type == "email").Value
+                };
+
+                IsBusy = false;
+                await GoToMainPage();
+            }
+        }
     }
 }

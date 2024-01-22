@@ -31,7 +31,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<AuthenticationService>();
 
         builder.Services.AddSingleton<OnboardingPage>();
-        builder.Services.AddSingleton<SynchronizationPage>();
+        //builder.Services.AddSingleton<SynchronizationPage>();
         builder.Services.AddSingleton<OnboardingViewModel>();
         builder.Services.AddSingleton<UnregReadingListPage>();
         builder.Services.AddTransient<UpsertUnregReadingPage>();

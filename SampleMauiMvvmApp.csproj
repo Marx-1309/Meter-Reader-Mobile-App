@@ -120,9 +120,6 @@
 	  <MauiXaml Update="Views\SecurityPages\LoginPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\SynchronizationPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="Views\UncapturedReadingsByAreaPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

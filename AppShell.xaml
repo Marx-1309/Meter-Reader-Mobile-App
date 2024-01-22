@@ -13,46 +13,35 @@
     ContentTemplate="{DataTemplate local:MonthCustomerTabPage}"
     Route="MenuPage" FlyoutItemIsVisible="False"/>-->
 
-
-    <ShellContent
-    ContentTemplate="{DataTemplate local:MonthCustomerTabPage}"
-    Route="LoadingPage" FlyoutItemIsVisible="False"/>
-<!--This is what i commented out-->
     <FlyoutItem Route="MonthCustomerTabPage" FlyoutDisplayOptions="AsMultipleItems">
         <ShellContent Title="Not Captured" Icon="water_tap_thick.png" ContentTemplate="{DataTemplate view:UncapturedReadingsPage}"></ShellContent>
         <ShellContent Title="Captured" Icon="data_entry_icon.jpg" ContentTemplate="{DataTemplate view:CapturedReadingsPage}"></ShellContent>
         <ShellContent Title="Months" Icon="month_tabbed_icon.png" ContentTemplate="{DataTemplate view:MonthPage}" ></ShellContent>
         <ShellContent Title="My locations" Icon="uncapturedlocation_logo.png" ContentTemplate="{DataTemplate view:LocationPage}" ></ShellContent>
-        
     </FlyoutItem>
-    <!--This is what i commented out-->
 
 
-    <!--<FlyoutItem Route="AddNewFlyoutItem" Title="App Menu Options" Icon="menu_options_icon.png" >
+    <FlyoutItem Route="AddNewFlyoutItem" Title="App Menu Options" Icon="menu_options_icon.png" >
         <ShellContent ContentTemplate="{DataTemplate view:MenuPage}"></ShellContent>
-    </FlyoutItem>-->
-
-  
+    </FlyoutItem>
 
 
 
-    <Shell.FlyoutHeader>
+
+    <!--<Shell.FlyoutHeader>
         <StackLayout Padding="20">
            <Image Source="user_profile.png" HeightRequest="150" WidthRequest="150" />
             <StackLayout Orientation="Vertical" Padding="10" >
                 <HorizontalStackLayout>
-                    <Label x:Name="lblUsername"  FontAttributes="Bold" FontSize="Subtitle" TextColor="Red"></Label>
+                    <Label x:Name="lblUsername"  FontAttributes="Bold" TextColor="Red"></Label>
+                    <Label Text="Role" TextColor="Black"  ></Label>
                     
                 </HorizontalStackLayout>
                 <Label x:Name="lblRole" TextColor="Black" FontAttributes="Bold" ></Label>
             </StackLayout>
         </StackLayout>
-    </Shell.FlyoutHeader>
+    </Shell.FlyoutHeader>-->
 
-    <!--<TabBar>
-        <ShellContent Title="Not Captured" Icon="water_tap_thick.png" ContentTemplate="{DataTemplate view:UncapturedReadingsPage}"></ShellContent>
-        <ShellContent Title="Captured" Icon="data_entry_icon.jpg" ContentTemplate="{DataTemplate view:CapturedReadingsPage}"></ShellContent>
-        <ShellContent Title="Months" Icon="month_tabbed_icon.png" ContentTemplate="{DataTemplate view:MonthPage}" ></ShellContent>
-    </TabBar>-->
-    
+
+
 </Shell>

@@ -37,9 +37,9 @@
 
                                         <!--If using tablet use Height of 75 , if pc then use height of 100 else ERRORS might occur when adding the objects to the collection in the VM--> 
                                         <Image
-                                            HeightRequest="75"
+                                            HeightRequest="100"
                                             Source="uncapturedlocation_logo.png"
-                                            WidthRequest="75"
+                                            WidthRequest="100"
                                         >
 
                                         </Image>

@@ -229,7 +229,7 @@ namespace SampleMauiMvvmApp.ViewModels
             //if (IsBusy) return; // Return an empty list if already busy
             try
             {
-                Title = area.AREANAME;
+                Title = area?.AREANAME;
                 IsBusy = true;
                 if (area == null)
                 {

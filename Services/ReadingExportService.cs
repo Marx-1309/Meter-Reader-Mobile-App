@@ -238,7 +238,7 @@ namespace SampleMauiMvvmApp.Services
                         if (newExportToInsert.Any())
                         {
                             await Shell.Current.DisplayAlert("New Reading Exports Found!", $"We Are Updating The App!", "OK");
-                            await Shell.Current.GoToAsync($"{nameof(SynchronizationPage)}");
+                            //await Shell.Current.GoToAsync($"{nameof(SynchronizationPage)}");
 
 
                             List<ReadingExport> exportsItemsToDelete = await dbContext.Database.Table<ReadingExport>().ToListAsync();

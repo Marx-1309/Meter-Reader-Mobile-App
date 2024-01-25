@@ -36,19 +36,19 @@
           ColumnSpacing="5"
           RowSpacing="0"
           BackgroundColor="LightGrey">
-        <RefreshView Grid.ColumnSpan="2" IsEnabled="False" Command="{Binding GetCapturedReadingsCommand}" IsRefreshing="{Binding IsBusy}">
+        <RefreshView Grid.ColumnSpan="2" IsEnabled="False"  Command="{Binding GetCapturedReadingsCommand}" IsRefreshing="{Binding IsBusy}">
             <CollectionView ItemsSource="{Binding AllReadings}" SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:Reading">
 
-                        <Frame HeightRequest="120" CornerRadius="0" Padding="5,2,5,2">
+                        <Frame HeightRequest="120" CornerRadius="0" Padding="5,2,0,2">
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                          Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ReadingViewModel}}, Path=GoToCustomerDetailsCommand}"
                                          CommandParameter="{Binding .}">
                                     </TapGestureRecognizer>
                                 </Frame.GestureRecognizers>
-                            <Grid Grid.Column="0" ColumnDefinitions="60,*,*" VerticalOptions="Center">
+                            <Grid Grid.Column="0" ColumnDefinitions="60,*,*,Auto" VerticalOptions="Center">
                                 <Image Source="red_dot3.png" IsVisible="{Binding ReadingNotTaken}" HeightRequest="50" />
                                 <Image Source="blue_dot.png" IsVisible="{Binding ReadingTaken}" HeightRequest="50" />
                                 <VerticalStackLayout Grid.Column="1" Padding="0,0,0,0" Spacing="0">
@@ -60,6 +60,13 @@
                                     <Label Text="Current Reading" TextColor="Gray" Margin="0" />
                                     <Label Style="{StaticResource LargeLabel}" TextColor="Blue" Text="{Binding CURRENT_READING, StringFormat=' {0}'}" Margin="0,3,0,0" />
                                     <Label FontSize="Subtitle" Text="{Binding AREA}" Margin="0,3,0,0" />
+                                </VerticalStackLayout>
+                                
+                                <VerticalStackLayout Grid.Column="3" Padding="0,0,0,0" IsVisible="{Binding IsFlagged}" >
+                                    <Border BackgroundColor="Red" WidthRequest="10"
+                                            HeightRequest="110">
+                                        
+                                    </Border>
                                 </VerticalStackLayout>
                             </Grid>
                         </Frame>

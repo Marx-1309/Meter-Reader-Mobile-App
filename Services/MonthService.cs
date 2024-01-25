@@ -227,5 +227,28 @@ namespace SampleMauiMvvmApp.Services
                 return null;
             }
         }
+
+        public async Task<bool> IsMonthPopulated(Month month)
+        {
+            try
+            {
+                int isWithReadings = await  dbContext.Database.Table<Reading>().Where(r=>r.MonthID == month.MonthID).CountAsync();
+                // If the lastItem is not null, return its ID; otherwise, return null.
+                if(isWithReadings>0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that might occur during the database operation
+                StatusMessage = $"Error: {ex.Message}";
+                return false;
+            }
+        }
     }
 }

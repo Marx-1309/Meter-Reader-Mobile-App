@@ -43,5 +43,16 @@
     </Shell.FlyoutHeader>-->
 
 
+    <Shell.FlyoutFooter>
+        <StackLayout Padding="20">
+            <StackLayout Orientation="Vertical" Padding="10" >
+                <HorizontalStackLayout>
+                    <Button BackgroundColor="Red" Clicked="BtnFlush_Clicked" Text="Reflush Readings"></Button>
+                </HorizontalStackLayout>
+            </StackLayout>
+        </StackLayout>
+    </Shell.FlyoutFooter>
+
+
 
 </Shell>

@@ -1,7 +1,10 @@
 ﻿
+using System.Linq;
+
 namespace SampleMauiMvvmApp.ViewModels
 {
     [QueryProperty("Area", "Area")]
+    [QueryProperty("Refresh", "Refresh")]
     public partial class ReadingViewModel : BaseViewModel
     {
         
@@ -31,6 +34,11 @@ namespace SampleMauiMvvmApp.ViewModels
         public static List<LocationReadings> LocationListForSearch { get; private set; } = new List<LocationReadings>();
         public ObservableCollection<Reading> Readings { get; set; } = new ObservableCollection<Reading>();
 
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(GetCapturedReadingsCommand))]
+        public string? refresh;
+
+
         [RelayCommand]
         async Task GetCapturedReadings()
         {
@@ -45,6 +53,11 @@ namespace SampleMauiMvvmApp.ViewModels
                     AllReadings.Clear(); // Clear the list before adding readings
                     foreach (var reading in listOfCapturedReadings)
                     {
+                        var IsFlagged = IsReadingFlagged((decimal)reading.PREVIOUS_READING,reading.CURRENT_READING);
+                        if (IsFlagged)
+                        {
+                            reading.IsFlagged = true;
+                        }
                         if (reading.CURRENT_READING >= 1)
                         {
                             reading.ReadingTaken = true;
@@ -58,10 +71,10 @@ namespace SampleMauiMvvmApp.ViewModels
                         AllReadings.Add(reading); // Add each reading to the list
 
                     }
-                    foreach (var reading in listOfCapturedReadings)
-                    {
-                        Readings.Add(reading);
-                    }
+                    //foreach (var reading in listOfCapturedReadings)
+                    //{
+                    //    Readings.Add(reading);
+                    //}
                     ReadingsListForSearch.Clear();
                     ReadingsListForSearch.AddRange(listOfCapturedReadings);
                     // Set IsBusy to false after adding all readings
@@ -111,6 +124,7 @@ namespace SampleMauiMvvmApp.ViewModels
                             reading.ReadingTaken = false;
                             reading.ReadingNotTaken = true;
                         }
+                        Task.Delay(50);
                         AllReadings.Add(reading); // Add each reading to the list
 
                     }
@@ -165,11 +179,20 @@ namespace SampleMauiMvvmApp.ViewModels
         {
             IsBusy = true;
             await Task.Delay(1000);
-            await readingExportService.ScanForNewExports();
+            await readingExportService.ScanForNewItems();
             IsBusy = false;
             await Shell.Current.GoToAsync("..");
         }
 
+        [RelayCommand]
+        public async Task ReflushData()
+        {
+            IsBusy = true;
+            await Task.Delay(50);
+            await readingExportService.FlushAndSeed();
+            IsBusy = false;
+            await Shell.Current.GoToAsync("..");
+        }
 
         //Get Locations list
 
@@ -274,6 +297,19 @@ namespace SampleMauiMvvmApp.ViewModels
             
         }
 
+        public bool IsReadingFlagged(decimal previous, decimal current)
+        {
+            decimal difference = Math.Abs(current - previous);
+
+            if (difference >= 20)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public bool IsLocationCleared(int count)
         {
             if (count > 0)

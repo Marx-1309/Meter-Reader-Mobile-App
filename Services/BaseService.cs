@@ -4,6 +4,7 @@ namespace SampleMauiMvvmApp.Services
     public class BaseService : ObservableObject
     {
         protected readonly DbContext dbContext;
+        protected readonly AppShell _appShell;
         protected readonly MonthService _monthService;
         protected readonly ReadingService _readingService;
         protected readonly CustomerService _customerService;
@@ -16,10 +17,11 @@ namespace SampleMauiMvvmApp.Services
             this.dbContext = dbContext;
         }
 
-        public BaseService(DbContext dbContext, MonthService monthService,
+        public BaseService(DbContext dbContext,AppShell appShell, MonthService monthService,
             ReadingService readingService, CustomerService customerService, ReadingExportService readingExportService)
         {
             this.dbContext = dbContext;
+            this._appShell = appShell;
             _monthService = monthService;
             _ = Init(this.dbContext);
             _readingService = readingService;
@@ -59,7 +61,10 @@ namespace SampleMauiMvvmApp.Services
                     await _readingService.GetListOfPrevMonthReadingFromSql();
                 }
                 //Check if all the existing readings are synced!
-                //await _readingExportService.ScanForNewExports();
+
+                await _readingExportService.ScanForNewItems();
+                //await _readingExportService.FlushAndSeed();
+                //_appShell.CheckIfValidToken();
             }
         }
 
@@ -89,7 +94,6 @@ namespace SampleMauiMvvmApp.Services
 
             List<Reading> GeneratedReadings = new();
             List<Customer> allCustomers = await dbContext.Database.Table<Customer>().ToListAsync();
-
 
             foreach (var customer in allCustomers)
             {

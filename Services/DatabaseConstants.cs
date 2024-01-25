@@ -13,7 +13,6 @@ namespace SampleMauiMvvmApp.Services
             // enable multi-threaded database access
             SQLite.SQLiteOpenFlags.SharedCache;
             
-        public static string DatabasePath =>
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DatabaseFileName);
+        public static string DatabasePath =>Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DatabaseFileName);
     }
 }

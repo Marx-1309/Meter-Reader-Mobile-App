@@ -1,7 +1,5 @@
 ﻿
 
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-
 namespace SampleMauiMvvmApp.Services
 {
     public interface IReadingService
@@ -98,7 +96,7 @@ namespace SampleMauiMvvmApp.Services
                     var b = await dbContext.Database.Table<Reading>()
                         .ToListAsync();
 
-                    List<Reading> trimmedR = await TrimObjProperties(b);
+                    List<Reading> trimmedR = TrimObjProperties(b);
                     //List<Reading> readings = trimmedArea;
 
                     var areas =  trimmedR
@@ -129,11 +127,11 @@ namespace SampleMauiMvvmApp.Services
             return new List<Reading>();
         }
 
-        public async Task<List<Reading>> TrimObjProperties(List<Reading> readings)
+        public List<Reading> TrimObjProperties(List<Reading> readings)
         {
             try
             {
-               foreach(var i in readings)
+                foreach (var i in readings)
                 {
                     i.AREA = i.AREA?.Trim();
                 }
@@ -589,7 +587,6 @@ namespace SampleMauiMvvmApp.Services
                 .Where(r => r.WaterReadingExportID == lastExportItem.WaterReadingExportID
                 && r.MonthID == lastExportItem.MonthID
                 && r.CURRENT_READING == 0)
-                .OrderBy(r => r.ERF_NUMBER)
                 //.ThenBy(r=>r.CUSTOMER_NUMBER)
                 .ToListAsync();
             if (ListOfAllReading.Count > 0)
@@ -632,8 +629,6 @@ namespace SampleMauiMvvmApp.Services
         List<Reading> readings;
         public async Task<List<ReadingDto>> GetListOfReadingFromSql()
         {
-            if (readings == null)
-            {
                 try
                 {
                     var readingsCount = await dbContext.Database.Table<Reading>().Where(c => c.WaterReadingExportDataID >= 1).ToListAsync();
@@ -694,7 +689,7 @@ namespace SampleMauiMvvmApp.Services
                     // Handle any other exception that might occur during the API call
                     StatusMessage = $"Error." + ex.Message;
                 }
-            }
+            
 
             // Use AutoMapper to map the Reading objects to ReadingDto objects
             var readingDtos = _mapper.Map<List<ReadingDto>>(readings);
@@ -711,13 +706,11 @@ namespace SampleMauiMvvmApp.Services
         List<ReadingExport> readingExports;
 
         public async Task<List<ReadingExport>> GetListOfReadingExportFromSql()
-        {
-            if (readingExports == null)
-            {
-                try
+        { 
+            try
                 {
                     var readingsCount = await dbContext.Database.Table<ReadingExport>().Where(c => c.WaterReadingExportID >= 1).ToListAsync();
-                    if (readingsCount.Count > 0)
+                    if (readingsCount.Any())
                     {
                         // Retrieve all the IDs of the existing ReadingExport items in the SQLite database
                         var existingIds = readingsCount.Select(r => r.WaterReadingExportID).ToList();
@@ -778,8 +771,6 @@ namespace SampleMauiMvvmApp.Services
                     // Handle any other exception that might occur during the API call
                     StatusMessage = $"Error." + ex.Message;
                 }
-            }
-
             // Return the ReadingExport list, even if it's null (client code should handle this)
             return null;
         }
@@ -958,13 +949,13 @@ namespace SampleMauiMvvmApp.Services
 
                             List<Reading> readingsToUpdateToSqlite = new();
                             List<Reading> readingsToDeleteFromSqlite = new();
-
+                            var x = await dbContext.Database.Table<Reading>().ToListAsync();
                             foreach (var readingDto in currentExportReadings)
                             {
 
                                 // Find matching records in SQLite
                                 var matchingRecords = await dbContext.Database.Table<Reading>()
-                                    .Where(r => r.CUSTOMER_NUMBER == readingDto.CUSTOMER_NUMBER && r.MonthID == currentMonth && r.Year == prevYearIdx /*&& r.CURRENT_READING == 0*/)
+                                    .Where(r => r.CUSTOMER_NUMBER == readingDto.CUSTOMER_NUMBER && r.MonthID == currentMonth /*&& r.CURRENT_READING == 0*/)
                                     .ToListAsync();
                                 if (matchingRecords.Count != 0)
                                 {

@@ -57,6 +57,7 @@
 	  <None Remove="Resources\Images\onboarding_icon.png" />
 	  <None Remove="Resources\Images\success_icon.jpg" />
 	  <None Remove="Resources\Images\uncapturedlocation_logo.png" />
+	  <None Remove="Resources\Raw\active_animation.json" />
 	  <None Remove="Resources\Raw\emptyview_animation.json" />
 	  <None Remove="Resources\Raw\sync_animation.json" />
 	</ItemGroup>
@@ -84,6 +85,9 @@
 	  <Compile Update="Views\ScanNewExport.xaml.cs">
 	    <DependentUpon>ScanNewExport.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\ReflushPage.xaml.cs">
+	    <DependentUpon>ReflushPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -94,6 +98,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\CustomerDetailPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\LoadingPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\LocationPage.xaml">
@@ -120,13 +127,16 @@
 	  <MauiXaml Update="Views\SecurityPages\LoginPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\SynchronizationPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\UncapturedReadingsByAreaPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\UncapturedReadingsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\UnregReadingListPage.xaml">
+	  <MauiXaml Update="Views\ReflushPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\UpsertUnregReadingPage.xaml">

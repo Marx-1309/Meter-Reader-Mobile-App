@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:SampleMauiMvvmApp.Models"
+             xmlns:viewModels="clr-namespace:SampleMauiMvvmApp.ViewModels"
+             x:DataType="viewModels:ReadingViewModel"
+             x:Class="SampleMauiMvvmApp.Views.ReflushPage"
+             Title="Unregistered Readings">
+    <ScrollView>
+    <StackLayout Margin="10">
+
+            <Button Text="Re-flush Data" Command="{Binding ReflushDataCommand}" HorizontalOptions="EndAndExpand" />
+        
+       
+       
+    </StackLayout> 
+</ScrollView>
+</ContentPage>

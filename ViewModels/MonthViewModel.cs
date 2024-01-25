@@ -21,29 +21,29 @@ namespace SampleMauiMvvmApp.ViewModels
         string message = string.Empty;
         [ObservableProperty]
         int currentYear;
-        MonthService MonthService;
-        CustomerService CustomerService;
-        ReadingService ReadingService;
+        MonthService monthService;
+        CustomerService customerService;
+        ReadingService readingService;
         IConnectivity connectivity;
 
         public MonthViewModel(
             MonthService _monthService,
             IConnectivity _connectivity,
             ReadingService _readingService,
-            CustomerService customerService
+            CustomerService _customerService
             )
         {
             Title = "Readings By Month";
             connectivity = _connectivity;
-            MonthService = _monthService;
-            ReadingService = _readingService;
-            CustomerService = customerService;
+            monthService = _monthService;
+            readingService = _readingService;
+            customerService = _customerService;
         }
 
         [RelayCommand]
         public async Task<decimal> GetLastReadingByCustomerId(string customer )
         {
-            var LastReadingByCustomerId = await ReadingService.GetLastReadingByIdAsync(customer);
+            var LastReadingByCustomerId = await readingService.GetLastReadingByIdAsync(customer);
             LastReadingByCustId = (decimal)LastReadingByCustomerId.CURRENT_READING;
             return LastReadingByCustId;
         }
@@ -59,7 +59,7 @@ namespace SampleMauiMvvmApp.ViewModels
                
                 IsBusy = true;
                 await Task.Delay(500);
-                var months = await MonthService.GetListOfMonthsFromSqlite();
+                var months = await monthService.GetListOfMonthsFromSqlite();
                 if (Months.Count != 0)
                     Months.Clear();
                 if (months == null)
@@ -68,7 +68,8 @@ namespace SampleMauiMvvmApp.ViewModels
                     return;
                 }
 
-                foreach (var month in months) { 
+                foreach (var month in months) {
+                    month.IsActive = await monthService.IsMonthPopulated(month);
                     Months.Add(month);
                 };
                 if(Months.Count == 0)
@@ -92,7 +93,7 @@ namespace SampleMauiMvvmApp.ViewModels
         public async Task GoToListOfReadingsByMonth (Month monthId)
         {
             if (monthId.MonthID <= 0) return;
-            var readings = await ReadingService.GetReadingsByMonthId(monthId.MonthID);
+            var readings = await readingService.GetReadingsByMonthId(monthId.MonthID);
             foreach(var item in readings)
             {
                 if(item.ReadingTaken == false)
@@ -137,8 +138,8 @@ namespace SampleMauiMvvmApp.ViewModels
             try {
                 if (IsBusy) return;
                 IsBusy = true;
-                var response = await ReadingService.SyncReadingsByMonthIdAsync(CMonth);
-                message = ReadingService.StatusMessage;
+                var response = await readingService.SyncReadingsByMonthIdAsync(CMonth);
+                message = readingService.StatusMessage;
                 if (response! > 1) return;
                 IsBusy = false;
                 int syncedReadingsItemCount = ReadingService.allReadingsItemsByCount;

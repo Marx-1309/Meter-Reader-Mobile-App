@@ -22,6 +22,7 @@ namespace SampleMauiMvvmApp.ModelWrappers
                 Customer_zoning = readingModel.CUSTOMER_ZONING;
                 RouteNumber = readingModel.RouteNumber;
                 MeterReader = readingModel.METER_READER;
+                IsFlagged = (bool)readingModel.IsFlagged;
                 //ReadingDate = (DateTime)readingModel.READING_DATE;
                 Comment = readingModel.Comment;
                 ReadingNotTaken = (bool)readingModel.ReadingNotTaken;
@@ -85,6 +86,8 @@ namespace SampleMauiMvvmApp.ModelWrappers
         string routeNumber;
         [ObservableProperty]
         public bool readingTaken;
+        [ObservableProperty]
+        public bool isFlagged;
         [ObservableProperty]
         public bool readingNotTaken;
         [ObservableProperty]

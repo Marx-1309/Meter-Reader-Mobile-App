@@ -17,8 +17,8 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(CapturedReadingsPage), typeof(CapturedReadingsPage));
         Routing.RegisterRoute(nameof(UncapturedReadingsPage), typeof(UncapturedReadingsPage));
         Routing.RegisterRoute(nameof(UpsertUnregReadingPage), typeof(UpsertUnregReadingPage));
-        Routing.RegisterRoute(nameof(UnregReadingListPage), typeof(UnregReadingListPage));
-        //Routing.RegisterRoute(nameof(SynchronizationPage), typeof(SynchronizationPage));
+        Routing.RegisterRoute(nameof(ReflushPage), typeof(ReflushPage));
+        Routing.RegisterRoute(nameof(SynchronizationPage), typeof(SynchronizationPage));
         Routing.RegisterRoute(nameof(OnboardingPage), typeof(OnboardingPage));
         Routing.RegisterRoute(nameof(LocationPage), typeof(LocationPage));
         Routing.RegisterRoute(nameof(UncapturedReadingsByAreaPage), typeof(UncapturedReadingsByAreaPage));
@@ -42,6 +42,15 @@ public partial class AppShell : Shell
     private async Task GoToMainPage()
     {
         await Shell.Current.GoToAsync($"//{nameof(MonthCustomerTabPage)}"); ;
+    }
+
+    private async Task GoToSyncPage()
+    {
+        await Shell.Current.GoToAsync($"{nameof(SynchronizationPage)}", true,
+                 new Dictionary<string, object>()
+                 {
+                    { "Refresh","Refresh"}
+                 }); 
     }
 
     public async Task CheckIfValidToken()
@@ -87,5 +96,10 @@ public partial class AppShell : Shell
                 await GoToMainPage();
             }
         }
+    }
+
+    private void BtnFlush_Clicked(object sender, EventArgs e)
+    {
+        GoToSyncPage();
     }
 }

@@ -1,5 +1,8 @@
 ﻿
 
+using System.Collections;
+using System.Collections.Generic;
+
 namespace SampleMauiMvvmApp.Services
 {
     public interface IReadingExportService
@@ -9,26 +12,29 @@ namespace SampleMauiMvvmApp.Services
         Task DeleteOldReadings();
         Task GetLatestExportItemIntoSqlite();
         Task ScanForNewExports();
-        Task SeedData(DbContext dbContext);
     }
 
-    public class ReadingExportService : IReadingExportService
+    public class ReadingExportService 
     {
         HttpClient _httpClient;
         public string StatusMessage;
-        protected readonly DbContext dbContext;
+        public DbContext dbContext;
         ReadingService readingService;
         CustomerService customerService;
         IConnectivity connectivity;
 
 
-        public ReadingExportService(DbContext dbContext, ReadingService _readingService, CustomerService _customerService, IConnectivity _connectivity)
+        public ReadingExportService(DbContext _dbContext, ReadingService _readingService, CustomerService _customerService, IConnectivity _connectivity)
         {
             this._httpClient = new HttpClient();
-            this.dbContext = dbContext;
+            this.dbContext = _dbContext;
             this.readingService = _readingService;
             this.customerService = _customerService;
             this.connectivity = _connectivity;
+        }
+
+        public ReadingExportService()
+        {
         }
 
 
@@ -150,7 +156,7 @@ namespace SampleMauiMvvmApp.Services
         List<ReadingExport> LatestExportList { get; set; } = new();
         List<Customer> LatestCustomerList { get; set; } = new();
         List<Reading> LatestReadingList { get; set; } = new();
-        public async Task ScanForNewExports()
+        public async Task ScanForNewItems()
         {
             if (readingExports == null)
             {
@@ -238,16 +244,18 @@ namespace SampleMauiMvvmApp.Services
                         if (newExportToInsert.Any())
                         {
                             await Shell.Current.DisplayAlert("New Reading Exports Found!", $"We Are Updating The App!", "OK");
-                            //await Shell.Current.GoToAsync($"{nameof(SynchronizationPage)}");
+                            await Shell.Current.GoToAsync($"{nameof(SynchronizationPage)}");
 
 
-                            List<ReadingExport> exportsItemsToDelete = await dbContext.Database.Table<ReadingExport>().ToListAsync();
+                            List<ReadingExport?> exportsItemsToDelete = await dbContext.Database.Table<ReadingExport>().ToListAsync();
 
-                            foreach (var exportItem in exportsItemsToDelete)
+                            if (exportsItemsToDelete.Any())
                             {
-                                await dbContext.Database.DeleteAsync(exportItem);
+                                foreach (var exportItem in exportsItemsToDelete)
+                                {
+                                    await dbContext.Database.DeleteAsync(exportItem);
+                                }
                             }
-
                             List<UnregReadings> unregReadingsToDelete = await dbContext.Database.Table<UnregReadings>().ToListAsync();
 
                             if (unregReadingsToDelete.Any())
@@ -359,7 +367,7 @@ namespace SampleMauiMvvmApp.Services
                                         recordToUpdate.WaterReadingExportID = lastExportItem.WaterReadingExportID;
                                         recordToUpdate.CUSTOMER_NUMBER = item.CUSTOMER_NUMBER;
                                         recordToUpdate.CUSTOMER_NAME = item.CUSTOMER_NAME;
-                                        recordToUpdate.AREA = item.AREA;
+                                        recordToUpdate.AREA = item.AREA?.Trim();
                                         recordToUpdate.CUSTOMER_ZONING = item.CUSTOMER_ZONING;
                                         recordToUpdate.ERF_NUMBER = item.ERF_NUMBER;
                                         recordToUpdate.RouteNumber = item.RouteNumber;
@@ -380,6 +388,8 @@ namespace SampleMauiMvvmApp.Services
                                 // Update the records in the database
                                 await dbContext.Database.UpdateAllAsync(ReadingList);
                                 await Shell.Current.DisplayAlert("Done!", $"finished downloading new data!", "OK");
+                                Page pg = await Shell.Current.Navigation.PopAsync();
+                                 Shell.Current.Navigation.RemovePage(pg);
                                 await Shell.Current.GoToAsync($"{nameof(UncapturedReadingsPage)}");
                             }
                         }
@@ -476,77 +486,125 @@ namespace SampleMauiMvvmApp.Services
 
 
 
-        public async Task SeedData(DbContext dbContext)
+        public async Task FlushAndSeed()
         {
-            //await _readingService.GetListOfReadingExportFromSql();
-
-            #region Getting the latest export values(Id,Month & Year)
-            var latestExportItem = await dbContext.Database.Table<ReadingExport>()
-                       .OrderByDescending(r => r.WaterReadingExportID)
-                       .FirstOrDefaultAsync();
-
-            var latestExportMonthItem = await dbContext.Database.Table<ReadingExport>()
-                   .OrderByDescending(r => r.MonthID)
-                   .FirstOrDefaultAsync();
-
-            var latestExportYearItem = await dbContext.Database.Table<ReadingExport>()
-                   .OrderByDescending(r => r.Year)
-                   .FirstOrDefaultAsync();
-
-            // If current month is January, adjust to December of previous year
-            int currentExportId = latestExportItem.WaterReadingExportID;
-            int currentMonthId = latestExportMonthItem.MonthID;
-            int currentYearId = latestExportYearItem.Year;
-            if (currentMonthId == 0)
+            await Shell.Current.GoToAsync($"{nameof(SynchronizationPage)}");
+            try
             {
-                currentMonthId = 12;
-                latestExportYearItem.Year -= 1;
-            }
-            #endregion
+                //await customerService.GetListOfCustomerFromSql();
+                #region deleting existing db data
+                List< ReadingExport > result1 = await dbContext.Database.Table<ReadingExport>().Where(i => i.WaterReadingExportID > 0).ToListAsync();
+                List<Reading> result2 = await dbContext.Database.Table<Reading>().Where(i => i.Id > 0).ToListAsync();
+                List<Customer> result3 = await dbContext.Database.Table<Customer>().Where(i => i.CUSTNMBR != null).ToListAsync();
+                List<Month> result4 = await dbContext.Database.Table<Month>().Where(i => i.MonthID >0).ToListAsync();
+                List<ReadingMedia> result5 = await dbContext.Database.Table<ReadingMedia>().Where(i=>i.Id>0).ToListAsync();
 
-
-
-            List<Reading> GeneratedReadings = new();
-            List<Customer> allCustomers = await dbContext.Database.Table<Customer>().ToListAsync();
-
-
-            foreach (var customer in allCustomers)
-            {
-                var existingReading = await dbContext.Database.Table<Reading>()
-                    .Where(r => r.CUSTOMER_NUMBER == customer.CUSTNMBR)
-                    .FirstOrDefaultAsync();
-
-                if (existingReading == null)
+                if (result1.Count>0)
                 {
-                    var readingFaker = new ReadingFaker();
-                    var reading = readingFaker.Generate(1).FirstOrDefault();
-
-                    reading.CUSTOMER_NUMBER = customer.CUSTNMBR;
-                    reading.CUSTOMER_NAME = customer.CUSTNAME;
-                    reading.ERF_NUMBER = customer.ZIP;
-                    reading.AREA = customer.STATE;
-                    reading.CUSTOMER_ZONING = customer.CUSTCLAS;
-                    reading.CURRENT_READING = 0;
-                    reading.Comment = string.Empty;
-                    reading.MonthID = currentMonthId;
-                    //reading.Year = await _readingService.GetLatestExportItemYear() ?? reading.Year;
-                    //reading.READING_DATE = DateTime.UtcNow.ToLongDateString();
-                    reading.WaterReadingExportID = currentExportId;
-                    reading.METER_READER = string.Empty;
-                    reading.ReadingSync = false;
-                    reading.ReadingNotTaken = false;
-
-                    GeneratedReadings.Add(reading);
+                    await dbContext.Database.Table<ReadingExport>().DeleteAsync(r => r.WaterReadingExportID>0);
                 }
 
+                if (result2.Count > 0)
+                {
+                    await dbContext.Database.Table<Reading>().DeleteAsync(r => r.Id > 0);
+                }
+
+                if (result3.Count > 0)
+                {
+                    await dbContext.Database.Table<Customer>().DeleteAsync(r => r.CUSTNMBR != null);
+                }
+
+                if (result4.Count > 0)
+                {
+                    await dbContext.Database.Table<Month>().DeleteAsync(r => r.MonthID >0);
+                }
+
+                if (result5.Count > 0)
+                {
+                    await dbContext.Database.Table<ReadingMedia>().DeleteAsync(r => r.Id>0);
+                }
+
+                #endregion
+
+                await customerService.GetListOfCustomerFromSql();
+                await CheckForNewExportInSql();
+
+                #region Getting the latest export values(Id,Month & Year)
+                var latestExportItem = await dbContext.Database.Table<ReadingExport>()
+               .OrderByDescending(r => r.WaterReadingExportID)
+               .FirstOrDefaultAsync();
+
+
+                // If current month is January, adjust to December of previous year
+                int currentExportId = latestExportItem.WaterReadingExportID;
+                int currentMonthId = latestExportItem.MonthID;
+                int currentYearId = latestExportItem.Year;
+                if (currentMonthId == 0)
+                {
+                    currentMonthId = 12;
+                    latestExportItem.Year -= 1;
+                }
+                #endregion
+
+
+
+                List<Reading> GeneratedReadings = new();
+                List<Customer> allCustomers = await dbContext.Database.Table<Customer>().ToListAsync();
+
+                foreach (var customer in allCustomers)
+                {
+                    var existingReading = await dbContext.Database.Table<Reading>()
+                        .Where(r => r.CUSTOMER_NUMBER == customer.CUSTNMBR)
+                        .FirstOrDefaultAsync();
+
+                    if (existingReading == null)
+                    {
+                        var readingFaker = new ReadingFaker();
+                        var reading = readingFaker.Generate(1).FirstOrDefault();
+
+                        reading.CUSTOMER_NUMBER = customer.CUSTNMBR;
+                        reading.CUSTOMER_NAME = customer.CUSTNAME;
+                        reading.ERF_NUMBER = customer.ZIP;
+                        reading.AREA = customer.STATE;
+                        reading.CUSTOMER_ZONING = customer.CUSTCLAS;
+                        reading.CURRENT_READING = 0;
+                        reading.Comment = string.Empty;
+                        reading.MonthID = currentMonthId;
+                        //reading.Year = await _readingService.GetLatestExportItemYear() ?? reading.Year;
+                        //reading.READING_DATE = DateTime.UtcNow.ToLongDateString();
+                        reading.WaterReadingExportID = currentExportId;
+                        reading.METER_READER = string.Empty;
+                        reading.ReadingSync = false;
+                        reading.ReadingNotTaken = false;
+
+                        GeneratedReadings.Add(reading);
+                    }
+
+
+                }
+                await dbContext.Database.InsertAllAsync(GeneratedReadings);
+
+                await readingService.GetListOfPrevMonthReadingFromSql();
+
+
+                await Shell.Current.DisplayAlert("The App is about to shut down","good","Okay");
+                Application.Current.Quit();
+
+                await Shell.Current.GoToAsync($"{nameof(MonthCustomerTabPage)}");
+            }
+            catch
+            {
 
             }
-            await dbContext.Database.InsertAllAsync(GeneratedReadings);
-
-
-
+            finally
+            {
+                await Shell.Current.GoToAsync($"{nameof(MonthCustomerTabPage)}");
+            }
+            
         }
         #endregion
+
+
 
         #region GetLatestExportItemIntoSqlite
         public async Task GetLatestExportItemIntoSqlite()

@@ -6,6 +6,7 @@ using Microsoft.Maui;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Xml.Linq;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SampleMauiMvvmApp.Models
 {
@@ -15,38 +16,29 @@ namespace SampleMauiMvvmApp.Models
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public int WaterReadingExportDataID { get; set; }
-        [ForeignKey(typeof(ReadingExport), Name = "WaterReadingExportID")]
         public int WaterReadingExportID { get; set; }
-
-        [ForeignKey(typeof(Customer), Name = "CUSTNMBR")]
         public string CUSTOMER_NUMBER { get; set; }
-
-        [ForeignKey(typeof(Customer), Name = "CUSTNAME")]
         public string CUSTOMER_NAME { get; set; }
-
-        [ForeignKey(typeof(Customer), Name = "UPSZONE")]
         public string AREA { get; set; } 
-        [ForeignKey(typeof(Customer), Name = "ZIP")]
         public string ERF_NUMBER { get; set; }
         public string? METER_NUMBER { get; set; }
         public decimal CURRENT_READING { get; set; } 
         public decimal? PREVIOUS_READING { get; set; }
-        [ForeignKey(typeof(Month), Name = "Id")]
         public int MonthID { get; set; }
         public int Year { get; set; }
-        [ForeignKey(typeof(Customer), Name = "UPSZONE")]
         public string? CUSTOMER_ZONING { get; set; }
         public string? RouteNumber { get; set; }
         public string Comment { get; set; }
         public int? WaterReadingTypeId { get; set; }
-
-        [ForeignKey(typeof(User), Name = "Username")]
         public string? METER_READER { get; set; }
         public string? ReadingDate { get; set; }  /*= DateTime.UtcNow.ToLocalTime();*/
         public bool? ReadingTaken { get; set; }
         [Ignore]
         public bool ReadingNotTaken { get; set; }
         public bool? ReadingSync { get; set; }
+
+        [NotMapped]
+        public bool? IsFlagged { get; set; } = false;
 
         [Ignore]
         public string? ReadingInfo
@@ -84,6 +76,7 @@ namespace SampleMauiMvvmApp.Models
                 //READING_DATE = wrapper.ReadingDate,
                 ReadingTaken = wrapper.ReadingTaken,
                 ReadingNotTaken = wrapper.ReadingNotTaken,
+                IsFlagged = wrapper.IsFlagged,
                 ReadingSync = wrapper.ReadingSync,
                 Comment = wrapper.Comment,
             };

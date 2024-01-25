@@ -33,7 +33,7 @@ namespace SampleMauiMvvmApp.ViewModels
                     Name = "Add Reading",
                     Image = "add_readings_maually.jpg",
                     Label= "314 tackles (212 solo), 33 passes defensed, 13 interceptions, 5 tackles for loss, 4 fumble recoveries, four forced fumbles, 3 interception returns for TDs",
-                    Url = "UnregReadingListPage",
+                    Url = "ReflushPage",
                     IsActive=true
                     //await Shell.Current.GoToAsync($"{nameof(CustomerDetailPage)}"
                 },

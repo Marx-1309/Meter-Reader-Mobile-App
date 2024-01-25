@@ -7,59 +7,59 @@
 	xmlns:viewmodel="clr-namespace:SampleMauiMvvmApp.ViewModels"
              x:DataType="viewmodel:ReadingViewModel"
     Title="My Locations">
-
     <Grid
-       ColumnDefinitions="*,*"
-        ColumnSpacing="1"
-        RowDefinitions="*,Auto"
-        RowSpacing="0"
-        Padding="4"
-         BackgroundColor="LightGrey">
+    ColumnDefinitions="*,*"
+    ColumnSpacing="5"
+    RowDefinitions="*,Auto"
+    RowSpacing="0"
+    BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
         <RefreshView
-            Grid.ColumnSpan="2"
-            Command="{Binding GetLocationsCommand}"
-            IsRefreshing="{Binding IsRefreshing}">
+        Grid.ColumnSpan="2"
+        Command="{Binding GetLocationsCommand}"
+        IsRefreshing="{Binding IsRefreshing}">
             <ContentView>
                 <CollectionView
                     ItemsSource="{Binding AllLocation}"
                     SelectionMode="None">
+                    <CollectionView.EmptyView>
+                        <StackLayout Padding="100">
+                            <Image
+                                HorizontalOptions="Center"
+                                HeightRequest="160"
+                                WidthRequest="160"
+                                Source="uncapturedlocation_logo.png"
+                                VerticalOptions="Center" />
+                        </StackLayout>
+                    </CollectionView.EmptyView>
+                    <!--<CollectionView.ItemsLayout>
+                        <GridItemsLayout  Orientation="Horizontal" Span="3"/>
+                    </CollectionView.ItemsLayout>-->
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="model:LocationReadings">
-                            <Grid Padding="1" HorizontalOptions="Fill">
-                                <Frame HeightRequest="120"
-                                       CornerRadius="10">
+                            <Grid Padding="5" HorizontalOptions="Fill">
+                                <Frame HeightRequest="100" Padding="2,0,2,0" >
                                     <Frame.GestureRecognizers>
                                         <TapGestureRecognizer 
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ReadingViewModel}}, Path=GoToListOfUncapturedReadingsByAreaCommand}"
-                                                CommandParameter="{Binding .}"/>
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ReadingViewModel}}, Path=GoToListOfUncapturedReadingsByAreaCommand}"
+                                        CommandParameter="{Binding .}"/>
                                     </Frame.GestureRecognizers>
-                                    <Grid Padding="-38" VerticalOptions="Fill"  ColumnDefinitions="150,300,*">
-
-                                        <!--If using tablet use Height of 75 , if pc then use height of 100 else ERRORS might occur when adding the objects to the collection in the VM--> 
+                                    <Grid Padding="0" ColumnDefinitions="100,200,Auto">
                                         <Image
-                                            HeightRequest="100"
+                                            Aspect="AspectFill"
+                                            HeightRequest="75"
                                             Source="uncapturedlocation_logo.png"
-                                            WidthRequest="100"
-                                        >
-
-                                        </Image>
-
-                                        <VerticalStackLayout
-                                                VerticalOptions="Center"
-                                                Grid.Column="1"
-                                                Padding="10">
-                                            <Label Style="{StaticResource LargeLabel}" HorizontalOptions="Start" TextColor="Black" Text="{Binding AREANAME}" />
-                                            <!--<Label Style="{StaticResource MediumLabel}" Text="{Binding Year}" TextColor="Gray" />-->
-                                        </VerticalStackLayout>
-
+                                            WidthRequest="75" />
                                         <VerticalStackLayout
                                             VerticalOptions="Center"
-                                            HorizontalOptions="StartAndExpand"
-                                            Grid.Column="2"
+                                            Grid.Column="1"
                                             Padding="10">
-                                            <Label Style="{StaticResource LargeLabel}" TextColor="Red" FontAttributes="Bold" Text="{Binding NumberOfReadings}"/>
-                                            <!--<Label Style="{StaticResource MediumLabel}" Text="{Binding Year}" TextColor="Gray" />-->
+                                            <Label FontSize="Large" FontAttributes="Bold" Text="{Binding AREANAME}" />
+
                                         </VerticalStackLayout>
+                                        <StackLayout Grid.Column="2">
+                                            <Label FontSize="Large" FontAttributes="Bold" HorizontalOptions="StartAndExpand" Padding="0,10" TextColor="Red" Text="{Binding NumberOfReadings}" />
+                                        </StackLayout>
+                                        
                                     </Grid>
                                 </Frame>
                             </Grid>
@@ -68,28 +68,18 @@
                 </CollectionView>
             </ContentView>
         </RefreshView>
-        <!--<Button
-            Grid.Row="1"
-            Grid.Column="0"
-            Margin="8"
-             CornerRadius="0"
-            Command="{Binding GetMonthsCommand}"
-            IsEnabled="{Binding IsNotBusy}"
-            Text="Get Month" /><Button
-            Grid.Row="1"
-            Grid.Column="1"
-            Margin="8"
-             CornerRadius="0"
-             Command="{Binding GoToAllCustomersCommand}"
-            IsEnabled="{Binding IsNotBusy}"
-            Text="All Customers" />-->
+        
         <ActivityIndicator
-            Grid.RowSpan="2"
-            Grid.ColumnSpan="2"
-            HorizontalOptions="Fill"
-            IsRunning="{Binding IsBusy}"
-            IsVisible="{Binding IsBusy}"
-            Color="{StaticResource Primary}"
-            VerticalOptions="Center" />
+        Grid.RowSpan="2"
+        Grid.ColumnSpan="2"
+        HorizontalOptions="Fill"
+        IsRunning="{Binding IsBusy}"
+        IsVisible="{Binding IsBusy}"
+        Color="{StaticResource Primary}"
+        VerticalOptions="Center" />
     </Grid>
+
+
+
+
 </ContentPage>

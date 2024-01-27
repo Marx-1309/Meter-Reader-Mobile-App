@@ -1,12 +1,16 @@
 ﻿
+using SampleMauiMvvmApp.Helpers;
+
 namespace SampleMauiMvvmApp.ViewModels
 {
     [QueryProperty(nameof(IsFirstTime), nameof(IsFirstTime))]
     public partial class LoginViewModel : BaseViewModel
     {
-        public LoginViewModel(AuthenticationService _authenticationService )
+        AppShell _appshell;
+        public LoginViewModel(AuthenticationService _authenticationService,AppShell appShell )
         {
             this.authenticationService = _authenticationService; 
+            this._appshell = appShell;
         }
         [ObservableProperty]
         private bool _isFirstTime;
@@ -57,12 +61,10 @@ namespace SampleMauiMvvmApp.ViewModels
                     Preferences.Default.Set("username", email);
 
                     //You can use this to access details of the logged_in user//commented out 
-                    //App.UserInfo = userInfo;
 
                     //Navigate to the app's main page
                     IsBusy = false;
                     await Shell.Current.GoToAsync($"//{nameof(MonthCustomerTabPage)}");;
-
                     
                 }
                 IsBusy = false;

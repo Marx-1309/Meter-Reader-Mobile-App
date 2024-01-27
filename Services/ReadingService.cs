@@ -450,7 +450,7 @@ namespace SampleMauiMvvmApp.Services
                                 else
                                 {
                                     StatusMessage = IsSyncSuccess.IsSuccessStatusCode.ToString();
-                                    await Shell.Current.DisplayAlert($"Uups ,something went wrong while syncing readings.", $"{StatusMessage}", "OK");
+                                    await Shell.Current.DisplayAlert($"Uups ,something went wrong while syncing readings.", $"{StatusMessage}", "OK");  
                                 }
                             }
 

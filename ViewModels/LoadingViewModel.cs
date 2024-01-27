@@ -15,8 +15,12 @@ using System.Threading.Tasks;
 
 namespace SampleMauiMvvmApp.ViewModels
 {
+    [QueryProperty("loggedin", "loggedin")]
     public partial class LoadingViewModel : BaseViewModel
     {
+        [ObservableProperty]
+        string loggedin;
+
         public ReadingService readingService;
         public ReadingExportService readingExportService;
         public LoadingViewModel(ReadingService _readingService, ReadingExportService _readingExportService)
@@ -64,11 +68,10 @@ namespace SampleMauiMvvmApp.ViewModels
         }
 
         [RelayCommand]
-        public Task GetInitializationDataAsync()
+        public Task GetInitializationDataAsync(string? loggedin)
         {
             return Task.CompletedTask;
             //await readingService.GetListOfReadingExportFromSql();
-
         }
 
         [RelayCommand]

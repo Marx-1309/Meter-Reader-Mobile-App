@@ -1,4 +1,6 @@
 ﻿
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 using System.Linq;
 
 namespace SampleMauiMvvmApp.ViewModels
@@ -13,13 +15,15 @@ namespace SampleMauiMvvmApp.ViewModels
         CustomerService customerService;
         MonthService monthService;
         DbContext dbContext;
-        public ReadingViewModel(ReadingService _readingService,ReadingExportService _readingExportService, CustomerService _customerService, MonthService _monthService, DbContext _dbContext)
+        AppShell appShell;
+        public ReadingViewModel(ReadingService _readingService,ReadingExportService _readingExportService, CustomerService _customerService, MonthService _monthService, DbContext _dbContext,AppShell _appShell)
         {
             this.readingService = _readingService;
             this.readingExportService = _readingExportService;
             this.customerService = _customerService;
             this.monthService = _monthService;
             this.dbContext = _dbContext;
+            this.appShell = _appShell;
         }
 
         public ObservableCollection<Reading> AllReadings { get; set; } = new();
@@ -102,7 +106,6 @@ namespace SampleMauiMvvmApp.ViewModels
         [RelayCommand]
         async Task GetUncapturedReadings()
         {
-            var currentPage = Shell.Current.CurrentPage;
             if (IsBusy) return; // Return an empty list if already busy
 
             try
@@ -183,12 +186,38 @@ namespace SampleMauiMvvmApp.ViewModels
             IsBusy = false;
             await Shell.Current.GoToAsync("..");
         }
+        private async Task DisplayAlert(string v1, string v2, string v3, string v4)
+        {
+            await Shell.Current.DisplayAlert(v1, v2, v3, v4);
+        }
 
         [RelayCommand]
         public async Task ReflushData()
         {
             IsBusy = true;
             await Task.Delay(50);
+            //CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+            //var snackbarOptions = new SnackbarOptions
+            //{
+            //    BackgroundColor = Colors.Red,
+            //    TextColor = Colors.Green,
+            //    ActionButtonTextColor = Colors.Yellow,
+            //    CornerRadius = new CornerRadius(10),
+            //    Font = Microsoft.Maui.Font.SystemFontOfSize(14),
+            //    ActionButtonFont = Microsoft.Maui.Font.SystemFontOfSize(14),
+            //    CharacterSpacing = 0.5
+            //};
+
+            //string text = "This is a Snackbar";
+            //string actionButtonText = "Click Here to Dismiss";
+            //Action action = async () => await DisplayAlert("Reseting and re-seeding", "You are about to delete and restore", "OK", "Cancel");
+            //if (action.Equals("Cancel")) return;
+            //TimeSpan duration = TimeSpan.FromSeconds(5);
+
+            //var snackbar = Snackbar.Make(text, action, actionButtonText, duration, snackbarOptions);
+
+            //await snackbar.Show(cancellationTokenSource.Token);
             await readingExportService.FlushAndSeed();
             IsBusy = false;
             await Shell.Current.GoToAsync("..");
@@ -252,7 +281,7 @@ namespace SampleMauiMvvmApp.ViewModels
             //if (IsBusy) return; // Return an empty list if already busy
             try
             {
-                Title = area?.AREANAME;
+                Title = area?.AREANAME.Trim();
                 IsBusy = true;
                 if (area == null)
                 {

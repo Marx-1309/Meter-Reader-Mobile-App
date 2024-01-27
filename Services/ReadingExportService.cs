@@ -1,8 +1,4 @@
 ﻿
-
-using System.Collections;
-using System.Collections.Generic;
-
 namespace SampleMauiMvvmApp.Services
 {
     public interface IReadingExportService
@@ -36,7 +32,6 @@ namespace SampleMauiMvvmApp.Services
         public ReadingExportService()
         {
         }
-
 
         #region Get ReadingExport
 
@@ -395,7 +390,9 @@ namespace SampleMauiMvvmApp.Services
                         }
                         else
                         {
-                            await Shell.Current.DisplayAlert("No New Exports Found!", $"You Can Proceed Using The App! ", "OK");
+                            //await Shell.Current.DisplayAlert("No New Exports Found!", $"You Can Proceed Using The App! ", "OK");
+                            string tstMsg = "No New Exports Found! You Can Proceed Using The App! ";
+                            await Toast.Make(tstMsg, CommunityToolkit.Maui.Core.ToastDuration.Long, 10).Show();
                         }
                     }
 
@@ -499,27 +496,27 @@ namespace SampleMauiMvvmApp.Services
                 List<Month> result4 = await dbContext.Database.Table<Month>().Where(i => i.MonthID >0).ToListAsync();
                 List<ReadingMedia> result5 = await dbContext.Database.Table<ReadingMedia>().Where(i=>i.Id>0).ToListAsync();
 
-                if (result1.Count>0)
+                if (result1.Count>0 || result1.Any())
                 {
                     await dbContext.Database.Table<ReadingExport>().DeleteAsync(r => r.WaterReadingExportID>0);
                 }
 
-                if (result2.Count > 0)
+                if (result2.Count > 0 || result2.Any())
                 {
                     await dbContext.Database.Table<Reading>().DeleteAsync(r => r.Id > 0);
                 }
 
-                if (result3.Count > 0)
+                if (result3.Count > 0 || result3.Any())
                 {
                     await dbContext.Database.Table<Customer>().DeleteAsync(r => r.CUSTNMBR != null);
                 }
 
-                if (result4.Count > 0)
+                if (result4.Count > 0 || result4.Any())
                 {
                     await dbContext.Database.Table<Month>().DeleteAsync(r => r.MonthID >0);
                 }
 
-                if (result5.Count > 0)
+                if (result5.Count > 0 || result5.Any())
                 {
                     await dbContext.Database.Table<ReadingMedia>().DeleteAsync(r => r.Id>0);
                 }
@@ -585,11 +582,6 @@ namespace SampleMauiMvvmApp.Services
                 await dbContext.Database.InsertAllAsync(GeneratedReadings);
 
                 await readingService.GetListOfPrevMonthReadingFromSql();
-
-
-                await Shell.Current.DisplayAlert("The App is about to shut down","good","Okay");
-                Application.Current.Quit();
-
                 await Shell.Current.GoToAsync($"{nameof(MonthCustomerTabPage)}");
             }
             catch

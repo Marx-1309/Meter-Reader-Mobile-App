@@ -9,9 +9,9 @@
     Shell.FlyoutBehavior="Flyout"
     >
 
-    <!--<ShellContent
-    ContentTemplate="{DataTemplate local:MonthCustomerTabPage}"
-    Route="MenuPage" FlyoutItemIsVisible="False"/>-->
+    <ShellContent
+    ContentTemplate="{DataTemplate local:LoadingPage}"
+    Route="MenuPage" FlyoutItemIsVisible="False"/>
 
     <FlyoutItem Route="MonthCustomerTabPage" FlyoutDisplayOptions="AsMultipleItems">
         <ShellContent Title="Not Captured" Icon="water_tap_thick.png" ContentTemplate="{DataTemplate view:UncapturedReadingsPage}"></ShellContent>
@@ -28,30 +28,17 @@
 
 
 
-    <!--<Shell.FlyoutHeader>
+    <Shell.FlyoutHeader>
         <StackLayout Padding="20">
-           <Image Source="user_profile.png" HeightRequest="150" WidthRequest="150" />
+            <Image Source="user_profile.png" HeightRequest="150" WidthRequest="150" />
             <StackLayout Orientation="Vertical" Padding="10" >
-                <HorizontalStackLayout>
-                    <Label x:Name="lblUsername"  FontAttributes="Bold" TextColor="Red"></Label>
-                    <Label Text="Role" TextColor="Black"  ></Label>
-                    
-                </HorizontalStackLayout>
-                <Label x:Name="lblRole" TextColor="Black" FontAttributes="Bold" ></Label>
+                <VerticalStackLayout HorizontalOptions="Center" Padding="10">
+                    <Label x:Name="lblUsername" FontSize="Subtitle"  FontAttributes="Bold" TextColor="Blue"></Label>
+
+                </VerticalStackLayout>
             </StackLayout>
         </StackLayout>
-    </Shell.FlyoutHeader>-->
-
-
-    <Shell.FlyoutFooter>
-        <StackLayout Padding="20">
-            <StackLayout Orientation="Vertical" Padding="10" >
-                <HorizontalStackLayout>
-                    <Button BackgroundColor="Red" Clicked="BtnFlush_Clicked" Text="Reflush Readings"></Button>
-                </HorizontalStackLayout>
-            </StackLayout>
-        </StackLayout>
-    </Shell.FlyoutFooter>
+    </Shell.FlyoutHeader>
 
 
 

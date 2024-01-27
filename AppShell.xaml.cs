@@ -5,7 +5,7 @@ public partial class AppShell : Shell
     public AppShell()
 	{
         InitializeComponent();
-        //_ = DisplayLoggedInUserInfo();
+        CheckIfValidToken();
         //Routes
         Routing.RegisterRoute(nameof(CustomerDetailPage), typeof(CustomerDetailPage));
         Routing.RegisterRoute(nameof(MonthPage), typeof(MonthPage));
@@ -55,13 +55,11 @@ public partial class AppShell : Shell
 
     public async Task CheckIfValidToken()
     {
-        await Task.Delay(1000);
-        IsBusy = true;
+        await Task.Delay(50);
+        IsBusy = true; 
         //Retrieve Token from internal Secure Storage
         var token = await SecureStorage.GetAsync("Token");
-        //temp code
-        //SecureStorage.Remove("Token");
-        //Preferences.Default.Clear();
+      
 
         if (string.IsNullOrEmpty(token))
         {
@@ -86,14 +84,10 @@ public partial class AppShell : Shell
                 string userId = jsonToken.Claims.First(claim => claim.Type == "sub").Value;
                 string email = jsonToken.Claims.First(claim => claim.Type == "email").Value;
 
-                App.UserInfo = new UserInfo()
-                {
-                    Id = jsonToken.Claims.First(claim => claim.Type == "sub").Value,
-                    Username = jsonToken.Claims.First(claim => claim.Type == "email").Value
-                };
+                lblUsername.Text = email;
 
                 IsBusy = false;
-                await GoToMainPage();
+                //await GoToMainPage();
             }
         }
     }

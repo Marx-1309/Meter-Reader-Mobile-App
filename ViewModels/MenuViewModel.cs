@@ -23,15 +23,22 @@ namespace SampleMauiMvvmApp.ViewModels
                 //    IsActive=false
                 //},
                 new Menu{
-                    Name = "Export Sync",
-                    Image = "export_sync.png",
+                    Name = "My Notes",
+                    Image = "notes_icon.png",
                     Label= "Pitt's all-time leader in passing yards (12,303), pass completions (1,045), total offense (13,112), touchdown responsibility (102) and passing touchdowns (81)",
                     Url = "SynchronizationPage",
                     IsActive=false
                 },
                 new Menu{
-                    Name = "Add Reading",
-                    Image = "add_readings_maually.jpg",
+                    Name = "Scan For New Customer(s)",
+                    Image = "scan_db_icon.png",
+                    Label= "314 tackles (212 solo), 33 passes defensed, 13 interceptions, 5 tackles for loss, 4 fumble recoveries, four forced fumbles, 3 interception returns for TDs",
+                    IsActive=true
+                    //await Shell.Current.GoToAsync($"{nameof(CustomerDetailPage)}"
+                },
+                new Menu{
+                    Name = "Recycle Readings",
+                    Image = "export_sync.png",
                     Label= "314 tackles (212 solo), 33 passes defensed, 13 interceptions, 5 tackles for loss, 4 fumble recoveries, four forced fumbles, 3 interception returns for TDs",
                     Url = "ReflushPage",
                     IsActive=true
@@ -46,7 +53,7 @@ namespace SampleMauiMvvmApp.ViewModels
             if (menu == null)
                 return;
 
-            await Shell.Current.GoToAsync(menu.Url.ToString());
+            await Shell.Current.GoToAsync(menu.Url?.ToString());
         }
     }
 }

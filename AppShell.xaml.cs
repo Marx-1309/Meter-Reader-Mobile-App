@@ -16,12 +16,14 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(OnboardingPage), typeof(OnboardingPage));
         Routing.RegisterRoute(nameof(CapturedReadingsPage), typeof(CapturedReadingsPage));
         Routing.RegisterRoute(nameof(UncapturedReadingsPage), typeof(UncapturedReadingsPage));
-        Routing.RegisterRoute(nameof(UpsertUnregReadingPage), typeof(UpsertUnregReadingPage));
         Routing.RegisterRoute(nameof(ReflushPage), typeof(ReflushPage));
         Routing.RegisterRoute(nameof(SynchronizationPage), typeof(SynchronizationPage));
         Routing.RegisterRoute(nameof(OnboardingPage), typeof(OnboardingPage));
         Routing.RegisterRoute(nameof(LocationPage), typeof(LocationPage));
         Routing.RegisterRoute(nameof(UncapturedReadingsByAreaPage), typeof(UncapturedReadingsByAreaPage));
+        Routing.RegisterRoute(nameof(NotesListPage), typeof(NotesListPage));
+        Routing.RegisterRoute(nameof(NotesDetailsPage), typeof(NotesDetailsPage));
+        Routing.RegisterRoute(nameof(SyncNewCustomersPage), typeof(SyncNewCustomersPage));
         Routing.RegisterRoute(nameof(MenuPage), typeof(MenuPage));
         Routing.RegisterRoute(nameof(AppShell), typeof(AppShell));
     }

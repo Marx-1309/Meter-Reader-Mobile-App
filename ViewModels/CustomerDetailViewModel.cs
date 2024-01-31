@@ -173,7 +173,7 @@
                     return;
                 }
 
-                if (CurrentMonthReading.CURRENT_READING < CustPrevReading && CurrentMonthReading.CURRENT_READING > 0)
+                if (CurrentMonthReading.CURRENT_READING < CustPrevReading && CurrentMonthReading.CURRENT_READING >= 0)
                 {
 
                     await Shell.Current.DisplayAlert($"Current Reading lesser than Previous of:{CustPrevReading}",
@@ -190,17 +190,6 @@
                 {
                     await Shell.Current.DisplayAlert($"Reset Success",
                                                           $"This reading has been uncaptured!", "OK");
-                }
-
-
-                if (CurrentMonthReading.CURRENT_READING != 0)
-                {
-                    CurrentMonthReading.ReadingTaken = true;
-
-                }
-                else
-                {
-                    CurrentMonthReading.ReadingTaken = false;
                 }
 
                 //GetLocation();

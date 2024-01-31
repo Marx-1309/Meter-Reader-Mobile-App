@@ -71,7 +71,7 @@ namespace SampleMauiMvvmApp.Services
             try
             {
                 await _authenticationService.SetAuthToken();
-                var readingslist = await dbContext.Database.Table<Reading>().Where(x => x.MonthID == monthId && x.CURRENT_READING != 0 || x.CURRENT_READING! < 0).ToListAsync();
+                var readingslist = await dbContext.Database.Table<Reading>().Where(x => x.MonthID == monthId && x.CURRENT_READING >= 0 && x.ReadingTaken == true).ToListAsync();
                 return readingslist;
             }
             catch (Exception ex)
@@ -166,7 +166,20 @@ namespace SampleMauiMvvmApp.Services
         {
             try
             {
-                var token = await SecureStorage.GetAsync("Token");
+                var meterReader = Preferences.Default.Get("username", "Unknown");
+
+                if (reading.CURRENT_READING == 0)
+                {
+                    reading.ReadingNotTaken = false;
+                    reading.ReadingTaken = true;
+                }
+
+                if(reading.CURRENT_READING  != 0 && reading.CURRENT_READING > reading.PREVIOUS_READING)
+                {
+                    reading.ReadingNotTaken = false;
+                    reading.ReadingTaken = true;
+                }
+                //reading.METER_READER = meterReader;
                 reading.ReadingDate = DateTime.Now.ToString("dd MMM yyyy h:mm tt");
 
                 await dbContext.Database.UpdateAsync(reading);
@@ -401,7 +414,7 @@ namespace SampleMauiMvvmApp.Services
                 if (Id != 0 || Id < 0)
                 {
                     var r = await dbContext.Database.Table<Reading>()
-                        .Where(r => r.MonthID == Id && r.ReadingSync == false && r.CURRENT_READING != 0 && r.WaterReadingExportDataID != 0)
+                        .Where(r => r.MonthID == Id && r.ReadingSync == false&&r.ReadingTaken==true && r.CURRENT_READING >= 0 && r.WaterReadingExportDataID > 0)
                         .OrderBy(r => r.ReadingDate).ToListAsync();
 
                     //var loggedInUser = await dbContext.Database.Table<LoginHistory>().OrderByDescending(r => r.LoginId).FirstAsync();
@@ -416,12 +429,23 @@ namespace SampleMauiMvvmApp.Services
                         {
                             // Initialize a count variable to keep track of the number of items processed.
                             int itemCount = 0;
-                            var meterReader = Preferences.Default.Get("username", "Unknown");
+                            
+
                             var iii = await dbContext.Database.Table<ReadingExport>().ToListAsync();
                             foreach (var item in response)
                             {
-                                
-                                item.METER_READER = meterReader;
+                                string email = Preferences.Default.Get("username", "Unknown");
+                                string[] parts = email.Split('@');
+
+                                if (parts.Length > 0)
+                                {
+                                    item.METER_READER = parts[0];
+                                }
+                                else
+                                {
+                                    item.METER_READER = "Unknown";
+                                }
+ 
                                 item.Comment = item.Comment;
 
                                 // Perform the update for each item in 'response'.
@@ -586,7 +610,8 @@ namespace SampleMauiMvvmApp.Services
             var ListOfAllReading = await dbContext.Database.Table<Reading>()
                 .Where(r => r.WaterReadingExportID == lastExportItem.WaterReadingExportID
                 && r.MonthID == lastExportItem.MonthID
-                && r.CURRENT_READING == 0)
+                && r.CURRENT_READING == 0
+                && r.ReadingNotTaken == true)
                 //.ThenBy(r=>r.CUSTOMER_NUMBER)
                 .ToListAsync();
             if (ListOfAllReading.Count > 0)
@@ -606,7 +631,8 @@ namespace SampleMauiMvvmApp.Services
                 .Where(r => r.WaterReadingExportID == lastExportItem.WaterReadingExportID
                 && r.MonthID == lastExportItem.MonthID
                 //&& r.Year == lastExportYearItem.Year
-                && r.CURRENT_READING > 0)
+                && r.CURRENT_READING >= 0
+                && r.ReadingTaken == true)
                 .OrderBy(r => r.ERF_NUMBER)
                 //.ThenBy(r=>r.CUSTOMER_NUMBER)
                 .ToListAsync();
@@ -968,9 +994,16 @@ namespace SampleMauiMvvmApp.Services
                                         record.CURRENT_READING = (decimal)readingDto.CURRENT_READING;
                                         record.AREA = readingDto.AREA;
                                         
-                                        if (record.CURRENT_READING > 0)
+                                        if (readingDto.CURRENT_READING > 0)
                                         {
                                             record.ReadingSync = true;
+                                            record.ReadingTaken = true;
+                                            record.ReadingNotTaken = false;
+                                        }
+                                        if(readingDto.CURRENT_READING == 0)
+                                        {
+                                            record.ReadingTaken = false;
+                                            record.ReadingNotTaken = true;
                                         }
   
                                         readingsToUpdateToSqlite.Add(record);
@@ -1073,6 +1106,115 @@ namespace SampleMauiMvvmApp.Services
             {
                 StatusMessage = ex.Message;
                 return new List<LocationReadings>();
+            }
+        }
+
+        public async Task<List<Reading>> ScanNewCustomersReadingsFromSql()
+        {
+            if (connectivity.NetworkAccess != NetworkAccess.Internet)
+            {
+                await Shell.Current.DisplayAlert("Failed to scan for new readings!",
+                    $"Please ensure connectivity and try again.", "OK");
+                return null;
+            }
+            try
+            {
+                //Get lists from APi
+                var responseSql = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetReading);
+
+                //Get Lists
+                var readingList = await dbContext.Database.Table<Reading>().ToListAsync();
+
+
+                //Readings by Customer Number's
+                var existingCustomerNo = readingList
+                       .Select(r => r.CUSTOMER_NUMBER)
+                       .ToList();
+
+                #region Getting the latest export values(Id,Month & Year)
+                var latestExportItem = await dbContext.Database.Table<ReadingExport>()
+                           .OrderByDescending(r => r.WaterReadingExportID)
+                           .FirstOrDefaultAsync();
+
+
+                // If current month is January, adjust to December of previous year
+                int currentExportId = latestExportItem.WaterReadingExportID;
+                int currentMonthId = latestExportItem.MonthID;
+                int currentYearId = latestExportItem.Year;
+                if (currentMonthId == 0)
+                {
+                    currentMonthId = 12;
+                    latestExportItem.Year -= 1;
+                }
+                #endregion
+
+                if (responseSql.IsSuccessStatusCode)
+                {
+                    // Read the response content as a string
+                    var responseContent = await responseSql.Content.ReadAsStringAsync();
+
+                    // Deserialize the response content into the List<Customer>
+                    var newApiReadings = JsonConvert.DeserializeObject<List<Reading>>(responseContent);
+
+
+                    var newReadings = newApiReadings
+                            .Where(r => !existingCustomerNo.Contains(r.CUSTOMER_NUMBER) && r.WaterReadingExportID == currentExportId)
+                            .ToList();
+                    if (newReadings.Any())
+                    {
+                        foreach(var reading in newReadings)
+                        {
+                            await dbContext.Database.InsertAsync(new Customer {CUSTNAME = reading.CUSTOMER_NAME,
+                                                                                CUSTNMBR = reading.CUSTOMER_NUMBER,
+                                                                                CUSTCLAS = reading.CUSTOMER_ZONING,
+                                                                                ZIP = reading.ERF_NUMBER});
+
+                            reading.Comment = string.Empty;
+                            reading.MonthID = currentMonthId;
+                            reading.Year = currentYearId;
+                            //reading.Year = await _readingService.GetLatestExportItemYear() ?? reading.Year;
+                            //reading.READING_DATE = DateTime.UtcNow.ToLongDateString();
+                            reading.WaterReadingExportID = currentExportId;
+                            reading.METER_READER = string.Empty;
+                            reading.ReadingSync = false;
+                            if(reading.CURRENT_READING == 0)
+                            {
+                                reading.ReadingNotTaken = true;
+                                reading.ReadingTaken = false;
+                                reading.ReadingSync = false;
+                            }
+                            if (reading.CURRENT_READING > 0)
+                            {
+                                reading.ReadingNotTaken = false;
+                                reading.ReadingTaken = true;
+                                reading.ReadingSync = true;
+                            }
+                            
+
+                            await dbContext.Database.InsertAsync(reading);
+                        }
+                        
+                        await Shell.Current.DisplayAlert("New customers found", $"{newReadings.Count} were found and successfully inserted", "OK");
+                       
+                    }
+                    else
+                    {
+                        await Shell.Current.DisplayAlert("No new customers found", "Ensure new customers are inserted in the database and try again.", "OK");
+                    }
+
+                    
+
+                    string tstMsg = "You Can Proceed Using The App! ";
+                    await Toast.Make(tstMsg, CommunityToolkit.Maui.Core.ToastDuration.Long, 10).Show();
+                    //await Shell.Current.GoToAsync(nameof(UncapturedReadingsPage));
+                    return new List<Reading>();
+                }
+                 return new List<Reading>();
+            }
+            catch(Exception ex)
+            {
+                StatusMessage = ex.Message;
+                return new List<Reading>();
             }
         }
 

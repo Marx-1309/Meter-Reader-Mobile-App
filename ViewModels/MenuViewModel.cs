@@ -1,7 +1,10 @@
 ﻿
+using CommunityToolkit.Maui.Core;
+
+
 namespace SampleMauiMvvmApp.ViewModels
 {
-    partial class MenuViewModel
+    partial class MenuViewModel : BaseViewModel
     {
         public ObservableCollection<SampleMauiMvvmApp.Models.Menu> Menus { get; set; }
 
@@ -26,13 +29,14 @@ namespace SampleMauiMvvmApp.ViewModels
                     Name = "My Notes",
                     Image = "notes_icon.png",
                     Label= "Pitt's all-time leader in passing yards (12,303), pass completions (1,045), total offense (13,112), touchdown responsibility (102) and passing touchdowns (81)",
-                    Url = "SynchronizationPage",
+                    Url = "NotesListPage",
                     IsActive=false
                 },
                 new Menu{
                     Name = "Scan For New Customer(s)",
                     Image = "scan_db_icon.png",
                     Label= "314 tackles (212 solo), 33 passes defensed, 13 interceptions, 5 tackles for loss, 4 fumble recoveries, four forced fumbles, 3 interception returns for TDs",
+                    Url = "SyncNewCustomersPage",
                     IsActive=true
                     //await Shell.Current.GoToAsync($"{nameof(CustomerDetailPage)}"
                 },
@@ -47,6 +51,37 @@ namespace SampleMauiMvvmApp.ViewModels
             };
         }
 
+
+        #region Prepare a toast/snackbar
+        public Snackbar SnackBar()
+        {
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+            var snackbarOptions = new SnackbarOptions
+            {
+                BackgroundColor = Colors.Red,
+                TextColor = Colors.Green,
+                ActionButtonTextColor = Colors.Yellow,
+                CornerRadius = new CornerRadius(10),
+                Font = Microsoft.Maui.Font.SystemFontOfSize(14),
+                ActionButtonFont = Microsoft.Maui.Font.SystemFontOfSize(14),
+                CharacterSpacing = 0.5
+            };
+
+            string text = "This is a Snackbar";
+            string actionButtonText = "Click Here to Dismiss";
+            Action action = async () => await Shell.Current.DisplayAlert("Reseting and re-seeding", "You are about to delete and restore", "OK", "Cancel");
+            if (action.Equals("Cancel")) ;
+            TimeSpan duration = TimeSpan.FromSeconds(5);
+
+            var snackbar = Snackbar.Make(text, action, actionButtonText, duration, snackbarOptions);
+
+            return (Snackbar)snackbar;
+        }
+
+
+        #endregion
+
         [RelayCommand]
         async Task GoToDetails(Menu menu)
         {
@@ -54,6 +89,22 @@ namespace SampleMauiMvvmApp.ViewModels
                 return;
 
             await Shell.Current.GoToAsync(menu.Url?.ToString());
+        }
+
+        [RelayCommand]
+        async Task ConfirmLogout()
+        {
+            bool isConfirm = await Shell.Current.DisplayAlert($"Logout or switch users", $"You are about to logout of {Preferences.Default.Get("username","user")} profile", "OK", "Cancel");
+
+            if (isConfirm.Equals(true))
+            {
+                IsBusy= true;
+                await Task.Delay(TimeSpan.FromSeconds(3));
+                SecureStorage.Remove("Token");
+                Preferences.Default.Clear();
+                IsBusy = false;
+                await Shell.Current.GoToAsync(nameof(LoginPage));
+            }
         }
     }
 }

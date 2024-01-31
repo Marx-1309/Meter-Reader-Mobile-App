@@ -162,23 +162,28 @@ namespace SampleMauiMvvmApp.Services
             return listMonths;
         }
 
-
-
         public async Task<List<Month>> GetListOfMonthsFromSqlite()
         {
             try
             {
-                await GetListOfMonthsFromSql();
                 var listOfMonths = await dbContext.Database.Table<Month>().ToListAsync();
+
+                // Check if the count is 0 before calling GetListOfMonthsFromSql()
+                if (listOfMonths.Count == 0)
+                {
+                    await GetListOfMonthsFromSql();
+                    listOfMonths = await dbContext.Database.Table<Month>().ToListAsync();
+                }
+
+                // Check again if the count is greater than 0 after calling GetListOfMonthsFromSql()
                 if (listOfMonths.Count > 0)
                 {
                     return listOfMonths;
                 }
-
                 else
                 {
-                    // Handle unsuccessful response, maybe throw an exception or log an error
-                    StatusMessage = $"Failed to retrieve months from database.";
+                    // Handle the case when both attempts to retrieve months were unsuccessful
+                    StatusMessage = $"Failed to retrieve months from the database.";
                 }
             }
             catch (Exception ex)
@@ -189,6 +194,7 @@ namespace SampleMauiMvvmApp.Services
 
             return null;
         }
+
 
         public async Task<string?> GetLatestExportItemMonthName()
         {

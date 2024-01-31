@@ -47,8 +47,7 @@ namespace SampleMauiMvvmApp.Services
                 , typeof(SampleMauiMvvmApp.Models.LoginHistory)
                 , typeof(SampleMauiMvvmApp.Models.ReadingMedia)
                 , typeof(SampleMauiMvvmApp.Models.Customer)
-                , typeof(SampleMauiMvvmApp.Models.UnregReadings));
-
+                , typeof(SampleMauiMvvmApp.Models.Notes));
 
 
             if (migrationResult.Results != null && migrationResult.Results.Count > 0)
@@ -119,8 +118,9 @@ namespace SampleMauiMvvmApp.Services
                     //reading.READING_DATE = DateTime.UtcNow.ToLongDateString();
                     reading.WaterReadingExportID = currentExportId;
                     reading.METER_READER = string.Empty;
+                    reading.ReadingTaken = false;
                     reading.ReadingSync = false;
-                    reading.ReadingNotTaken = false;
+                    reading.ReadingNotTaken = true;
 
                     GeneratedReadings.Add(reading);
                 }
@@ -128,9 +128,6 @@ namespace SampleMauiMvvmApp.Services
 
             }
             await dbContext.Database.InsertAllAsync(GeneratedReadings);
-
-
-
         }
     }
 }

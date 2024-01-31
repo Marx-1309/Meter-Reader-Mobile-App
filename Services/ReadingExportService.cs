@@ -246,19 +246,14 @@ namespace SampleMauiMvvmApp.Services
 
                             if (exportsItemsToDelete.Any())
                             {
-                                foreach (var exportItem in exportsItemsToDelete)
-                                {
-                                    await dbContext.Database.DeleteAsync(exportItem);
-                                }
+                                await dbContext.Database.Table<ReadingExport>().DeleteAsync(r => r.WaterReadingExportID > 0);
                             }
-                            List<UnregReadings> unregReadingsToDelete = await dbContext.Database.Table<UnregReadings>().ToListAsync();
 
-                            if (unregReadingsToDelete.Any())
+                            List<Notes> notesToDelete = await dbContext.Database.Table<Notes>().ToListAsync();
+
+                            if (notesToDelete.Any())
                             {
-                                foreach (var unregReadingitem in unregReadingsToDelete)
-                                {
-                                    await dbContext.Database.DeleteAsync(unregReadingitem);
-                                }
+                                await dbContext.Database.Table<Notes>().DeleteAsync(r => r.NoteID > 0);
                             }
 
 
@@ -485,6 +480,12 @@ namespace SampleMauiMvvmApp.Services
 
         public async Task FlushAndSeed()
         {
+            if (connectivity.NetworkAccess != NetworkAccess.Internet)
+            {
+                await Shell.Current.DisplayAlert("Failed to recycle readings!",
+                    $"Please ensure connectivity and try again.", "OK");
+                return;
+            }
             await Shell.Current.GoToAsync($"{nameof(SynchronizationPage)}");
             try
             {
@@ -569,10 +570,12 @@ namespace SampleMauiMvvmApp.Services
                         reading.MonthID = currentMonthId;
                         //reading.Year = await _readingService.GetLatestExportItemYear() ?? reading.Year;
                         //reading.READING_DATE = DateTime.UtcNow.ToLongDateString();
+                        reading.ReadingTaken = false;
+                        reading.ReadingNotTaken = true;
+                        reading.ReadingSync = false;
                         reading.WaterReadingExportID = currentExportId;
                         reading.METER_READER = string.Empty;
-                        reading.ReadingSync = false;
-                        reading.ReadingNotTaken = false;
+
 
                         GeneratedReadings.Add(reading);
                     }
@@ -582,15 +585,11 @@ namespace SampleMauiMvvmApp.Services
                 await dbContext.Database.InsertAllAsync(GeneratedReadings);
 
                 await readingService.GetListOfPrevMonthReadingFromSql();
-                await Shell.Current.GoToAsync($"{nameof(MonthCustomerTabPage)}");
+                await GoBackAsync();
             }
-            catch
+            catch(Exception ex)
             {
-
-            }
-            finally
-            {
-                await Shell.Current.GoToAsync($"{nameof(MonthCustomerTabPage)}");
+                StatusMessage = ex.Message;
             }
             
         }
@@ -687,6 +686,10 @@ namespace SampleMauiMvvmApp.Services
         }
         #endregion
 
+        public async Task GoBackAsync()
+        {
+            await Shell.Current.GoToAsync("../..");
+        }
         //End of function 
     }
 }

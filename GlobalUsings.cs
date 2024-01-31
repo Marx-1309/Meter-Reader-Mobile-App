@@ -33,3 +33,4 @@ global using System.Text.Json.Serialization;
 global using CommunityToolkit.Mvvm.Messaging.Messages;
 global using Bogus;
 global using CommunityToolkit.Maui.Alerts;
+global using System.ComponentModel.DataAnnotations;

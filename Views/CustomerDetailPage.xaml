@@ -34,7 +34,7 @@
                         <Label FontSize="22" FontAttributes="Bold" Text="{Binding CustCurrentReading}" TextColor="Blue" />
 
                         <Label FontSize="12" IsVisible="{Binding IsCurrentReading}" TextColor="Grey" FontAttributes="Italic,Bold" Text="Total Usage" />
-                        <Label FontSize="22" IsVisible="{Binding IsCurrentReading}" FontAttributes="Bold" Text="{Binding TotalUsage}" TextColor="Blue" />
+                        <Label FontSize="22" IsVisible="{Binding IsCurrentReading}" FontAttributes="Bold" Text="{Binding TotalUsage}" TextColor="Red" />
                         
                     </StackLayout>
                     <StackLayout Orientation="Vertical" Spacing="5" HorizontalOptions="CenterAndExpand">

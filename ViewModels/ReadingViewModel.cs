@@ -90,7 +90,8 @@ namespace SampleMauiMvvmApp.ViewModels
                     await Shell.Current.DisplayAlert("Not Found", "No Captured readings found", "OK");
                 }
             }
-            catch (Exception ex)
+            catch (Exception 
+            ex)
             {
                 await Shell.Current.DisplayAlert("Unable to retrieve any readings", "Please try again", "OK");
             }
@@ -186,6 +187,17 @@ namespace SampleMauiMvvmApp.ViewModels
             IsBusy = false;
             await Shell.Current.GoToAsync("..");
         }
+
+        [RelayCommand]
+        public async Task ScanForNewlyAddedCustomerReadings()
+        {
+            IsBusy = true;
+            await Task.Delay(1000);
+            await readingService.ScanNewCustomersReadingsFromSql();
+            IsBusy = false;
+            await Shell.Current.GoToAsync("..");
+        }
+
         private async Task DisplayAlert(string v1, string v2, string v3, string v4)
         {
             await Shell.Current.DisplayAlert(v1, v2, v3, v4);

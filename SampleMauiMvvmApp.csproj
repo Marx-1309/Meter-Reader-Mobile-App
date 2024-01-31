@@ -90,6 +90,15 @@
 	  <Compile Update="Views\ReflushPage.xaml.cs">
 	    <DependentUpon>ReflushPage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\NotesListPage.xaml.cs">
+	    <DependentUpon>NotesListPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\NotesDetailsPage.xaml.cs">
+	    <DependentUpon>NotesDetailsPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\SyncNewCustomersPage.xaml.cs">
+	    <DependentUpon>SyncNewCustomersPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -132,6 +141,9 @@
 	  <MauiXaml Update="Views\SynchronizationPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\SyncNewCustomersPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\UncapturedReadingsByAreaPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -141,7 +153,10 @@
 	  <MauiXaml Update="Views\ReflushPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\UpsertUnregReadingPage.xaml">
+	  <MauiXaml Update="Views\NotesListPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\NotesDetailsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

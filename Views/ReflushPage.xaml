@@ -30,7 +30,7 @@
              TextColor="#333333"
              Margin="0,0,0,10"/>
 
-                <Label Text="Initialization:"
+                <Label Text="Initialization"
              FontAttributes="Bold"
              FontSize="Medium"
              TextColor="#555555"
@@ -108,7 +108,7 @@
         Grid.Row="1"
         Grid.ColumnSpan="2"
         Margin="8"
-        CornerRadius="25"
+        CornerRadius="10"
         BackgroundColor="Red"
         FontAttributes="Bold"
         Text="Recycle readings"

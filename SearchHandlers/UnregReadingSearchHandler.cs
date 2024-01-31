@@ -1,9 +1,9 @@
 ﻿
 namespace SampleMauiMvvmApp.SearchHandlers
 {
-    public class UnregReadingSearchHandler : SearchHandler
+    public class NotesSearchHandler : SearchHandler
     {
-        public IList<UnregReadings> Readings { get; set; }
+        public IList<Notes> Readings { get; set; }
         public string NavigationRoute { get; set; }
         public Type NavigationType { get; set; }
         protected override void OnQueryChanged(string oldValue, string newValue)
@@ -16,7 +16,7 @@ namespace SampleMauiMvvmApp.SearchHandlers
             }
             else
             {
-                ItemsSource = Readings.Where(s => s.FullName.ToLower().Contains(newValue.ToLower())).ToList();
+                ItemsSource = Readings.Where(s => s.NoteTitle.ToLower().Contains(newValue.ToLower())).ToList();
             }
         }
 

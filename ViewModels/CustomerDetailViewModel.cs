@@ -188,8 +188,14 @@
 
                 if (CurrentMonthReading.CURRENT_READING == 0)
                 {
-                    await Shell.Current.DisplayAlert($"Reset Success",
-                                                          $"This reading has been uncaptured!", "OK");
+                   var myAction = await Shell.Current.DisplayAlert($"Zero(0) readings entered",
+                                                          $"Are you sure you want to enter this reading?", "Cancel","Yes");
+
+                    if (myAction)
+                    {
+                        await ClearForm();
+                        return;
+                    }
                 }
 
                 //GetLocation();

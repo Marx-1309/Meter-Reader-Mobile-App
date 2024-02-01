@@ -585,6 +585,7 @@ namespace SampleMauiMvvmApp.Services
                 await dbContext.Database.InsertAllAsync(GeneratedReadings);
 
                 await readingService.GetListOfPrevMonthReadingFromSql();
+                await Shell.Current.DisplayAlert("Successful sync","Readings were restored successfully","OK");
                 await GoBackAsync();
             }
             catch(Exception ex)

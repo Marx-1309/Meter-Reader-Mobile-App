@@ -957,7 +957,7 @@ namespace SampleMauiMvvmApp.Services
                             //var readingsFromSqlServer = await response.Content.ReadFromJsonAsync<List<ReadingDto>>();
 
                             var DeserializedReadingsFromSqlServer = JsonConvert.DeserializeObject<List<ReadingDto>>(readingsFromSqlServer);
-
+                            var p = DeserializedReadingsFromSqlServer.Where(r=>r.METER_NUMBER != null).ToList();
                             var lastExportItemx = await dbContext.Database.Table<ReadingExport>()
                           .OrderByDescending(r => r.WaterReadingExportID)
                           .FirstOrDefaultAsync();
@@ -993,6 +993,8 @@ namespace SampleMauiMvvmApp.Services
                                         record.PREVIOUS_READING = readingDto.PREVIOUS_READING;
                                         record.CURRENT_READING = (decimal)readingDto.CURRENT_READING;
                                         record.AREA = readingDto.AREA;
+                                        record.ReadingDate = readingDto.ReadingDate;
+                                        record.METER_READER = readingDto.METER_READER;
                                         
                                         if (readingDto.CURRENT_READING > 0)
                                         {
@@ -1071,8 +1073,10 @@ namespace SampleMauiMvvmApp.Services
 
                 var distinctLocations = allReadings.Select(r => r.AREA?.Trim()).Distinct().ToList();
 
+                var filteredDistincLocations = distinctLocations.Where((r=>!(Equals("NULL") || string.IsNullOrWhiteSpace(r)))).ToList();
+
                 var listOfLocations = new List<LocationReadings>();
-                foreach (var location in distinctLocations)
+                foreach (var location in filteredDistincLocations)
                 {
                     var count = allReadings.Count(r => r.AREA?.Trim() == location && r.CURRENT_READING >=0);
     
@@ -1099,7 +1103,8 @@ namespace SampleMauiMvvmApp.Services
 
                     StatusMessage = "Looks like all the locations are captured!";
                 }
-
+                //var v = listOfLocations.Count();
+                Task.Delay(50);
                 return listOfLocations;
             }
             catch (Exception ex)

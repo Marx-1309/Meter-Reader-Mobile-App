@@ -13,6 +13,8 @@ namespace SampleMauiMvvmApp.Mappings.Dto_s
         public int MonthID { get; set; }
         public int Year { get; set; }
         public int WaterReadingExportID { get; set; }
+        public string? METER_READER { get; set; }
+        public string? ReadingDate { get; set; }
     }
 
     public class UpdateReadingDto

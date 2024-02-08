@@ -26,16 +26,23 @@ namespace SampleMauiMvvmApp.ViewModels
                 //    IsActive=false
                 //},
                 new Menu{
+                    Name = "Abnormal Consumption",
+                    Image = "abnormal_use_icon.png",
+                    Label= "",
+                    Url = "ExceptionReadingListPage",
+                    IsActive=false
+                },
+                new Menu{
                     Name = "My Notes",
                     Image = "notes_icon.png",
-                    Label= "Pitt's all-time leader in passing yards (12,303), pass completions (1,045), total offense (13,112), touchdown responsibility (102) and passing touchdowns (81)",
+                    Label= "",
                     Url = "NotesListPage",
                     IsActive=false
                 },
                 new Menu{
                     Name = "Scan For New Customer(s)",
                     Image = "scan_db_icon.png",
-                    Label= "314 tackles (212 solo), 33 passes defensed, 13 interceptions, 5 tackles for loss, 4 fumble recoveries, four forced fumbles, 3 interception returns for TDs",
+                    Label= "",
                     Url = "SyncNewCustomersPage",
                     IsActive=true
                     //await Shell.Current.GoToAsync($"{nameof(CustomerDetailPage)}"
@@ -43,7 +50,7 @@ namespace SampleMauiMvvmApp.ViewModels
                 new Menu{
                     Name = "Recycle Readings",
                     Image = "export_sync.png",
-                    Label= "314 tackles (212 solo), 33 passes defensed, 13 interceptions, 5 tackles for loss, 4 fumble recoveries, four forced fumbles, 3 interception returns for TDs",
+                    Label= "",
                     Url = "ReflushPage",
                     IsActive=true
                     //await Shell.Current.GoToAsync($"{nameof(CustomerDetailPage)}"

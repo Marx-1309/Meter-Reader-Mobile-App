@@ -49,7 +49,7 @@ namespace SampleMauiMvvmApp.Models
         }
 
         [Ignore]
-        private int? PercentageChange { get; set; }
+        public int? PercentageChange { get; set; }
         
 
         public static Reading GenerateNewFromWrapper(ReadingWrapper wrapper)

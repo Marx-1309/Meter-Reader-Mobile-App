@@ -1,7 +1,4 @@
 ﻿
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using System.Linq;
 
 namespace SampleMauiMvvmApp.ViewModels
 {
@@ -26,21 +23,19 @@ namespace SampleMauiMvvmApp.ViewModels
             this.appShell = _appShell;
         }
 
-        public ObservableCollection<Reading> AllReadings { get; set; } = new();
-        public ObservableCollection<LocationReadings> AllLocation { get; set; } = new();
         [ObservableProperty]
         bool isRefreshing;
         [ObservableProperty]
         string area;
         [ObservableProperty]
         bool isAllLocationsCaptured;
+
+        public ObservableCollection<Reading> AllReadings { get; set; } = new();
+        public ObservableCollection<LocationReadings> AllLocation { get; set; } = new();
         public static List<Reading> ReadingsListForSearch { get; private set; } = new List<Reading>();
         public static List<LocationReadings> LocationListForSearch { get; private set; } = new List<LocationReadings>();
         public ObservableCollection<Reading> Readings { get; set; } = new ObservableCollection<Reading>();
-
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(GetCapturedReadingsCommand))]
-        public string? refresh;
+        public ObservableCollection<Reading> exceptionReadings { get; set; } = new ObservableCollection<Reading>();
 
 
         [RelayCommand]
@@ -72,6 +67,7 @@ namespace SampleMauiMvvmApp.ViewModels
                             reading.ReadingTaken = false;
                             reading.ReadingNotTaken = true;
                         }
+                        Task.Delay(50);
                         AllReadings.Add(reading); // Add each reading to the list
 
                     }
@@ -100,6 +96,8 @@ namespace SampleMauiMvvmApp.ViewModels
                 IsBusy = false; // Ensure IsBusy is set to false in case of any exception or no readings found
                 IsRefreshing = false;
             }
+            isRefreshing = false;
+            IsBusy = false;
         }
 
 
@@ -128,7 +126,7 @@ namespace SampleMauiMvvmApp.ViewModels
                             reading.ReadingTaken = false;
                             reading.ReadingNotTaken = true;
                         }
-                        Task.Delay(50);
+                        Task.Delay(500);
                         AllReadings.Add(reading); // Add each reading to the list
 
                     }
@@ -155,6 +153,9 @@ namespace SampleMauiMvvmApp.ViewModels
                 IsBusy = false; // Ensure IsBusy is set to false in case of any exception or no readings found
                 IsRefreshing = false;
             }
+
+            isRefreshing = false;
+            IsBusy = false;
         }
 
 
@@ -240,7 +241,7 @@ namespace SampleMauiMvvmApp.ViewModels
         [RelayCommand]
         async Task GetLocations()
         {
-            if (IsBusy) return; // Return an empty list if already busy
+            //if (IsBusy) return; // Return an empty list if already busy
 
             try
             {
@@ -293,7 +294,6 @@ namespace SampleMauiMvvmApp.ViewModels
             //if (IsBusy) return; // Return an empty list if already busy
             try
             {
-                Title = area?.AREANAME.Trim();
                 IsBusy = true;
                 if (area == null)
                 {
@@ -306,6 +306,8 @@ namespace SampleMauiMvvmApp.ViewModels
 
                 if (uncapturedReadings != null)
                 {
+                    Title = area?.AREANAME;
+
                     AllReadings.Clear();
                     foreach (var i in uncapturedReadings)
                     {
@@ -325,8 +327,12 @@ namespace SampleMauiMvvmApp.ViewModels
 
                 if (uncapturedReadings.Count == 0)
                 {
-                    await Shell.Current.DisplayAlert("No Readings", $"No records found in {area}", "OK");
-                    return;
+                    await Shell.Current.DisplayAlert("No Readings", $"No records found here.", "OK");
+                     if (IsBusy = true) { IsBusy = !IsBusy; }
+                     await Task.Delay(500);
+                    await Shell.Current.GoToAsync("..");
+
+                    
                 }
                 IsBusy = false;
             }
@@ -336,6 +342,58 @@ namespace SampleMauiMvvmApp.ViewModels
             }
             
             
+        }
+
+        [RelayCommand]
+        public async Task GoToExceptionList()
+        {
+
+
+            string email = Preferences.Default.Get("username", "Unknown");
+            string[] parts = email.Split('@');
+
+
+            try
+            {
+                var i = await dbContext.Database.Table<Reading>().Where(r => r.CURRENT_READING > 0).ToListAsync();
+                var ii = i.Where(r => r.CURRENT_READING - r.PREVIOUS_READING >= 20).Select(reading => new {
+                                                                                                            Name = string.Join(" ", reading.CUSTOMER_NAME.Split().Take(2)),
+                                                                                                            Meter = reading.METER_NUMBER,
+                                                                                                            CurrentReading = reading.CURRENT_READING,
+                                                                                                            WaterUsage = reading.CURRENT_READING - reading.PREVIOUS_READING,
+                                                                                                            MeterReader = reading.METER_READER,
+                                                                                                            ErfNo = reading.ERF_NUMBER,
+                                                                                                            Date = reading.ReadingDate,}).ToList();
+                exceptionReadings.Clear();
+
+                foreach (var item in ii)
+                {
+                    Reading exReading = new()
+                    {
+                        CUSTOMER_NAME = item.Name,
+                        ERF_NUMBER = item.ErfNo,
+                        METER_NUMBER = item.Meter,
+                        CURRENT_READING = item.CurrentReading,
+                        PercentageChange = (int?)item.WaterUsage,
+                        ReadingDate = item.Date,
+                        METER_READER = item.MeterReader
+                    };
+
+                    if(string.IsNullOrEmpty(exReading.METER_READER))
+                    {
+                        exReading.METER_READER = parts[0];
+                    }
+                    
+                    exceptionReadings.Add(exReading);
+                }
+
+            }
+            catch(Exception ex)
+            {
+                StatusMessage = ex.ToString();
+            }
+            isRefreshing = false;
+            IsBusy = false;
         }
 
         public bool IsReadingFlagged(decimal previous, decimal current)

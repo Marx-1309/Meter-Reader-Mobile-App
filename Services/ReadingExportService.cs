@@ -1,4 +1,6 @@
 ﻿
+using System.Net.NetworkInformation;
+
 namespace SampleMauiMvvmApp.Services
 {
     public interface IReadingExportService
@@ -480,12 +482,21 @@ namespace SampleMauiMvvmApp.Services
 
         public async Task FlushAndSeed()
         {
+            
             if (connectivity.NetworkAccess != NetworkAccess.Internet)
             {
                 await Shell.Current.DisplayAlert("Failed to recycle readings!",
                     $"Please ensure connectivity and try again.", "OK");
                 return;
             }
+            var i = await PendingNotSyncedReadings();
+            if (i >0)
+            {
+                await Shell.Current.DisplayAlert($"{i} reading(s) not uploaded!",
+                    $"Please sync the pending readings,and try again!", "OK");
+                return;
+            }
+
             await Shell.Current.GoToAsync($"{nameof(SynchronizationPage)}");
             try
             {
@@ -596,7 +607,32 @@ namespace SampleMauiMvvmApp.Services
         }
         #endregion
 
+        public async Task<int> PendingNotSyncedReadings()
+        {
+            try
+            {
+                var r = await dbContext.Database.Table<Reading>()
+                        .Where(r=>r.ReadingSync == false
+                        && r.ReadingTaken == true && r.CURRENT_READING >= 0 
+                        && r.WaterReadingExportDataID > 0)
+                        .OrderBy(r => r.ReadingDate).ToListAsync();
 
+                if (r.Count > 0)
+                {
+                    return r.Count;
+                }
+                else if(r.Count == 0)
+                {
+                    return 0;
+                }
+                else { return 0; }
+            }
+            catch(Exception ex)
+            {
+                StatusMessage = $"An error was encountered";
+                return 0;
+            }
+        }
 
         #region GetLatestExportItemIntoSqlite
         public async Task GetLatestExportItemIntoSqlite()

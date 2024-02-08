@@ -11,8 +11,7 @@
     ColumnDefinitions="*,*"
     ColumnSpacing="5"
     RowDefinitions="*,Auto"
-    RowSpacing="0"
-    BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
+    RowSpacing="0">
         <RefreshView
         Grid.ColumnSpan="2"
         Command="{Binding GetLocationsCommand}"

@@ -20,6 +20,9 @@ namespace SampleMauiMvvmApp.Models
         [JsonPropertyName("ZIP")]
         public string? ZIP { get; set; }
 
+        [JsonPropertyName("PHONE1")]
+        public string? PHONE1 { get; set; }
+
 
         [OneToMany]
         public List<Reading>? Readings { get; set; }

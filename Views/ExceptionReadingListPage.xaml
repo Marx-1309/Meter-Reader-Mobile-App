@@ -16,39 +16,36 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:Reading">
 
-                        <Frame BackgroundColor="PapayaWhip" HeightRequest="120" CornerRadius="0" Padding="5,2,5,2">
+                        <Frame BackgroundColor="PapayaWhip" HeightRequest="125" CornerRadius="0" Padding="0">
                             <!--<Frame.GestureRecognizers>
-                                <TapGestureRecognizer
-                                     Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ReadingViewModel}}, Path=GoToCustomerDetailsCommand}"
-                                     CommandParameter="{Binding .}">
-                                </TapGestureRecognizer>
-                            </Frame.GestureRecognizers>-->
+        <TapGestureRecognizer
+             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ReadingViewModel}}, Path=GoToCustomerDetailsCommand}"
+             CommandParameter="{Binding .}">
+        </TapGestureRecognizer>
+    </Frame.GestureRecognizers>-->
 
+                            <Grid Grid.Column="0" ColumnDefinitions="*,*,*" RowDefinitions="*,*,Auto" VerticalOptions="Center" Padding="0">
+                                <Label Text="Usage" TextColor="Grey" HorizontalOptions="Center"/>
+                                <VerticalStackLayout Grid.Column="0" Grid.RowSpan="3" HorizontalOptions="Center" VerticalOptions="Center">
+                                    <Label Grid.RowSpan="3" FontSize="30" FontAttributes="Bold" TextColor="Red" Text="{Binding PercentageChange}"/>
+                                </VerticalStackLayout>
 
-                            <Grid Grid.Column="0" ColumnDefinitions="150,*,*,*" RowDefinitions="Auto" VerticalOptions="Center">
-                                <Label FontSize="Header" FontAttributes="Bold" TextColor="red" Text="{Binding PercentageChange}" VerticalOptions="Center" HorizontalOptions="Center" HeightRequest="50" />
-        
-                                <VerticalStackLayout Grid.Column="1" Padding="0,0,0,0" Spacing="0">
-                                    <Label Text="Customer" TextColor="Black" Margin="0" />
-                                    <Label Style="{StaticResource SmallLabel}" TextColor="Gray" Text="{Binding ERF_NUMBER}" Margin="0,3,0,0" />
-                                    <Label Style="{StaticResource MediumLabel}" FontAttributes="Bold" TextColor="Black" Text="{Binding CUSTOMER_NAME}" Margin="0,3,0,0" />
-                                    <Label Style="{StaticResource MediumLabel}" FontAttributes="Bold" TextColor="CornflowerBlue" Text="{Binding METER_NUMBER}" Margin="0,3,0,0" />
+                                <VerticalStackLayout Grid.Column="1" Grid.RowSpan="3" >
+                                    <Label Text="Customer" TextColor="Grey" Margin="0" />
+                                    <Label Style="{StaticResource SmallLabel}" TextColor="Black" Text="{Binding ERF_NUMBER}" />
+                                    <Label Style="{StaticResource SmallLabel}" FontAttributes="Bold" TextColor="Black" Text="{Binding CUSTOMER_NAME}" />
+                                    <Label Style="{StaticResource MediumLabel}" FontAttributes="Bold" TextColor="CornflowerBlue" Text="{Binding METER_NUMBER}" />
                                 </VerticalStackLayout>
-                                <VerticalStackLayout Grid.Column="2" Padding="0,0,5,0" Spacing="5">
-                                    <Label Text="Current Reading" TextColor="Black" Margin="0" />
-                                    <Label Style="{StaticResource LargeLabel}" TextColor="Blue" Text="{Binding CURRENT_READING, StringFormat=' {0}'}" Margin="0,3,0,0" />
-                                    <Label FontSize="Subtitle" Text="{Binding AREA}" Margin="0,3,0,0" />
-                                </VerticalStackLayout>
-                                <VerticalStackLayout Grid.Column="4" Padding="0,0,5,0" Spacing="5">
-                                    <Label Text="Taken by" TextColor="Black" Margin="0" />
-                                    <Label Style="{StaticResource MediumLabel}" TextColor="Red" Text="{Binding METER_READER, StringFormat=' {0}'}" Margin="0,3,0,0" />
-                                    <Label Style="{StaticResource SmallLabel}" TextColor="Red" Text="{Binding ReadingDate, StringFormat=' {0}'}" Margin="0,3,0,0" />
-                                    <Label FontSize="Subtitle" Text="{Binding AREA}" Margin="0,3,0,0" />
+
+                                <VerticalStackLayout Grid.Column="3" Grid.RowSpan="3" >
+                                    <Label Text="Taken by" TextColor="Grey"/>
+                                    <Label Style="{StaticResource MediumLabel}" TextColor="Red" Text="{Binding METER_READER, StringFormat=' {0}'}"  />
+                                    <Label Style="{StaticResource SmallLabel}" TextColor="Red" Text="{Binding ReadingDate, StringFormat=' {0}'}"  />
+                                    <Label FontSize="Subtitle" Text="{Binding AREA}"  />
                                 </VerticalStackLayout>
                             </Grid>
-
-
                         </Frame>
+
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
                 <CollectionView.EmptyView>

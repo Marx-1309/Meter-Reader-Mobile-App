@@ -108,6 +108,7 @@ namespace SampleMauiMvvmApp.Services
                     reading.CUSTOMER_NUMBER = customer.CUSTNMBR;
                     reading.CUSTOMER_NAME = customer.CUSTNAME;
                     reading.ERF_NUMBER = customer.ZIP;
+                    reading.PHONE1 = customer?.PHONE1?.Substring(0, 10).Trim();
                     //reading.AREA = customer.STATE;
                     reading.CUSTOMER_ZONING = customer.CUSTCLAS;
                     reading.CURRENT_READING = 0;

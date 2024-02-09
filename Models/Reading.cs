@@ -19,7 +19,8 @@ namespace SampleMauiMvvmApp.Models
         public int WaterReadingExportID { get; set; }
         public string CUSTOMER_NUMBER { get; set; }
         public string CUSTOMER_NAME { get; set; }
-        public string AREA { get; set; } 
+        public string AREA { get; set; }
+        public string? PHONE1 { get; set; }
         public string ERF_NUMBER { get; set; }
         public string? METER_NUMBER { get; set; }
         public decimal CURRENT_READING { get; set; } 
@@ -62,6 +63,7 @@ namespace SampleMauiMvvmApp.Models
                 CUSTOMER_NUMBER = wrapper.Customer_number,
                 CUSTOMER_NAME = wrapper.Customer_name,
                 AREA = wrapper.Area,
+                PHONE1 = wrapper.Phone1,
                 ERF_NUMBER = wrapper.Erf_number,
                 METER_NUMBER = wrapper.Meter_number,
                 CURRENT_READING = (decimal)wrapper.Current_reading,

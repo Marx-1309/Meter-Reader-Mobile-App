@@ -76,6 +76,7 @@ namespace SampleMauiMvvmApp.ViewModels
                     //    Readings.Add(reading);
                     //}
                     ReadingsListForSearch.Clear();
+                    Task.Delay(50);
                     ReadingsListForSearch.AddRange(listOfCapturedReadings);
                     // Set IsBusy to false after adding all readings
                     
@@ -135,6 +136,7 @@ namespace SampleMauiMvvmApp.ViewModels
                         Readings.Add(reading);
                     }
                     ReadingsListForSearch.Clear();
+                    Task.Delay(50);
                     ReadingsListForSearch.AddRange(listOfCapturedReadings);
                     // Set IsBusy to false after adding all readings
 
@@ -267,6 +269,7 @@ namespace SampleMauiMvvmApp.ViewModels
                         AllLocation.Add(location);
                     }
                     LocationListForSearch.Clear();
+                    Task.Delay(50);
                     LocationListForSearch.AddRange(listOfLocations);
 
                     // Set IsBusy to false after adding all readings
@@ -383,7 +386,7 @@ namespace SampleMauiMvvmApp.ViewModels
                     {
                         exReading.METER_READER = parts[0];
                     }
-                    
+                    Task.Delay(50);
                     exceptionReadings.Add(exReading);
                 }
 

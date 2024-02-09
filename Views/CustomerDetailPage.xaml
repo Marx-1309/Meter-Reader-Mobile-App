@@ -23,6 +23,9 @@
                         <Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="AREA" />
                         <Label FontSize="22" Text="{Binding CustStateErf}" TextColor="CornflowerBlue" FontAttributes="Bold" />
 
+                        <Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="Phone NO" />
+                        <Label FontSize="15" FontAttributes="Bold" TextColor="CornflowerBlue" Text="{Binding Custphone1}"  />
+
                         <Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="METER NO" />
                         <Label FontSize="22" FontAttributes="Bold" Text="{Binding MeterNumber}" TextColor="CornflowerBlue" />
                         <!--<Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="ROUTE NO" />

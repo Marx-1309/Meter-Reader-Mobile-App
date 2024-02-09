@@ -1171,8 +1171,9 @@ namespace SampleMauiMvvmApp.Services
                         {
                             await dbContext.Database.InsertAsync(new Customer {CUSTNAME = reading.CUSTOMER_NAME,
                                                                                 CUSTNMBR = reading.CUSTOMER_NUMBER,
-                                                                                CUSTCLAS = reading.CUSTOMER_ZONING,
-                                                                                ZIP = reading.ERF_NUMBER});
+                                                                                CUSTCLAS = reading?.CUSTOMER_ZONING,
+                                                                                ZIP = reading?.ERF_NUMBER,
+                                                                                PHONE1 = reading?.PHONE1});
 
                             reading.Comment = string.Empty;
                             reading.MonthID = currentMonthId;

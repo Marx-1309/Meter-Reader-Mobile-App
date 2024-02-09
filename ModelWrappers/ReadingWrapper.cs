@@ -13,6 +13,7 @@ namespace SampleMauiMvvmApp.ModelWrappers
                 Customer_number = readingModel.CUSTOMER_NUMBER;
                 Customer_name = readingModel.CUSTOMER_NAME;
                 Area = readingModel.AREA;
+                Phone1 = readingModel.PHONE1;
                 Erf_number = readingModel.ERF_NUMBER;
                 Meter_number = readingModel.METER_NUMBER;
                 Current_reading = (long)readingModel.CURRENT_READING;
@@ -48,6 +49,8 @@ namespace SampleMauiMvvmApp.ModelWrappers
         string customer_name;
         [ObservableProperty]
         string area;
+        [ObservableProperty]
+        string phone1;
         [ObservableProperty]
         string erf_number;
         [ObservableProperty]

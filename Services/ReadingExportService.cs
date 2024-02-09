@@ -294,6 +294,7 @@ namespace SampleMauiMvvmApp.Services
                                         CUSTNMBR = item.CUSTNMBR,
                                         CUSTNAME = item.CUSTNAME,
                                         CUSTCLAS = item.CUSTCLAS,
+                                        PHONE1 = item.PHONE1?.Substring(0, 10).Trim(),
                                         STATE = item.STATE,
                                         ZIP = item.ZIP,
                                     };
@@ -360,6 +361,7 @@ namespace SampleMauiMvvmApp.Services
                                         recordToUpdate.CUSTOMER_NUMBER = item.CUSTOMER_NUMBER;
                                         recordToUpdate.CUSTOMER_NAME = item.CUSTOMER_NAME;
                                         recordToUpdate.AREA = item.AREA?.Trim();
+                                        recordToUpdate.PHONE1 = item.PHONE1?.Substring(0, 10).Trim();
                                         recordToUpdate.CUSTOMER_ZONING = item.CUSTOMER_ZONING;
                                         recordToUpdate.ERF_NUMBER = item.ERF_NUMBER;
                                         recordToUpdate.RouteNumber = item.RouteNumber;
@@ -574,6 +576,7 @@ namespace SampleMauiMvvmApp.Services
                         reading.CUSTOMER_NUMBER = customer.CUSTNMBR;
                         reading.CUSTOMER_NAME = customer.CUSTNAME;
                         reading.ERF_NUMBER = customer.ZIP;
+                        reading.PHONE1 = customer?.PHONE1?.Substring(0, 10).Trim();
                         reading.AREA = customer.STATE;
                         reading.CUSTOMER_ZONING = customer.CUSTCLAS;
                         reading.CURRENT_READING = 0;

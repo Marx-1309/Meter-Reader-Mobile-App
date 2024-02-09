@@ -46,7 +46,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<MonthCustomerTabPage>();
         builder.Services.AddScoped<UncapturedReadingsPage>();
         builder.Services.AddSingleton<MonthPage>();
-        builder.Services.AddSingleton<ExceptionReadingListPage>();
+        builder.Services.AddTransient<ExceptionReadingListPage>();
         builder.Services.AddTransient<CustomerDetailPage>();
         builder.Services.AddScoped<CapturedReadingsPage>();
         builder.Services.AddTransient<LocationPage>();

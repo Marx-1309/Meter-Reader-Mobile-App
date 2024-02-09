@@ -17,6 +17,8 @@
         [ObservableProperty]
         string custStateErf;
         [ObservableProperty]
+        string custphone1;
+        [ObservableProperty]
         decimal custPrevReading;
         [ObservableProperty]
         decimal custCurrentReading;
@@ -83,6 +85,7 @@
                 CustCurrentReading = (decimal)reading.CURRENT_READING;
                 MeterNumber = reading.METER_NUMBER;
                 RouteNumber = reading.RouteNumber;
+                Custphone1 = reading.PHONE1;
                 TotalUsage = $"{((decimal?)reading.CURRENT_READING >= (decimal?)reading.PREVIOUS_READING ? (decimal?)reading.CURRENT_READING - (decimal?)reading.PREVIOUS_READING : 0)}";
                 bool isCurrentReading = IsCurrentReadingCaptured(reading.CURRENT_READING);
                 if (isCurrentReading)

@@ -39,7 +39,7 @@
           ColumnSpacing="5"
           RowSpacing="0"
           BackgroundColor="LightGrey">
-        <RefreshView Grid.ColumnSpan="2" IsEnabled="False" Command="{Binding GoToListOfUncapturedReadingsByAreaCommand}" IsRefreshing="{Binding IsBusy}">
+        <ScrollView Grid.ColumnSpan="2" >
             <CollectionView ItemsSource="{Binding AllReadings}" SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:Reading">
@@ -79,7 +79,7 @@
                     </StackLayout>
                 </CollectionView.EmptyView>
             </CollectionView>
-        </RefreshView>
+        </ScrollView>
         <ActivityIndicator
     IsVisible="{Binding IsBusy}"
     IsRunning="{Binding IsBusy}"

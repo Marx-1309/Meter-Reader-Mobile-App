@@ -18,9 +18,9 @@ public static class MauiProgram
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
-        builder.Services.AddSingleton<IConnectivity>(Connectivity.Current);
-        builder.Services.AddSingleton<IGeolocation>(Geolocation.Default);
-        builder.Services.AddSingleton<IMap>(Map.Default);
+        builder.Services.AddSingleton(Connectivity.Current);
+        builder.Services.AddSingleton(Geolocation.Default);
+        builder.Services.AddSingleton(Map.Default);
         builder.Services.AddTransient<BaseService>();
         builder.Services.AddSingleton<NotesService>();
         builder.Services.AddSingleton<DbContext>();
@@ -46,7 +46,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<MonthCustomerTabPage>();
         builder.Services.AddScoped<UncapturedReadingsPage>();
         builder.Services.AddSingleton<MonthPage>();
-        builder.Services.AddTransient<ExceptionReadingListPage>();
+        builder.Services.AddTransientWithShellRoute<ExceptionReadingListPage, ReadingViewModel>(nameof(ExceptionReadingListPage));
         builder.Services.AddTransient<CustomerDetailPage>();
         builder.Services.AddScoped<CapturedReadingsPage>();
         builder.Services.AddTransient<LocationPage>();

@@ -100,7 +100,7 @@ namespace SampleMauiMvvmApp.Services
                     //List<Reading> readings = trimmedArea;
 
                     var areas =  trimmedR
-                        .Where(x => x.AREA == trimmedArea && x.CURRENT_READING == 0)
+                        .Where(x => x.AREA == trimmedArea && x.CURRENT_READING == 0 && x.ReadingNotTaken ==true & x.ReadingTaken == false)
                         .ToList();
 
 
@@ -174,7 +174,14 @@ namespace SampleMauiMvvmApp.Services
                     reading.ReadingTaken = true;
                 }
 
-                if(reading.CURRENT_READING  != 0 && reading.CURRENT_READING > reading.PREVIOUS_READING)
+                if (reading.CURRENT_READING == reading.PREVIOUS_READING)
+                {
+                    reading.ReadingNotTaken = false;
+                    reading.ReadingTaken = true;
+                    reading.ReadingSync = false;
+                }
+
+                if (reading.CURRENT_READING  != 0 && reading.CURRENT_READING > reading.PREVIOUS_READING)
                 {
                     reading.ReadingNotTaken = false;
                     reading.ReadingTaken = true;
@@ -1007,6 +1014,12 @@ namespace SampleMauiMvvmApp.Services
                                             record.ReadingTaken = false;
                                             record.ReadingNotTaken = true;
                                         }
+                                        if(record.ReadingDate is not null && record.CURRENT_READING == 0)
+                                        {
+                                            record.ReadingSync = true;
+                                            record.ReadingTaken = true;
+                                            record.ReadingNotTaken = false;
+                                        }
   
                                         readingsToUpdateToSqlite.Add(record);
                                         // Update other properties as needed.
@@ -1069,7 +1082,7 @@ namespace SampleMauiMvvmApp.Services
         {
             try
             {
-                var allReadings = await dbContext.Database.Table<Reading>().Where(r=> r.CURRENT_READING == 0).ToListAsync();
+                var allReadings = await dbContext.Database.Table<Reading>().Where(r=> r.CURRENT_READING == 0 && r.ReadingTaken == false).ToListAsync();
 
                 var distinctLocations = allReadings.Select(r => r.AREA?.Trim()).Distinct().ToList();
 
@@ -1211,7 +1224,7 @@ namespace SampleMauiMvvmApp.Services
                     
 
                     string tstMsg = "You Can Proceed Using The App! ";
-                    await Toast.Make(tstMsg, CommunityToolkit.Maui.Core.ToastDuration.Long, 10).Show();
+                     Toast.Make(tstMsg, CommunityToolkit.Maui.Core.ToastDuration.Long, 10).Show();
                     //await Shell.Current.GoToAsync(nameof(UncapturedReadingsPage));
                     return new List<Reading>();
                 }

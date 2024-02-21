@@ -158,16 +158,6 @@
                     return;
                 }
                 
-                CurrentMonthReading.Comment = VmReading.Comment;
-                //CurrentMonthReading.READING_DATE = DateTime.Now.ToString();
-                //CurrentMonthReading.Meter_Reader = loggedInUser.Username;
-                CurrentMonthReading.ReadingTaken = true;
-                CurrentMonthReading.ReadingNotTaken = false;
-                CurrentMonthReading.ReadingSync = false;
-                CurrentMonthReading.WaterReadingExportID = (int)await readingService.GetLatestExportItemId();
-
-
-
                 if (CurrentMonthReading.WaterReadingExportID <= 0)
                 {
                     await Shell.Current.DisplayAlert($"No Reading Export Found",
@@ -200,6 +190,15 @@
                         return;
                     }
                 }
+
+                CurrentMonthReading.Comment = VmReading.Comment;
+                //CurrentMonthReading.READING_DATE = DateTime.Now.ToString();
+                //CurrentMonthReading.Meter_Reader = loggedInUser.Username;
+                CurrentMonthReading.ReadingTaken = true;
+                CurrentMonthReading.ReadingNotTaken = false;
+                CurrentMonthReading.ReadingSync = false;
+                CurrentMonthReading.WaterReadingExportID = (int)await readingService.GetLatestExportItemId();
+
 
                 //GetLocation();
 
@@ -284,7 +283,11 @@
                     await dbContext.Database.DeleteAsync(img);
                 }
             }
-            await dbContext.Database.InsertAsync(capturedImage);
+            int isSaved = await dbContext.Database.InsertAsync(capturedImage);
+            if(isSaved == 1)
+            {
+                 Toast.Make("image saved", CommunityToolkit.Maui.Core.ToastDuration.Short, 10).Show();
+            }
         }
 
 

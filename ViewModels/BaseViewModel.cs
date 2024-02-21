@@ -18,5 +18,6 @@
          
         [ObservableProperty]
         string statusMessage;
+
     }
 }

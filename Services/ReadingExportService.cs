@@ -391,7 +391,7 @@ namespace SampleMauiMvvmApp.Services
                         {
                             //await Shell.Current.DisplayAlert("No New Exports Found!", $"You Can Proceed Using The App! ", "OK");
                             string tstMsg = "No New Exports Found! You Can Proceed Using The App! ";
-                            await Toast.Make(tstMsg, CommunityToolkit.Maui.Core.ToastDuration.Long, 10).Show();
+                            Toast.Make(tstMsg, CommunityToolkit.Maui.Core.ToastDuration.Long, 10).Show();
                         }
                     }
 

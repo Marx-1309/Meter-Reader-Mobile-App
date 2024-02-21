@@ -8,8 +8,9 @@
     xmlns:modelwrapper="clr-namespace:SampleMauiMvvmApp.ModelWrappers"
     xmlns:viewmodel="clr-namespace:SampleMauiMvvmApp.ViewModels"
     x:DataType="viewmodel:CustomerDetailViewModel"
-    Title="{Binding Title}"
->
+    Title="{Binding Title}">
+    <!--Shell.PresentationMode="ModalAnimated"-->
+
     <Grid
         Padding="2,0,2,5"
         ColumnDefinitions="*"
@@ -54,12 +55,20 @@
                                         <Entry Grid.Column="0" BackgroundColor="WhiteSmoke" Placeholder="Enter comment here..." WidthRequest="250"
                                            HeightRequest="75" VerticalOptions="Center" IsTextPredictionEnabled="True" IsSpellCheckEnabled="True"
                                            Text="{Binding VmReading.Comment}"  />
-                                        <Button
+                                        <!--<Button
                                                 CornerRadius="10"
                                                 BackgroundColor="Grey"
                                                 Command="{Binding TakePhotoClickedCommand}"
                                                 HorizontalOptions="Center"
-                                                Text="Camera" />
+                                                Text="Camera" />-->
+                                        
+                                        <Border Style="{StaticResource iconBtnContainer}">
+                                            <Image Source="camera_circle_icon.png" />
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding TakePhotoClickedCommand}" />
+                                            </Border.GestureRecognizers>
+                                        </Border>
+                                        
                                     </HorizontalStackLayout>
                                 </Grid>
 

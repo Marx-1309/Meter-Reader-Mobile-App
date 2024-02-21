@@ -5,7 +5,7 @@ public partial class AppShell : Shell
     public AppShell()
 	{
         InitializeComponent();
-        CheckIfValidToken();
+        //CheckIfValidToken();
         //Routes
         Routing.RegisterRoute(nameof(CustomerDetailPage), typeof(CustomerDetailPage));
         Routing.RegisterRoute(nameof(MonthPage), typeof(MonthPage));
@@ -28,6 +28,13 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(MenuPage), typeof(MenuPage));
         Routing.RegisterRoute(nameof(AppShell), typeof(AppShell));
     }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        CheckIfValidToken();
+    }
+
 
     //private async Task DisplayLoggedInUserInfo()
     //{

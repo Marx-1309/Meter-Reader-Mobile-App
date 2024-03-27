@@ -131,6 +131,7 @@ namespace SampleMauiMvvmApp.ViewModels
                         AllReadings.Add(reading); // Add each reading to the list
 
                     }
+                  
                     foreach (var reading in listOfCapturedReadings)
                     {
                         Readings.Add(reading);

@@ -22,11 +22,6 @@ namespace SampleMauiMvvmApp.ViewModels
             this.customerService = _customerService;
             this.monthService = _monthService;
         }
-
-
-
-
-
     }
 
    

@@ -45,6 +45,7 @@ namespace SampleMauiMvvmApp.ViewModels
 
                 if (!string.IsNullOrEmpty(response.Token)) 
                 {
+                    MauiProgram.CreateMauiApp();
                     //Store token in secure 
                     await SecureStorage.SetAsync("Token",response.Token);
 
@@ -59,7 +60,7 @@ namespace SampleMauiMvvmApp.ViewModels
                     // Set a string value:
                     Preferences.Default.Set("userId", userId);
                     Preferences.Default.Set("username", email);
-
+                    
                     //You can use this to access details of the logged_in user//commented out 
 
                     //Navigate to the app's main page

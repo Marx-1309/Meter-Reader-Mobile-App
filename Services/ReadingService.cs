@@ -39,6 +39,7 @@ namespace SampleMauiMvvmApp.Services
         AuthenticationService _authenticationService;
         MonthService _monthService;
         IConnectivity connectivity;
+        DbContext dbContext;
         public ReadingService(DbContext dbContext, IMapper mapper,
             AuthenticationService authenticationService, MonthService monthService, IConnectivity _connectivity) : base(dbContext)
         {
@@ -48,6 +49,7 @@ namespace SampleMauiMvvmApp.Services
             this._monthService = monthService;
             string StatusMessage = String.Empty;
             this.connectivity = _connectivity;
+            this.dbContext = dbContext;
         }
 
 
@@ -100,8 +102,10 @@ namespace SampleMauiMvvmApp.Services
                     //List<Reading> readings = trimmedArea;
 
                     var areas =  trimmedR
-                        .Where(x => x.AREA == trimmedArea && x.CURRENT_READING == 0 && x.ReadingNotTaken ==true & x.ReadingTaken == false)
-                        .ToList();
+                        .Where(x => x.AREA == trimmedArea && 
+                               x.CURRENT_READING == 0 && 
+                               x.ReadingNotTaken ==true & 
+                               x.ReadingTaken == false).ToList();
 
 
 

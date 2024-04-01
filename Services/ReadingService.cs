@@ -1214,7 +1214,5 @@ namespace SampleMauiMvvmApp.Services
                 return new List<Reading>();
             }
         }
-
-
     }
 }

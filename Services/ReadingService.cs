@@ -107,9 +107,6 @@ namespace SampleMauiMvvmApp.Services
                                x.ReadingNotTaken ==true & 
                                x.ReadingTaken == false).ToList();
 
-
-
-
                     if (areas.Count == 0)
                     {
                         StatusMessage = $"All reading captured for {trimmedArea}";
@@ -392,8 +389,6 @@ namespace SampleMauiMvvmApp.Services
             }
         }
 
-
-
         public async Task<List<Reading>> GetListOfReadingsNotSynced()
         {
             try
@@ -440,8 +435,6 @@ namespace SampleMauiMvvmApp.Services
                         {
                             // Initialize a count variable to keep track of the number of items processed.
                             int itemCount = 0;
-                            
-
                             var iii = await dbContext.Database.Table<ReadingExport>().ToListAsync();
                             foreach (var item in response)
                             {
@@ -468,8 +461,6 @@ namespace SampleMauiMvvmApp.Services
                                     var updatedItem = await dbContext.Database.Table<Reading>()
                                         .Where(r => r.WaterReadingExportDataID == item.WaterReadingExportDataID)
                                         .FirstOrDefaultAsync();
-
-
                                     if (updatedItem != null)
                                     {
                                         updatedItem.ReadingTaken = true;
@@ -496,7 +487,6 @@ namespace SampleMauiMvvmApp.Services
                             {
                                 await SyncImages();
                             }
-
                             // After processing asyncImageCountll items, store the count in the static variable.
                             allReadingsItemsByCount = itemCount;
                             await Shell.Current.DisplayAlert($"{allReadingsItemsByCount} Reading(s) Synced ", "Successfully", "OK");
@@ -504,8 +494,6 @@ namespace SampleMauiMvvmApp.Services
                             await Task.Delay(500);
                             await Shell.Current.GoToAsync("..");
                             return allReadingsItemsByCount;
-
-
                         }
                     }
                     await Shell.Current.DisplayAlert("No readings to be synced. ", "Add new readings and try again !", "OK");
@@ -594,7 +582,6 @@ namespace SampleMauiMvvmApp.Services
             return allImageItemsByCount;
         }
 
-
         public async Task<bool> IsReadingExistForMonthId(string customer)
         {
             var latestMonthName = await _monthService.GetLatestExportItemMonthId();
@@ -652,7 +639,6 @@ namespace SampleMauiMvvmApp.Services
                 .Where(r=>r.CURRENT_READING > 0)
                 //.ThenBy(r=>r.CUSTOMER_NUMBER)
                 .ToListAsync();
-
 
             if (ListOfAllReading.Count > 0)
             {
@@ -736,8 +722,6 @@ namespace SampleMauiMvvmApp.Services
         }
         #endregion
 
-
-
         #region Get ReadingExport
 
         List<ReadingExport> readingExports;
@@ -813,7 +797,6 @@ namespace SampleMauiMvvmApp.Services
         }
         #endregion
 
-
         public async Task<int?> GetLatestExportItemId()
         {
             try
@@ -852,7 +835,6 @@ namespace SampleMauiMvvmApp.Services
             }
         }
 
-
         public async Task<int?> GetLatestExportItemYear()
         {
             try
@@ -881,7 +863,6 @@ namespace SampleMauiMvvmApp.Services
                 var lastExportItemTask = dbContext.Database.Table<ReadingExport>()
                     .OrderByDescending(r => r.WaterReadingExportID)
                     .FirstOrDefaultAsync();
-
 
                 var lastExportItem = await lastExportItemTask;
                 var lastExportMonth = await lastExportItemTask;
@@ -934,7 +915,6 @@ namespace SampleMauiMvvmApp.Services
                            .OrderByDescending(r => r.WaterReadingExportID)
                            .FirstOrDefaultAsync();
 
-
                     // If current month is January, adjust to December of previous year
                     int prevMonthId = lastExportItem.MonthID;
                     int prevYearId = lastExportItem.Year;
@@ -948,10 +928,8 @@ namespace SampleMauiMvvmApp.Services
                     && c.MonthID == prevMonthId
                     && c.Year == prevYearId).ToListAsync();
 
-
                     if (readingsCount.Count < 0)
                     {
-
                         // Handle unsuccessful response, maybe throw an exception or log an error
                         StatusMessage = $"Previous Readings Exist!";
                         return null;

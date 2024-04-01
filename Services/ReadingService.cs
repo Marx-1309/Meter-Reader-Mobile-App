@@ -936,7 +936,6 @@ namespace SampleMauiMvvmApp.Services
                     }
                     else
                     {
-
                         var response = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetWaterReadingExportDataID);
 
                         if (response.IsSuccessStatusCode)
@@ -1088,7 +1087,6 @@ namespace SampleMauiMvvmApp.Services
                         loc.AREANAME = location;
                         loc.NumberOfReadings = count;
                     }
-
                     
                     loc.IsAllCaptured = false;
                     loc.IsAllNotCaptured = !loc.IsAllCaptured;
@@ -1202,8 +1200,6 @@ namespace SampleMauiMvvmApp.Services
                     {
                         await Shell.Current.DisplayAlert("No new customers found", "Ensure new customers are inserted in the database and try again.", "OK");
                     }
-
-                    
 
                     string tstMsg = "You Can Proceed Using The App! ";
                      Toast.Make(tstMsg, CommunityToolkit.Maui.Core.ToastDuration.Long, 10).Show();

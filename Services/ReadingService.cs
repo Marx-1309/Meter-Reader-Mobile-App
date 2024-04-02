@@ -1120,7 +1120,7 @@ namespace SampleMauiMvvmApp.Services
                 //Get lists from APi
                 var responseSql = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetReading);
 
-                //Get Lists
+                //Get Lists if readings 
                 var readingList = await dbContext.Database.Table<Reading>().ToListAsync();
 
 

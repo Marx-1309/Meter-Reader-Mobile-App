@@ -37,11 +37,11 @@
                         <DataTemplate x:DataType="model:LocationReadings">
                             <Grid Padding="5" HorizontalOptions="Fill">
                                 <Frame HeightRequest="100" Padding="2,0,2,0" >
-                                    <Frame.GestureRecognizers>
+                                    <!--<Frame.GestureRecognizers>
                                         <TapGestureRecognizer 
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ReadingViewModel}}, Path=GoToListOfUncapturedReadingsByAreaCommand}"
                                         CommandParameter="{Binding .}"/>
-                                    </Frame.GestureRecognizers>
+                                    </Frame.GestureRecognizers>-->
                                     <Grid Padding="0" ColumnDefinitions="100,200,Auto">
                                         <Image
                                             Aspect="AspectFill"

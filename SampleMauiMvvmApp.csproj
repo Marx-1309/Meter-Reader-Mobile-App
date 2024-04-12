@@ -53,6 +53,7 @@
 	  <None Remove="Resources\Images\add_readings_maually.jpg" />
 	  <None Remove="Resources\Images\camera_circle_icon.png" />
 	  <None Remove="Resources\Images\cloudsync.gif" />
+	  <None Remove="Resources\Images\export_document_icon.png" />
 	  <None Remove="Resources\Images\export_sync.png" />
 	  <None Remove="Resources\Images\kinetic_logo_splash.jpg" />
 	  <None Remove="Resources\Images\menu_options_icon.png" />

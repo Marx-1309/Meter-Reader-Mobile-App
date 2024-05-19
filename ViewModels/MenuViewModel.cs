@@ -11,20 +11,6 @@ namespace SampleMauiMvvmApp.ViewModels
         public MenuViewModel()
         {
             Menus = new ObservableCollection<SampleMauiMvvmApp.Models.Menu>{
-                //new Menu{
-                //    Name = "Month",
-                //    Image = "month_tabbed_icon.png",
-                //    Label= "Five-time Pro Bowler (2018, 2019, 2020, 2021, 2022)",
-                //    Url = "MonthPage",
-                //    IsActive=false
-                //},
-                //new Menu{
-                //    Name = "Uncaptured Readings",
-                //    Image = "water_tap_thick.png",
-                //    Label= "A vertical receiver who dominates opponents with size and great hands",
-                //    Url = "MonthCustomerTabPage",
-                //    IsActive=false
-                //},
                 new Menu{
                     Name = "Abnormal Consumption",
                     Image = "abnormal_use_icon.png",
@@ -45,7 +31,6 @@ namespace SampleMauiMvvmApp.ViewModels
                     Label= "",
                     Url = "SyncNewCustomersPage",
                     IsActive=true
-                    //await Shell.Current.GoToAsync($"{nameof(CustomerDetailPage)}"
                 },
                 new Menu{
                     Name = "Recycle Readings",
@@ -53,7 +38,6 @@ namespace SampleMauiMvvmApp.ViewModels
                     Label= "",
                     Url = "ReflushPage",
                     IsActive=true
-                    //await Shell.Current.GoToAsync($"{nameof(CustomerDetailPage)}"
                 }/*,
 */                //new Menu{
                 //    Name = "Export to document",

@@ -38,14 +38,14 @@
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame HorizontalOptions="Center" VerticalOptions="Center" Margin="20"  BackgroundColor="WhiteSmoke">
+                    <Frame HorizontalOptions="Center" VerticalOptions="StartAndExpand" WidthRequest="350" Margin="20"  BackgroundColor="WhiteSmoke">
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer 
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MenuViewModel}}, Path=GoToDetailsCommand}"
                             CommandParameter="{Binding .}"/>
                         </Frame.GestureRecognizers>
 
-                        <VerticalStackLayout >
+                        <StackLayout >
                             <Image WidthRequest="100"
                                    HeightRequest="100"
                                    Source="{Binding Image}">
@@ -58,7 +58,7 @@
                                HorizontalOptions="Center"
                                VerticalOptions="Center"/>
 
-                        </VerticalStackLayout>
+                        </StackLayout>
                     </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

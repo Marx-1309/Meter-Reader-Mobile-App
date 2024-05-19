@@ -19,6 +19,7 @@ namespace SampleMauiMvvmApp.ModelWrappers
                 Current_reading = (long)readingModel.CURRENT_READING;
                 Previous_reading = (decimal)readingModel.PREVIOUS_READING;
                 MonthID = (int)readingModel.MonthID;
+                CurrentMonth = readingModel.CurrentMonth;
                 Year = (int)readingModel.Year;
                 Customer_zoning = readingModel.CUSTOMER_ZONING;
                 RouteNumber = readingModel.RouteNumber;
@@ -65,6 +66,8 @@ namespace SampleMauiMvvmApp.ModelWrappers
         int percentageChange;
         [ObservableProperty]
         int monthID;
+        [ObservableProperty]
+        string? currentMonth;
         [ObservableProperty]
         int year;
         [ObservableProperty]

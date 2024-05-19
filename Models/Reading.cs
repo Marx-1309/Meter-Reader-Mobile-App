@@ -26,6 +26,7 @@ namespace SampleMauiMvvmApp.Models
         public decimal CURRENT_READING { get; set; } 
         public decimal? PREVIOUS_READING { get; set; }
         public int MonthID { get; set; }
+        public string? CurrentMonth;
         public int Year { get; set; }
         public string? CUSTOMER_ZONING { get; set; }
         public string? RouteNumber { get; set; }
@@ -70,6 +71,7 @@ namespace SampleMauiMvvmApp.Models
                 PREVIOUS_READING = wrapper.Previous_reading,
                 PercentageChange = wrapper.PercentageChange,
                 MonthID = wrapper.MonthID,
+                CurrentMonth = wrapper.CurrentMonth,
                 Year = wrapper.Year,
                 CUSTOMER_ZONING = wrapper.Customer_zoning,
                 RouteNumber = wrapper.RouteNumber,

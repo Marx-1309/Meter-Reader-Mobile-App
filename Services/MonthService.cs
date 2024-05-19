@@ -60,6 +60,23 @@ namespace SampleMauiMvvmApp.Services
             }
         }
 
+        public async Task<string> GetCurrentMonthNameById(int Id)
+        {
+            if (Id > 0)
+            {
+                try
+                {
+                    var month = await dbContext.Database.Table<Month>().Where(m=>m.MonthID == Id).FirstOrDefaultAsync();
+                    string monthName = month.MonthName;
+                    return monthName;
+                }
+                catch (Exception ex)
+                {
+                    return StatusMessage = ex.Message;
+                }
+            }
+            return "";
+        }
 
         List<Reading> ReadingList;
         public async Task<List<Reading>> GetReadingsByMonthIdAsync(int MonthId)

@@ -54,15 +54,15 @@ namespace SampleMauiMvvmApp.ViewModels
                     Url = "ReflushPage",
                     IsActive=true
                     //await Shell.Current.GoToAsync($"{nameof(CustomerDetailPage)}"
-                },
-                new Menu{
-                    Name = "Export to document",
-                    Image = "export_document_icon.png",
-                    Label= "",
-                    //Url = "ReflushPage",
-                    IsActive=true
-                    //await Shell.Current.GoToAsync($"{nameof(CustomerDetailPage)}"
-                },
+                }/*,
+*/                //new Menu{
+                //    Name = "Export to document",
+                //    Image = "export_document_icon.png",
+                //    Label= "",
+                //    //Url = "ReflushPage",
+                //    IsActive=true
+                //    //await Shell.Current.GoToAsync($"{nameof(CustomerDetailPage)}"
+                //},
             };
         }
 

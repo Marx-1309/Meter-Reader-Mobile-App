@@ -30,8 +30,8 @@
         string routeNumber;
         [ObservableProperty]
         ReadingWrapper vmReading;
-        [ObservableProperty]
-        int currentMonth;
+        //[ObservableProperty]
+        //string? currentMonth;
         [ObservableProperty]
         public static bool isExist;
         [ObservableProperty]
@@ -81,6 +81,7 @@
             var reading = await readingService.GetLastReadingByIdAsync(Customer.Custnmbr);
             if (reading != null)
             {
+                
                 CustPrevReading = (decimal)reading.PREVIOUS_READING;
                 CustCurrentReading = (decimal)reading.CURRENT_READING;
                 MeterNumber = reading.METER_NUMBER;
@@ -88,6 +89,7 @@
                 Custphone1 = reading.PHONE1;
                 TotalUsage = $"{((decimal?)reading.CURRENT_READING >= (decimal?)reading.PREVIOUS_READING ? (decimal?)reading.CURRENT_READING - (decimal?)reading.PREVIOUS_READING : 0)}";
                 bool isCurrentReading = IsCurrentReadingCaptured(reading.CURRENT_READING);
+                //CurrentMonth =  monthService?.GetCurrentMonthNameById(reading.MonthID).GetAwaiter().GetResult();
                 if (isCurrentReading)
                 {
                     IsCurrentReading = true;

@@ -52,7 +52,6 @@
                                 </TapGestureRecognizer>
                             </Frame.GestureRecognizers>
 
-
                             <Grid Grid.Column="0" ColumnDefinitions="60,*,*" VerticalOptions="Center">
                                 <Image Source="red_dot3.png" IsVisible="{Binding ReadingNotTaken}" HeightRequest="50" />
                                 <Image Source="blue_dot.png" IsVisible="{Binding ReadingTaken}" HeightRequest="50" />
@@ -67,9 +66,8 @@
                                     <Label FontSize="Subtitle" Text="{Binding AREA}" Margin="0,3,0,0" />
                                 </VerticalStackLayout>
                             </Grid>
-
-
                         </Frame>
+                        
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
                 <CollectionView.EmptyView>

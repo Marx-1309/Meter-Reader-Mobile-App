@@ -3,7 +3,7 @@ namespace SampleMauiMvvmApp.API_URL_s
 {
     public static class Constants
     {
-        public const string HOST = ListOfUrl.RTCOFRuacanaTcWifi;
+        public const string HOST = ListOfUrl.OmaruruMun;
         //Month
         public const string GetMonth = HOST+"/api/Month";
         public const string PostMonth = HOST + "/api/Month";
@@ -53,7 +53,7 @@ namespace SampleMauiMvvmApp.API_URL_s
         //Home Wi-Fi
         public const string OkahaoHomeWifi = "http://192.168.178.78:88";
         //My Phone
-        public const string SamsungA51 = "http://192.168.185.176:88";
+        public const string SamsungA51 = "http://192.168.57.27:82";
 
         public const string RTCOFRuacanaTcWifi = "http://192.168.178.5:81";
 
@@ -61,5 +61,7 @@ namespace SampleMauiMvvmApp.API_URL_s
 
         public const string OkahaoTCStaff = "http://192.168.1.4:8088";
         public const string RuacanaTcLocalPcDb = "http://192.168.178.72:88"; 
+        public const string OmaruruMun = "http://10.10.2.85:88"; 
+
     }
 }

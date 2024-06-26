@@ -38,15 +38,14 @@ namespace SampleMauiMvvmApp.ViewModels
                     Label= "",
                     Url = "ReflushPage",
                     IsActive=true
-                }/*,
-*/                //new Menu{
-                //    Name = "Export to document",
-                //    Image = "export_document_icon.png",
-                //    Label= "",
-                //    //Url = "ReflushPage",
-                //    IsActive=true
-                //    //await Shell.Current.GoToAsync($"{nameof(CustomerDetailPage)}"
-                //},
+                },
+                    new Menu{
+                    Name = "Integrated Services",
+                    Image = "cloud_intergration.png",
+                    Label= "",
+                    Url = "ReflushPage",
+                    IsActive=true,
+                },
             };
         }
 

@@ -5,7 +5,8 @@
              Title="           Insert/Update">
 
     <Grid ColumnDefinitions="*"
-          RowDefinitions="*,auto">
+          RowDefinitions="*,auto"
+          Margin="10">
         <StackLayout Grid.Row="0" Margin="10" Spacing="15">
             <VerticalStackLayout>
                 <Label Text="Title" FontSize="Title" />
@@ -33,7 +34,7 @@
             </VerticalStackLayout>
         </StackLayout>
 
-        <Button Grid.Row="1" CornerRadius="0" Text="Save" FontAttributes="Bold" FontSize="Large" Command="{Binding UpsertNoteCommand}"/>
+        <Button Grid.Row="1" CornerRadius="20"  Text="Save"  FontSize="Large" Command="{Binding UpsertNoteCommand}"/>
         
     </Grid>
         

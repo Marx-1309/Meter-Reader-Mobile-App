@@ -56,10 +56,12 @@
 	  <None Remove="Resources\Images\cloud_sync_icon.png" />
 	  <None Remove="Resources\Images\export_document_icon.png" />
 	  <None Remove="Resources\Images\export_sync.png" />
+	  <None Remove="Resources\Images\info_icon.jpg" />
 	  <None Remove="Resources\Images\kinetic_logo_splash.png" />
 	  <None Remove="Resources\Images\menu_options_icon.png" />
 	  <None Remove="Resources\Images\notes_icon.png" />
 	  <None Remove="Resources\Images\onboarding_icon.png" />
+	  <None Remove="Resources\Images\pencil_icon.jpg" />
 	  <None Remove="Resources\Images\scan_db_icon.png" />
 	  <None Remove="Resources\Images\success_icon.jpg" />
 	  <None Remove="Resources\Images\uncapturedlocation_logo.png" />

@@ -85,8 +85,25 @@ namespace SampleMauiMvvmApp.ViewModels
         {
             if (menu == null)
                 return;
-
+            if(menu.Name == "Integrated Services".ToString())
+            {
+                var response = await AppShell.Current.DisplayActionSheet("Select Option", "cancel", null, "CityTaps", "Others");
+                if (response == "CityTaps")
+                {
+                    var loggedInUsername =  Preferences.Get("username",true);
+                    var userPassword = await Shell.Current.DisplayPromptAsync("Authentication","Please enter your password","cancel","Connect Now".ToString() ,"enter password here...",keyboard:Keyboard.Text);
+                    var dictData = new Dictionary<string, object>();
+                    dictData.Add("integratedService", response);
+                    await AppShell.Current.GoToAsync(nameof(ReflushPage), dictData);
+                }
+                else return;
+            }
             await Shell.Current.GoToAsync(menu.Url?.ToString());
+        }
+
+        private async Task DisplayPromptAsync(string Title,string Expression,string init,int length,string keyboardType)
+        {
+            throw new NotImplementedException();
         }
 
         [RelayCommand]

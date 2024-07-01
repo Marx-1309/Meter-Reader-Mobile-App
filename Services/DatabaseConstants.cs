@@ -3,7 +3,7 @@ namespace SampleMauiMvvmApp.Services
 {
     public class DatabaseConstants
     {
-        public const string DatabaseFileName = "otcdb.db3";
+        public const string DatabaseFileName = "otcdb142.db3";
 
         public const SQLite.SQLiteOpenFlags Flags =
             // open the database in read/write mode

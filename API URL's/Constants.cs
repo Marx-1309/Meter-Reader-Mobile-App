@@ -3,7 +3,7 @@ namespace SampleMauiMvvmApp.API_URL_s
 {
     public static class Constants
     {
-        public const string HOST = ListOfUrl.OmaruruMun;
+        public const string HOST = ListOfUrl.LocalIIS;
         //Month
         public const string GetMonth = HOST+"/api/Month";
         public const string PostMonth = HOST + "/api/Month";
@@ -40,6 +40,8 @@ namespace SampleMauiMvvmApp.API_URL_s
         public const string GetRM00303ById = HOST+"/api/RM00303/{id}";
         //Login
         public const string PostLogin = HOST+"/api/login";
+        //Locations
+        public const string GetLocation = HOST+"/api/Location";
     }
 
     public static class ListOfUrl

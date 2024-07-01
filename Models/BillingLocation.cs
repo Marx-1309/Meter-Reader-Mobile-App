@@ -8,8 +8,8 @@ namespace SampleMauiMvvmApp.Models
 {
     public class BillingLocation
     {
-        public int BillingLocationId { get; set; }
-        public string Name { get; set; }
+        public int BillingLocationID { get; set; }
+        public string Location { get; set; }
         public string? Township { get; set; }
     }
 }

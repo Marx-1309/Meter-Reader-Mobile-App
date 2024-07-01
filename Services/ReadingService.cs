@@ -202,6 +202,22 @@ namespace SampleMauiMvvmApp.Services
             return null;
         }
 
+        public async Task<string> UpsertArea(Reading reading)
+        {
+            try
+            {
+                await dbContext.Database.UpdateAsync(reading);
+
+                return reading.AREA;
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Failed to insert record. {ex.Message}";
+            }
+
+            return "";
+        }
+
         public async Task<Reading> UpdateReading(Reading reading)
         {
             try

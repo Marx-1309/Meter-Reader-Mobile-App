@@ -1,4 +1,6 @@
-﻿namespace SampleMauiMvvmApp.ViewModels
+﻿using CommunityToolkit.Maui.Converters;
+
+namespace SampleMauiMvvmApp.ViewModels
 {
     [QueryProperty("Customer", "Customer")]
     [QueryProperty("Reading", "Reading")]
@@ -77,7 +79,7 @@
         [RelayCommand]
         async Task CustDisplayDetailsAsync()
         {
-
+            
             var reading = await readingService.GetLastReadingByIdAsync(Customer.Custnmbr);
             if (reading != null)
             {
@@ -89,6 +91,7 @@
                 Custphone1 = reading.PHONE1;
                 TotalUsage = $"{((decimal?)reading.CURRENT_READING >= (decimal?)reading.PREVIOUS_READING ? (decimal?)reading.CURRENT_READING - (decimal?)reading.PREVIOUS_READING : 0)}";
                 bool isCurrentReading = IsCurrentReadingCaptured(reading.CURRENT_READING);
+                
                 //CurrentMonth =  monthService?.GetCurrentMonthNameById(reading.MonthID).GetAwaiter().GetResult();
                 if (isCurrentReading)
                 {
@@ -120,9 +123,9 @@
                 {
                     CustStateErf = $"{reading.AREA.Trim()} - (ERF {reading.ERF_NUMBER.Replace("ERF", "").Trim()})";
                 }
-
+                
                 Title = $"{reading.CUSTOMER_NAME.Trim()}";
-
+                
             }
 
             bool isExist = await readingService.IsReadingExistForMonthId(Customer.Custnmbr);
@@ -201,10 +204,21 @@
                 CurrentMonthReading.ReadingSync = false;
                 CurrentMonthReading.WaterReadingExportID = (int)await readingService.GetLatestExportItemId();
 
-
+                Reading newReading = new Models.Reading();
                 //GetLocation();
-
-                var newReading = await readingService.InsertReading(Models.Reading.GenerateNewFromWrapper(new ReadingWrapper(CurrentMonthReading)));
+                if (string.IsNullOrEmpty(CurrentMonthReading.AREA) ||
+                                string.IsNullOrWhiteSpace(CurrentMonthReading.AREA.Trim()) ||
+                                CurrentMonthReading.AREA.Equals("NULL", StringComparison.OrdinalIgnoreCase))
+                {
+                    CurrentMonthReading.AREA = await AddNewCustomerLocation(Customer.Custnmbr);
+                    await readingService.InsertReading(Models.Reading.GenerateNewFromWrapper(new ReadingWrapper(CurrentMonthReading)));
+                }
+                else
+                {
+                     newReading = await readingService.InsertReading(Models.Reading.GenerateNewFromWrapper(new ReadingWrapper(CurrentMonthReading)));
+                }
+                
+                
                 IsExist = true;
 
 
@@ -288,7 +302,7 @@
             int isSaved = await dbContext.Database.InsertAsync(capturedImage);
             if(isSaved == 1)
             {
-                 Toast.Make("image saved", CommunityToolkit.Maui.Core.ToastDuration.Short, 10).Show();
+                 await Toast.Make("image saved", CommunityToolkit.Maui.Core.ToastDuration.Short, 10).Show();
             }
         }
 
@@ -364,5 +378,50 @@
             VmReading.C_reading = string.Empty;
         }
 
+        public async Task<string> AddNewCustomerLocation(string customerNo)
+        {
+            var cstObj = await dbContext.Database.Table<Reading>()
+                            .Where(r => r.CUSTOMER_NUMBER == customerNo)
+                            .FirstOrDefaultAsync();
+
+            bool hasLocation = false;
+
+            // Check initial condition
+            if (cstObj != null)
+            {
+                if (cstObj.AREA != null)
+                {
+                    cstObj.AREA = cstObj.AREA.Trim();
+                }
+
+                hasLocation = !(string.IsNullOrEmpty(cstObj.AREA) ||
+                                string.IsNullOrWhiteSpace(cstObj.AREA) ||
+                                cstObj.AREA.Equals("NULL", StringComparison.OrdinalIgnoreCase));
+            }
+
+            // Keep prompting until a valid location is entered
+            while (!hasLocation)
+            {
+                var userLocation = await Shell.Current.DisplayPromptAsync(
+                    "Add Customer Location",
+                    "Please enter customer location",
+                    "Add",
+                    "Cancel",
+                    "Enter location here...",
+                    keyboard: Keyboard.Text);
+
+                if (!string.IsNullOrEmpty(userLocation) &&
+                    !string.IsNullOrWhiteSpace(userLocation) &&
+                    !userLocation.Equals("NULL", StringComparison.OrdinalIgnoreCase))
+                {
+                    var newReading = await readingService.GetCurrentMonthReadingByCustIdAsync(cstObj.CUSTOMER_NUMBER);
+                    newReading.AREA = userLocation.Trim();
+                    var custNewArea = await readingService.UpsertArea(Models.Reading.GenerateNewFromWrapper(new ReadingWrapper(newReading)));
+                    hasLocation = true;
+                    return custNewArea;
+                }
+            }
+            return "";
+        }
     }
 }

@@ -8,60 +8,52 @@
     xmlns:modelwrapper="clr-namespace:SampleMauiMvvmApp.ModelWrappers"
     xmlns:viewmodel="clr-namespace:SampleMauiMvvmApp.ViewModels"
     x:DataType="viewmodel:CustomerDetailViewModel"
-    Title="{Binding Title}">
-    <!--Shell.PresentationMode="ModalAnimated"-->
-
+    Title="{Binding Title}"
+>
     <Grid
-        Padding="10"
+        Padding="2,0,2,5"
         ColumnDefinitions="*"
         ColumnSpacing="0"
-        RowDefinitions="*,*,Auto"
+        RowDefinitions="Auto,*,Auto"
         BackgroundColor="LightGray">
         <VerticalStackLayout Grid.Row="0">
             <Frame BackgroundColor="White" CornerRadius="10" Padding="15" Margin="10">
                 <VerticalStackLayout Grid.Row="0">
-                    
-                        <Grid ColumnDefinitions="*,*">
-                            <StackLayout Grid.ColumnSpan="2"  Padding="40,10,10,10" HorizontalOptions="StartAndExpand">
-                            <HorizontalStackLayout>
-                                <Label Grid.Column="0" Padding="0,0,10,20" FontSize="20" TextColor="Grey" FontAttributes="Bold" Text="CUSTOMER INFO" />
-                                <Image HeightRequest="20" WidthRequest="20" VerticalOptions="Start" HorizontalOptions="EndAndExpand" Source="info_icon.jpg" />
+                    <StackLayout Orientation="Vertical" Padding="40,10,10,10" HorizontalOptions="StartAndExpand">
+                        <HorizontalStackLayout>
+                            <Label Grid.Column="0" Padding="0,0,10,20" FontSize="20" TextColor="Grey" FontAttributes="Bold" Text="CUSTOMER INFO" />
+                            <Image HeightRequest="20" WidthRequest="20" VerticalOptions="Start" HorizontalOptions="EndAndExpand" Source="info_icon.jpg" />
 
-                            </HorizontalStackLayout>
-                            <Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="AREA" />
-                            <HorizontalStackLayout>
-                                <Label Padding="0,0,40,0" FontSize="22" Text="{Binding CustStateErf}" TextColor="CornflowerBlue" FontAttributes="Bold" />
-                                <Image HeightRequest="30" WidthRequest="30" VerticalOptions="Start" HorizontalOptions="EndAndExpand" Source="pencil_icon.jpg" />
-                            </HorizontalStackLayout>
-                            
-                                
+                        </HorizontalStackLayout>
+                        <Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="AREA" />
+                        <HorizontalStackLayout>
+                            <Label Padding="0,0,40,0" FontSize="22" Text="{Binding CustStateErf}" TextColor="CornflowerBlue" FontAttributes="Bold" />
+                            <Image HeightRequest="30" WidthRequest="30" VerticalOptions="Start" HorizontalOptions="EndAndExpand" Source="pencil_icon.jpg" />
+                        </HorizontalStackLayout>
 
-                                <Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="Phone NO" />
-                                <Label FontSize="15" FontAttributes="Bold" TextColor="CornflowerBlue" Text="{Binding Custphone1}"  />
 
-                                <Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="METER NO" />
-                                <Label FontSize="22" FontAttributes="Bold" Text="{Binding MeterNumber}" TextColor="CornflowerBlue" />
-                                <!--<Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="ROUTE NO" />
+
+                        <Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="Phone NO" />
+                        <Label FontSize="15" FontAttributes="Bold" TextColor="CornflowerBlue" Text="{Binding Custphone1}"  />
+
+                        <Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="METER NO" />
+                        <Label FontSize="22" FontAttributes="Bold" Text="{Binding MeterNumber}" TextColor="CornflowerBlue" />
+                        <!--<Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="ROUTE NO" />
                                 <Label FontSize="22" Text="{Binding RouteNumber}" TextColor="CornflowerBlue" />-->
 
-                                <Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="PREVIOUS READING" />
-                                <Label FontSize="30" FontAttributes="Bold" Text="{Binding CustPrevReading}" TextColor="Blue" />
-                                <Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="CURRENT READING" />
-                                <Label FontSize="30" FontAttributes="Bold" Text="{Binding CustCurrentReading}" TextColor="Blue" />
+                        <Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="PREVIOUS READING" />
+                        <Label FontSize="30" FontAttributes="Bold" Text="{Binding CustPrevReading}" TextColor="Blue" />
+                        <Label FontSize="12" TextColor="Grey" FontAttributes="Italic,Bold" Text="CURRENT READING" />
+                        <Label FontSize="30" FontAttributes="Bold" Text="{Binding CustCurrentReading}" TextColor="Blue" />
 
-                                <Label FontSize="12" IsVisible="{Binding IsCurrentReading}" TextColor="Grey" FontAttributes="Italic,Bold" Text="Total Usage" />
-                                <Label FontSize="22" IsVisible="{Binding IsCurrentReading}" FontAttributes="Bold" Text="{Binding TotalUsage}" TextColor="Red" />
-                                
-                            </StackLayout>
-                        </Grid>
-                        
-                    
+                        <Label FontSize="12" IsVisible="{Binding IsCurrentReading}" TextColor="Grey" FontAttributes="Italic,Bold" Text="Total Usage" />
+                        <Label FontSize="22" IsVisible="{Binding IsCurrentReading}" FontAttributes="Bold" Text="{Binding TotalUsage}" TextColor="Red" />
+                    </StackLayout>
                     <StackLayout Orientation="Vertical" Spacing="5" HorizontalOptions="CenterAndExpand">
-                        <Entry Grid.Row="0" BackgroundColor="LightGrey" Placeholder="Enter new reading here"  WidthRequest="400" IsTextPredictionEnabled="True" IsSpellCheckEnabled="True" Text="{Binding VmReading.C_reading}" Keyboard="Numeric"/>
+                        <Entry Grid.Row="0" BackgroundColor="LightGrey" Placeholder="Enter new reading here"  WidthRequest="300" IsTextPredictionEnabled="True" IsSpellCheckEnabled="True" Text="{Binding VmReading.C_reading}" Keyboard="Numeric"/>
                         <toolkit:Expander>
                             <toolkit:Expander.Header>
-                                <Label HorizontalOptions="CenterAndExpand" Text="Leave a comment..." FontAttributes="Italic" FontSize="Medium">
-                                </Label>
+                                <Label HorizontalOptions="CenterAndExpand" Text="Leave a comment..." FontAttributes="Italic" FontSize="Medium"/>
 
                             </toolkit:Expander.Header>
                             <HorizontalStackLayout Padding="10">
@@ -70,22 +62,17 @@
                                         <Entry Grid.Column="0" BackgroundColor="WhiteSmoke" Placeholder="Enter comment here..." WidthRequest="250"
                                            HeightRequest="75" VerticalOptions="Center" IsTextPredictionEnabled="True" IsSpellCheckEnabled="True"
                                            Text="{Binding VmReading.Comment}"  />
-                                        <!--<Button
-                                                CornerRadius="10"
-                                                BackgroundColor="Grey"
-                                                Command="{Binding TakePhotoClickedCommand}"
-                                                HorizontalOptions="Center"
-                                                Text="Camera" />-->
-
                                         <Border Style="{StaticResource iconBtnContainer}">
                                             <Image Source="camera_icon.jpg" />
                                             <Border.GestureRecognizers>
                                                 <TapGestureRecognizer Command="{Binding TakePhotoClickedCommand}" />
                                             </Border.GestureRecognizers>
                                         </Border>
-
                                     </HorizontalStackLayout>
                                 </Grid>
+
+
+
                             </HorizontalStackLayout>
                         </toolkit:Expander>
                         <Button Grid.Row="2"
@@ -96,11 +83,11 @@
                             <Button.Triggers>
                                 <DataTrigger TargetType="Button"
                                  Binding="{Binding IsUpdate}"
-                                 Value="true">  
-                                 <Setter Property="Text" Value="Update Reading"></Setter>
-                                  <Setter Property="BackgroundColor"  Value="OrangeRed"></Setter>
-                                   <Setter Property="TextColor" Value="White"></Setter>
-                                   <Setter Property="FontAttributes" Value="Bold"></Setter>
+                                 Value="true">
+                                    <Setter Property="Text" Value="Update Reading"></Setter>
+                                    <Setter Property="BackgroundColor"  Value="OrangeRed"></Setter>
+                                    <Setter Property="TextColor" Value="White"></Setter>
+                                    <Setter Property="FontAttributes" Value="Bold"></Setter>
 
                                 </DataTrigger>
                             </Button.Triggers>
@@ -112,8 +99,8 @@
 
         </VerticalStackLayout>
 
-        <VerticalStackLayout VerticalOptions="EndAndExpand" Grid.Row="1" Padding="10">
-            <ScrollView>
+        <!--<VerticalStackLayout VerticalOptions="EndAndExpand" Grid.Row="1" Padding="10">
+            <ScrollView   HeightRequest="115" >
 
                 <ContentView>
                     <CollectionView
@@ -124,9 +111,9 @@
                                 >
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="modelwrapper:ReadingWrapper">
-                                <Grid  HorizontalOptions="Fill" >
+                                <Grid Padding="2" HorizontalOptions="Fill" >
                                     <Frame HeightRequest="110" CornerRadius="10">
-                                        <Grid Padding="10" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" RowDefinitions="Auto,Auto,*" RowSpacing="10">
+                                        <Grid Padding="0,0,0,0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" RowDefinitions="Auto,Auto,*" RowSpacing="10">
 
 
                                             <Frame Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Padding="3" CornerRadius="5" WidthRequest="50" HeightRequest="30" BackgroundColor="LimeGreen" VerticalOptions="Center" IsVisible="{Binding IsNew}">
@@ -138,9 +125,7 @@
                                                 </HorizontalStackLayout>
                                                 <HorizontalStackLayout>
                                                     <Label Grid.Row="2" TextColor="Blue" FontAttributes="Bold" FontSize="Subtitle" Grid.ColumnSpan="3" Text="{Binding Current_reading, StringFormat='Reading : {0}'}" />
-                                                    <!--<Image Grid.Column="2" HeightRequest="40" WidthRequest="40" Source="pencil_icon.jpg" VerticalOptions="Start" HorizontalOptions="End"></Image>-->
                                                 </HorizontalStackLayout>
-                                                
                                             </VerticalStackLayout>
 
                                         </Grid>
@@ -152,11 +137,9 @@
                 </ContentView>
 
             </ScrollView>
-        </VerticalStackLayout>
-        <VerticalStackLayout Grid.Row="2">
-            <Button  CornerRadius="20"  Text="Go Back" Command="{Binding GoBackCommand}" />
-        </VerticalStackLayout>
-        
+        </VerticalStackLayout>-->
+
+        <Button Grid.Row="2" CornerRadius="20"  Text="Go Back" Command="{Binding GoBackCommand}" />
     </Grid>
 </ContentPage>
 

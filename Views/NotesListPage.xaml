@@ -83,6 +83,12 @@
 
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
+                    <CollectionView.EmptyView>
+                        <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand" VerticalOptions="Fill">
+                            <Image Source="no_notes_icon.png" WidthRequest="100" HeightRequest="100" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
+                            <Label Text="You do not have NOTES!" FontSize="14"  />
+                        </StackLayout>
+                    </CollectionView.EmptyView>
                 </CollectionView>
 
             </StackLayout>

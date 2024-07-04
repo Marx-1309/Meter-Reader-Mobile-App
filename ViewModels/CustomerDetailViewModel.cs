@@ -210,8 +210,12 @@ namespace SampleMauiMvvmApp.ViewModels
                                 string.IsNullOrWhiteSpace(CurrentMonthReading.AREA.Trim()) ||
                                 CurrentMonthReading.AREA.Equals("NULL", StringComparison.OrdinalIgnoreCase))
                 {
+                     var MeterNo= await UpdateCustomerMeterNo();
+                    CurrentMonthReading.METER_NUMBER = MeterNo;
+                    meterNumber = MeterNo.ToString();
                     CurrentMonthReading.AREA = await AddNewCustomerLocation(Customer.Custnmbr);
-                    await readingService.InsertReading(Models.Reading.GenerateNewFromWrapper(new ReadingWrapper(CurrentMonthReading)));
+                    await readingService.InsertReading(CurrentMonthReading);
+                    await GoBackAsync();
                 }
                 else
                 {
@@ -228,6 +232,7 @@ namespace SampleMauiMvvmApp.ViewModels
                     if(IsUpdate) 
                     {
                         await Shell.Current.DisplayAlert($"Success!", $"A reading for {CurrentMonthReading.CUSTOMER_NAME.Substring(0,15).Trim()}... Updated!", "OK");
+                        CustCurrentReading = custCurrentReading;
                     }
                     else
                     {
@@ -378,6 +383,26 @@ namespace SampleMauiMvvmApp.ViewModels
             VmReading.C_reading = string.Empty;
         }
 
+        #region CustomerLocations
+        string items1 = "Omaruru Town - Extension 1";
+        string items2 = "Omaruru Town - Extension 2";
+        string items3 = "Omaruru Town - Extension 3";
+        string items4 = "Omaruru Town - Extension 4";
+        string items5 = "Omaruru Town - Extension 5";
+        string items6 = "Ozondje Town -  Extension 1";
+        string items7 = "Ozondje Town - Extension 2";
+        string items8 = "Ozondje Town - Extension 3";
+        string items9 = "Ozondje Town - Extension 4";
+        string items10 = "Ozondje Town - Extension 5";
+        string items11 = "Ozondje Town - Extension 6";
+        string items12 = "Ozondje Town - Extension 7";
+        string items13 = "Ozondje Town - Extension 8";
+        string items14 = "Ozondje Town - Extension 9";
+        string items15 = "Ozondje Town - Extension 10";
+        string items16 = "Ozondje Town - Extension 11";
+
+        #endregion
+
         public async Task<string> AddNewCustomerLocation(string customerNo)
         {
             var cstObj = await dbContext.Database.Table<Reading>()
@@ -402,13 +427,10 @@ namespace SampleMauiMvvmApp.ViewModels
             // Keep prompting until a valid location is entered
             while (!hasLocation)
             {
-                var userLocation = await Shell.Current.DisplayPromptAsync(
-                    "Add Customer Location",
-                    "Please enter customer location",
-                    "Add",
-                    "Cancel",
-                    "Enter location here...",
-                    keyboard: Keyboard.Text);
+                var userLocation = await Shell.Current.DisplayActionSheet(
+                    "Select Location",null,null,items1, items2, items3, items4, items5, items6, items7, items8, items9
+                    , items10, items11, items12, items13
+                    );
 
                 if (!string.IsNullOrEmpty(userLocation) &&
                     !string.IsNullOrWhiteSpace(userLocation) &&
@@ -416,12 +438,97 @@ namespace SampleMauiMvvmApp.ViewModels
                 {
                     var newReading = await readingService.GetCurrentMonthReadingByCustIdAsync(cstObj.CUSTOMER_NUMBER);
                     newReading.AREA = userLocation.Trim();
-                    var custNewArea = await readingService.UpsertArea(Models.Reading.GenerateNewFromWrapper(new ReadingWrapper(newReading)));
+                    
+                    var custNewArea = await readingService.UpsertArea(newReading);
                     hasLocation = true;
                     return custNewArea;
                 }
+
+                
+            }
+            
+            return "";
+        }
+
+        [RelayCommand]
+        public async Task<string> UpdateCustomerMeterNo()
+        {
+            try
+            {
+                var cstObj = await dbContext.Database.Table<Reading>()
+                              .Where(r => r.CUSTOMER_NUMBER == Customer.Custnmbr)
+                              .FirstOrDefaultAsync();
+
+                var userMenterNo = await Shell.Current.DisplayPromptAsync(
+                    "Add Customer Meter",
+                    "Please enter customer meter",
+                    "Add",
+                    "Cancel",
+                    "Enter location here...",
+                    keyboard: Keyboard.Text);
+                if (!string.IsNullOrWhiteSpace(userMenterNo))
+                {
+                    cstObj.METER_NUMBER = userMenterNo;
+                    var custNewMeter = await readingService.UpsertMeter(cstObj);
+
+                    if (!string.IsNullOrEmpty(custNewMeter))
+                    {
+                        await Shell.Current.DisplayAlert("Success!", "Meter Updated!", "OK");
+                        MeterNumber = custNewMeter;
+                    }
+                    return userMenterNo;
+                }
+                else
+                {
+                    cstObj.METER_NUMBER = "None";
+                    var custNewArea = await readingService.UpsertMeter(cstObj);
+                    return "None";
+                }
+            }
+            catch(Exception ex)
+            {
+
             }
             return "";
         }
+
+        [RelayCommand]
+        public async Task<string> UpdateCustomerLocation()
+        {
+            StatusMessage = "";
+            try
+            {
+                var cstObj1 = await dbContext.Database.Table<Reading>()
+                              .Where(r => r.CUSTOMER_NUMBER == Customer.Custnmbr)
+                              .FirstOrDefaultAsync();
+
+                if (cstObj1 != null)
+                {
+                    var userLocation = await Shell.Current.DisplayActionSheet(
+                        "Select Location", null, null, items1, items2, items3, items4, items5, items6, items7, items8, items9,
+                        items10, items11, items12, items13,items14,items15,items16
+                    );
+
+                    if (!string.IsNullOrEmpty(userLocation))
+                    {
+                        cstObj1.AREA = userLocation;
+
+                        var custNewArea = await readingService.UpsertArea(cstObj1);
+
+                        if (!string.IsNullOrEmpty(custNewArea))
+                        {
+                            await Shell.Current.DisplayAlert("Success!", "Location Updated!", "OK");
+                            CustStateErf =  custNewArea;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error!", "Location could not be updated", "OK");
+            }
+            return "";
+        }
+
     }
 }

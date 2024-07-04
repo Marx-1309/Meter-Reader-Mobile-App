@@ -139,7 +139,7 @@ namespace SampleMauiMvvmApp.Services
                 {
                     // 1. Retrieve the list of customers & readings from SQL Server and compare to get a list of customers that have existing readings in SQL..
                     var response = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetCustomer);
-                    var response2 = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetWaterReadingExportDataID);
+                    var response2 = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetReading);
 
                     if (response.IsSuccessStatusCode)
                     {

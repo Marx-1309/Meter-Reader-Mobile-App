@@ -536,7 +536,7 @@ namespace SampleMauiMvvmApp.Services
                 }
 
                 #endregion
-
+                await ScanNewLocationsFromSql();
                 await customerService.GetListOfCustomerFromSql();
                 await CheckForNewExportInSql();
 
@@ -615,9 +615,9 @@ namespace SampleMauiMvvmApp.Services
             try
             {
                 var r = await dbContext.Database.Table<Reading>()
-                        .Where(r=>r.ReadingSync == false
+                        .Where(((r=>r.ReadingSync == false
                         && r.ReadingTaken == true && r.CURRENT_READING >= 0 
-                        && r.WaterReadingExportDataID > 0)
+                        && r.WaterReadingExportDataID > 0 || (r.AreaUpdated ==true && r.ReadingSync==false))))
                         .OrderBy(r => r.ReadingDate).ToListAsync();
 
                 if (r.Count > 0)
@@ -731,5 +731,77 @@ namespace SampleMauiMvvmApp.Services
             await Shell.Current.GoToAsync("../..");
         }
         //End of function 
+
+        public async Task<List<Reading>> ScanNewLocationsFromSql()
+        {
+            if (connectivity.NetworkAccess != NetworkAccess.Internet)
+            {
+                await Shell.Current.DisplayAlert("Failed to scan for new locations!",
+                    $"Please ensure connectivity and try again.", "OK");
+                return null;
+            }
+            try
+            {
+                //Get lists from APi
+                var responseSql = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetLocation);
+
+                //Get Lists if readings 
+                var locationsList = await dbContext.Database.Table<BillingLocation>().ToListAsync();
+
+
+                //Readings by Customer Number's
+                var existingLocationNo = locationsList
+                       .Select(r => r.Location)
+                       .ToList();
+
+                if (responseSql.IsSuccessStatusCode)
+                {
+                    // Read the response content as a string
+                    var responseContent = await responseSql.Content.ReadAsStringAsync();
+
+                    // Deserialize the response content into the List<Customer>
+                    var newApiLocations = JsonConvert.DeserializeObject<List<BillingLocation>>(responseContent);
+
+
+                    var newLocations = newApiLocations
+                            .Where(r => !existingLocationNo.Contains(r.Location) /*&& r.WaterReadingExportID == currentExportId*/)
+                            .ToList();
+                    if (newLocations.Any())
+                    {
+                        foreach (var location in newLocations)
+                        {
+                            await dbContext.Database.InsertAsync(new BillingLocation
+                            {
+                                BillingLocationID = location.BillingLocationID,
+                                Location = location.Location,
+                                Township = location.Township
+                            });
+
+                            await dbContext.Database.InsertAsync(location);
+                        }
+
+                        await Shell.Current.DisplayAlert("New locations found", $"{newLocations.Count} were found and successfully inserted", "OK");
+
+                    }
+                    else
+                    {
+                        await Shell.Current.DisplayAlert("No new locations found", "Ensure new locations are inserted in the database and try again.", "OK");
+                    }
+
+                    string tstMsg = "You Can Proceed Using The App! ";
+                    await Toast.Make(tstMsg, CommunityToolkit.Maui.Core.ToastDuration.Long, 10).Show();
+                    //await Shell.Current.GoToAsync(nameof(UncapturedReadingsPage));
+                    return new List<Reading>();
+                }
+                return new List<Reading>();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = ex.Message;
+                return new List<Reading>();
+            }
+        }
     }
+
+
 }

@@ -37,6 +37,8 @@ namespace SampleMauiMvvmApp.Models
         public bool ReadingTaken { get; set; }
         public bool ReadingNotTaken { get; set; }
         public bool? ReadingSync { get; set; }
+        public bool? AreaUpdated { get; set; } = false;
+
 
         [NotMapped]
         public bool? IsFlagged { get; set; } = false;
@@ -81,6 +83,7 @@ namespace SampleMauiMvvmApp.Models
                 ReadingNotTaken = wrapper.ReadingNotTaken,
                 IsFlagged = wrapper.IsFlagged,
                 ReadingSync = wrapper.ReadingSync,
+                AreaUpdated = wrapper.AreaUpdated,
                 Comment = wrapper.Comment,
             };
         }

@@ -202,13 +202,33 @@ namespace SampleMauiMvvmApp.Services
             return null;
         }
 
-        public async Task<string> UpsertArea(Reading reading)
+        public async Task<string> UpsertArea(Reading reading1)
         {
             try
             {
-                await dbContext.Database.UpdateAsync(reading);
+                reading1.ReadingSync = false;
+                reading1.AreaUpdated = true;
+                await dbContext.Database.UpdateAsync(reading1);
+                
+                return reading1.AREA;
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Failed to insert record. {ex.Message}";
+            }
 
-                return reading.AREA;
+            return "";
+        }
+
+        public async Task<string> UpsertMeter(Reading reading2)
+        {
+            try
+            {
+                reading2.ReadingSync = false;
+                reading2.AreaUpdated = true;
+                await dbContext.Database.UpdateAsync(reading2);
+
+                return reading2.METER_NUMBER;
             }
             catch (Exception ex)
             {
@@ -436,7 +456,7 @@ namespace SampleMauiMvvmApp.Services
                 if (Id != 0 || Id < 0)
                 {
                     var r = await dbContext.Database.Table<Reading>()
-                        .Where(r => r.MonthID == Id && r.ReadingSync == false&&r.ReadingTaken==true && r.CURRENT_READING >= 0 && r.WaterReadingExportDataID > 0)
+                        .Where(r => (r.MonthID == Id && r.ReadingSync == false&&r.ReadingTaken==true && r.CURRENT_READING >= 0 && r.WaterReadingExportDataID > 0) || (r.AreaUpdated==true))
                         .OrderBy(r => r.ReadingDate).ToListAsync();
 
                     //var loggedInUser = await dbContext.Database.Table<LoginHistory>().OrderByDescending(r => r.LoginId).FirstAsync();
@@ -479,9 +499,21 @@ namespace SampleMauiMvvmApp.Services
                                         .FirstOrDefaultAsync();
                                     if (updatedItem != null)
                                     {
-                                        updatedItem.ReadingTaken = true;
-                                        updatedItem.ReadingSync = true;
+                                        if (updatedItem.AreaUpdated == true && updatedItem.ReadingTaken == false)
+                                        {
+                                                updatedItem.AreaUpdated = false;
+                                        }
+                                        if (updatedItem.AreaUpdated == true && updatedItem.ReadingTaken == true)
+                                        {
+                                            updatedItem.AreaUpdated = false;
+                                            updatedItem.ReadingSync = true;
+                                        }
 
+                                            updatedItem.ReadingSync = true;
+                                        
+                                       
+                                        
+                                        
                                         // Save the changes to the local database.
                                         await dbContext.Database.UpdateAsync(updatedItem);
                                     }
@@ -952,7 +984,7 @@ namespace SampleMauiMvvmApp.Services
                     }
                     else
                     {
-                        var response = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetWaterReadingExportDataID);
+                        var response = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetReading);
 
                         if (response.IsSuccessStatusCode)
                         {
@@ -1231,6 +1263,8 @@ namespace SampleMauiMvvmApp.Services
             }
         }
 
+
+        
 
     }
 }

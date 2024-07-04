@@ -3,7 +3,7 @@ namespace SampleMauiMvvmApp.API_URL_s
 {
     public static class Constants
     {
-        public const string HOST = ListOfUrl.LocalIIS;
+        public const string HOST = ListOfUrl.OmaruruMun;
         //Month
         public const string GetMonth = HOST+"/api/Month";
         public const string PostMonth = HOST + "/api/Month";
@@ -41,7 +41,7 @@ namespace SampleMauiMvvmApp.API_URL_s
         //Login
         public const string PostLogin = HOST+"/api/login";
         //Locations
-        public const string GetLocation = HOST+"/api/Location";
+        public const string GetLocation = HOST+ "/api/BillingLocation";
     }
 
     public static class ListOfUrl
@@ -63,7 +63,8 @@ namespace SampleMauiMvvmApp.API_URL_s
 
         public const string OkahaoTCStaff = "http://192.168.1.4:8088";
         public const string RuacanaTcLocalPcDb = "http://192.168.178.72:88"; 
-        public const string OmaruruMun = "http://10.10.2.85:88"; 
+        public const string OmaruruMun = "http://192.1.4.8:81"; 
+        public const string OmaCentralHotel = "http://192.168.178.183:88"; 
 
     }
 }

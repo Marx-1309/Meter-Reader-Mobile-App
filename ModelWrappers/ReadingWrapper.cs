@@ -98,6 +98,8 @@ namespace SampleMauiMvvmApp.ModelWrappers
         public bool readingNotTaken;
         [ObservableProperty]
         bool readingSync;
+        [ObservableProperty]
+        bool areaUpdated;
         public List<Reading> month;
     }
 }

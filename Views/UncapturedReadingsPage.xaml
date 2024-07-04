@@ -62,6 +62,9 @@
                                 <VerticalStackLayout Grid.Column="1" Padding="0,0,0,0" Spacing="0">
                                     <Label Text="Customer Erf" TextColor="Gray" Margin="0" />
                                     <Label Style="{StaticResource MediumLabel}" TextColor="Red" Text="{Binding ERF_NUMBER}" Margin="0,3,0,0" />
+                                <HorizontalStackLayout>
+                                    <Label Style="{StaticResource SmallLabel}"  FontAttributes="Bold"  TextColor="Black" Text="{Binding METER_NUMBER}" Margin="0,3,0,0" />
+                                </HorizontalStackLayout>
                                     <Label Style="{StaticResource SmallLabel}" TextColor="Gray" Text="{Binding CUSTOMER_NAME}" Margin="0,3,0,0" />
                                 </VerticalStackLayout>
                                 <VerticalStackLayout Grid.Column="2" Padding="0,0,5,0" Spacing="5">

@@ -100,6 +100,7 @@ namespace SampleMauiMvvmApp.ViewModels
                 motesList = motesList.OrderBy(f => f.Date).ToList();
                 foreach (var note in motesList)
                 {
+                    await Task.Delay(50);
                     Notes.Add(note);
                 }
                 NotesListForSearch.Clear();

@@ -51,7 +51,7 @@ namespace SampleMauiMvvmApp.API_URL_s
         //Local
         public const string LocalIIS = "http://127.0.0.1";
         //TN Card
-        public const string TnWifi = "http://192.168.8.118:86";
+        public const string TnWifi = "http://192.168.8.129:88";
         //Home Wi-Fi
         public const string OkahaoHomeWifi = "http://192.168.178.78:88";
         //My Phone

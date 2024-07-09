@@ -53,6 +53,16 @@ namespace SampleMauiMvvmApp.Models
         }
 
         [Ignore]
+        [NotMapped]
+        public string? SearchBarReadingInfo
+        {
+            get
+            {
+                return $"{CUSTOMER_NAME.Trim()}\n{ERF_NUMBER.Trim()} , Meter No : ({METER_NUMBER.Trim()})\nPrevious : {PREVIOUS_READING}";
+            }
+        }
+
+        [Ignore]
         public int? PercentageChange { get; set; }
         
 

@@ -779,13 +779,14 @@ namespace SampleMauiMvvmApp.Services
 
                             await dbContext.Database.InsertAsync(location);
                         }
-
-                        await Shell.Current.DisplayAlert("New locations found", $"{newLocations.Count} were found and successfully inserted", "OK");
+                        string tstMsg1 = $"{newLocations.Count} found and successfully inserted";
+                        await Toast.Make(tstMsg1, CommunityToolkit.Maui.Core.ToastDuration.Long, 10).Show();
 
                     }
                     else
                     {
-                        await Shell.Current.DisplayAlert("No new locations found", "Ensure new locations are inserted in the database and try again.", "OK");
+                        string tstMsg2 = "No new locations found";
+                        await Toast.Make(tstMsg2, CommunityToolkit.Maui.Core.ToastDuration.Long, 10).Show();
                     }
 
                     string tstMsg = "You Can Proceed Using The App! ";

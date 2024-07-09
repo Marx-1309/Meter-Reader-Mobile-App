@@ -20,9 +20,9 @@
             <searchHandlers:CustomerSearchHandler.ItemTemplate>
                 <DataTemplate x:DataType="model:Reading">
                     <Grid Margin="5" RowDefinitions="Auto" ColumnDefinitions="40,Auto">
-                        <Image Grid.Row="0" Grid.Column="0" Source="user" HeightRequest="35" WidthRequest="35" />
+                        <Image Grid.Row="0" Grid.Column="0" Source="user" HeightRequest="100" WidthRequest="50"/>
                         <Label Grid.Row="0" Grid.Column="1" 
-                               Text="{Binding CUSTOMER_NAME}" 
+                               Text="{Binding SearchBarReadingInfo}" 
                                FontSize="18" 
                                HorizontalTextAlignment="Center" 
                                VerticalTextAlignment="Center"/>

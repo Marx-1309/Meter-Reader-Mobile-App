@@ -187,6 +187,16 @@ namespace SampleMauiMvvmApp.Services
                     reading.ReadingNotTaken = false;
                     reading.ReadingTaken = true;
                 }
+                if (!string.IsNullOrEmpty(reading.Comment))
+                {
+                    
+                    await dbContext.Database.InsertAsync(new Notes {
+                        Date= DateTime.Now.ToString("dd MMM yyyy h:mm tt"),
+                        NoteTitle = $"Meter Issues : Erf {reading.ERF_NUMBER}",
+                        NoteContent = reading.Comment,
+                    });
+                    
+                }
                 //reading.METER_READER = meterReader;
                 reading.ReadingDate = DateTime.Now.ToString("dd MMM yyyy h:mm tt");
 

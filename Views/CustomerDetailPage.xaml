@@ -14,8 +14,9 @@
         Padding="2,0,2,5"
         ColumnDefinitions="*"
         ColumnSpacing="0"
+        Margin="10"
         RowDefinitions="Auto,*,Auto"
-        BackgroundColor="LightGray">
+        >
         <VerticalStackLayout Grid.Row="0">
             <Frame BackgroundColor="White" CornerRadius="10" Padding="15" Margin="10">
                 <VerticalStackLayout Grid.Row="0">

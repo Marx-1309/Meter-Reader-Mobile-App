@@ -389,17 +389,14 @@ namespace SampleMauiMvvmApp.ViewModels
         string items3 = "Omaruru Town - Extension 3";
         string items4 = "Omaruru Town - Extension 4";
         string items5 = "Omaruru Town - Extension 5";
-        string items6 = "Ozondje Town -  Extension 1";
-        string items7 = "Ozondje Town - Extension 2";
-        string items8 = "Ozondje Town - Extension 3";
-        string items9 = "Ozondje Town - Extension 4";
-        string items10 = "Ozondje Town - Extension 5";
-        string items11 = "Ozondje Town - Extension 6";
-        string items12 = "Ozondje Town - Extension 7";
-        string items13 = "Ozondje Town - Extension 8";
-        string items14 = "Ozondje Town - Extension 9";
-        string items15 = "Ozondje Town - Extension 10";
-        string items16 = "Ozondje Town - Extension 11";
+        string items6 = "Ozondje Town -  Welwitchia";
+        string items7 = "Ozondje Town - Herero Location";
+        string items8 = "Ozondje Town - Damara Location";
+        string items9 = "Ozondje Town - Sonskyn";
+        string items10 = "Ozondje Town - Hakahana";
+        string items11 = "Ozondje Town - Vambo Location";
+        string items12 = "Unclassified";
+
 
         #endregion
 
@@ -429,7 +426,7 @@ namespace SampleMauiMvvmApp.ViewModels
             {
                 var userLocation = await Shell.Current.DisplayActionSheet(
                     "Select Location",null,null,items1, items2, items3, items4, items5, items6, items7, items8, items9
-                    , items10, items11, items12, items13
+                    , items10, items11, items12
                     );
 
                 if (!string.IsNullOrEmpty(userLocation) &&
@@ -506,7 +503,7 @@ namespace SampleMauiMvvmApp.ViewModels
                 {
                     var userLocation = await Shell.Current.DisplayActionSheet(
                         "Select Location", null, null, items1, items2, items3, items4, items5, items6, items7, items8, items9,
-                        items10, items11, items12, items13,items14,items15,items16
+                        items10, items11, items12
                     );
 
                     if (!string.IsNullOrEmpty(userLocation))

@@ -169,7 +169,7 @@ namespace SampleMauiMvvmApp.Services
                     //Get lists from APi
                     var responseSql1 = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.ReadingExport);
                     var responseSql2 = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetCustomer);
-                    var responseSql3 = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetWaterReadingExportDataID);
+                    var responseSql3 = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetReading);
 
                     //Get Lists
                     var exportsList = await dbContext.Database.Table<ReadingExport>().ToListAsync();

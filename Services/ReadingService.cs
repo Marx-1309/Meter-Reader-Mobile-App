@@ -520,10 +520,6 @@ namespace SampleMauiMvvmApp.Services
                                         }
 
                                             updatedItem.ReadingSync = true;
-                                        
-                                       
-                                        
-                                        
                                         // Save the changes to the local database.
                                         await dbContext.Database.UpdateAsync(updatedItem);
                                     }

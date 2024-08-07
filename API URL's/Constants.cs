@@ -3,7 +3,7 @@ namespace SampleMauiMvvmApp.API_URL_s
 {
     public static class Constants
     {
-        public const string HOST = ListOfUrl.OmaruruMun;
+        public const string HOST = ListOfUrl.OtaviWifi;
         //Month
         public const string GetMonth = HOST+"/api/Month";
         public const string PostMonth = HOST + "/api/Month";
@@ -65,6 +65,8 @@ namespace SampleMauiMvvmApp.API_URL_s
         public const string RuacanaTcLocalPcDb = "http://192.168.178.72:88"; 
         public const string OmaruruMun = "http://192.1.4.8:81"; 
         public const string OmaCentralHotel = "http://192.168.178.183:88"; 
+        public const string OtaviLocalPcDb = "http://192.168.178.78:82"; 
+        public const string OtaviWifi = "http://192.168.178.3:81"; 
 
     }
 }

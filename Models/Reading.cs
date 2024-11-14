@@ -22,12 +22,12 @@ namespace SampleMauiMvvmApp.Models
         public string AREA { get; set; }
         public string? PHONE1 { get; set; }
         public string ERF_NUMBER { get; set; }
-        public string? METER_NUMBER { get; set; }
+        public string? METER_NUMBER { get; set; } = "";
         public decimal CURRENT_READING { get; set; } 
         public decimal? PREVIOUS_READING { get; set; }
-        public int MonthID { get; set; }
+        public System.Int64 MonthID { get; set; }
         public string? CurrentMonth;
-        public int Year { get; set; }
+        public System.Int64 Year { get; set; }
         public string? CUSTOMER_ZONING { get; set; }
         public string? RouteNumber { get; set; }
         public string Comment { get; set; }

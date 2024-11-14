@@ -56,11 +56,12 @@ namespace SampleMauiMvvmApp.ViewModels
 
                     string userId = jsonToken.Claims.First(claim => claim.Type == "sub")?.Value;
                     string email = jsonToken.Claims.First(claim => claim.Type == "email")?.Value;
-
+                    string userSite = jsonToken.Claims.First(claim => claim.Type == "UserSite")?.Value.Trim();
                     // Set a string value:
                     Preferences.Default.Set("userId", userId);
                     Preferences.Default.Set("username", email);
-                    
+                    Preferences.Default.Set("userSite", userSite);
+
                     //You can use this to access details of the logged_in user//commented out 
 
                     //Navigate to the app's main page

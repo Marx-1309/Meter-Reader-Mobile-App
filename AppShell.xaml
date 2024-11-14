@@ -37,6 +37,7 @@
             <StackLayout Orientation="Vertical" Padding="10" >
                 <VerticalStackLayout HorizontalOptions="Center" Padding="10">
                     <Label x:Name="lblUsername" FontSize="Subtitle"  FontAttributes="Bold" TextColor="Blue"></Label>
+                    <Label x:Name="lblUserSite" FontSize="Subtitle"  FontAttributes="Bold" TextColor="Grey"></Label>
 
                 </VerticalStackLayout>
             </StackLayout>

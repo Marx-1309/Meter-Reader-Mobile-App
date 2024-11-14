@@ -3,7 +3,7 @@ namespace SampleMauiMvvmApp.API_URL_s
 {
     public static class Constants
     {
-        public const string HOST = ListOfUrl.OtaviWifi;
+        public const string HOST = ListOfUrl.Localhost;
         //Month
         public const string GetMonth = HOST+"/api/Month";
         public const string PostMonth = HOST + "/api/Month";
@@ -19,7 +19,7 @@ namespace SampleMauiMvvmApp.API_URL_s
         public const string GetCustomerById = HOST+"/api/Customer/{id}";
         public const string PutCustomer = HOST+"/api/Customer{id}";
         //Readings Data
-        public const string GetReading = HOST+"/api/Reading";
+        public const string GetReading = HOST+ "/api/Reading";
         public const string PostReading = HOST+"/api/Reading";
         public const string SyncListOfReadingsToSql = HOST+ "/api/Reading/list";
         public const string SyncReadingByCustomerId = HOST + "api/reading/{id}";
@@ -47,7 +47,7 @@ namespace SampleMauiMvvmApp.API_URL_s
     public static class ListOfUrl
     {
         //Kinetic
-        public const string KineticWifi = "http://192.168.178.35:88";
+        public const string KineticWifi = "http://192.168.178.50:81";
         //Local
         public const string LocalIIS = "http://127.0.0.1";
         //TN Card
@@ -64,9 +64,12 @@ namespace SampleMauiMvvmApp.API_URL_s
         public const string OkahaoTCStaff = "http://192.168.1.4:8088";
         public const string RuacanaTcLocalPcDb = "http://192.168.178.72:88"; 
         public const string OmaruruMun = "http://192.1.4.8:81"; 
-        public const string OmaCentralHotel = "http://192.168.178.183:88"; 
-        public const string OtaviLocalPcDb = "http://192.168.178.78:82"; 
-        public const string OtaviWifi = "http://192.168.178.3:81"; 
+        public const string OmaCentralHotel = "http://192.168.178.183:88";
+        public const string DebugApi = "http://192.168.178.41:81";
+        public const string OmusatiRC = "http://192.168.178.128:86";
+        public const string Localhost = "https://localhost:7231";
+
+
 
     }
 }

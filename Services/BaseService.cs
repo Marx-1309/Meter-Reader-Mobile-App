@@ -81,13 +81,18 @@ namespace SampleMauiMvvmApp.Services
 
 
             // If current month is January, adjust to December of previous year
-            int currentExportId = latestExportItem.WaterReadingExportID;
-            int currentMonthId = latestExportItem.MonthID;
-            int currentYearId = latestExportItem.Year;
-            if (currentMonthId == 0)
+            var readingExport = new ReadingExport
             {
-                currentMonthId = 12;
-                latestExportItem.Year -= 1;
+                WaterReadingExportID = latestExportItem.WaterReadingExportID,
+                MonthID = latestExportItem.MonthID,
+                Year = latestExportItem.Year,
+
+            };
+
+            if (readingExport.MonthID == 0)
+            {
+                readingExport.MonthID = 12;
+                readingExport.Year -= 1;
             }
             #endregion
 
@@ -115,11 +120,11 @@ namespace SampleMauiMvvmApp.Services
                     reading.CUSTOMER_ZONING = customer.CUSTCLAS;
                     reading.CURRENT_READING = 0;
                     reading.Comment = string.Empty;
-                    reading.MonthID = currentMonthId;
-                    reading.Year = currentYearId;
+                    reading.MonthID = readingExport.MonthID;
+                    reading.Year = readingExport.Year;
                     //reading.Year = await _readingService.GetLatestExportItemYear() ?? reading.Year;
                     //reading.READING_DATE = DateTime.UtcNow.ToLongDateString();
-                    reading.WaterReadingExportID = currentExportId;
+                    reading.WaterReadingExportID = readingExport.WaterReadingExportID;
                     reading.METER_READER = string.Empty;
                     reading.ReadingTaken = false;
                     reading.ReadingSync = false;
@@ -127,8 +132,6 @@ namespace SampleMauiMvvmApp.Services
 
                     GeneratedReadings.Add(reading);
                 }
-
-
             }
             await dbContext.Database.InsertAllAsync(GeneratedReadings);
         }

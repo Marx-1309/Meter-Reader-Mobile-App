@@ -83,6 +83,7 @@ namespace SampleMauiMvvmApp.ViewModels
         [RelayCommand]
         async Task GoToDetails(Menu menu)
         {
+            
             if (menu == null)
                 return;
             if(menu.Name == "Integrated Services".ToString())
@@ -90,13 +91,17 @@ namespace SampleMauiMvvmApp.ViewModels
                 var response = await AppShell.Current.DisplayActionSheet("Select Option", "cancel", null, "CityTaps", "Others");
                 if (response == "CityTaps")
                 {
+                    DisplayToast("This service is not available");
+                    return;
+
                     var loggedInUsername =  Preferences.Get("username",true);
                     var userPassword = await Shell.Current.DisplayPromptAsync("Authentication","Please enter your password","cancel","Connect Now".ToString() ,"enter password here...",keyboard:Keyboard.Text);
                     var dictData = new Dictionary<string, object>();
                     dictData.Add("integratedService", response);
                     await AppShell.Current.GoToAsync(nameof(ReflushPage), dictData);
                 }
-                else return;
+                else DisplayToast("This service is not available");
+                return;
             }
             await Shell.Current.GoToAsync(menu.Url?.ToString());
         }

@@ -23,7 +23,8 @@
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync("/login", loginModel);
+
+                var response = await _httpClient.PostAsJsonAsync("api/login", loginModel);
                 response.EnsureSuccessStatusCode();
                 #region Save Data of the loggedIn User
                 //Save Data of the loggedIn User

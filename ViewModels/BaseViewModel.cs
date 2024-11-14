@@ -19,5 +19,13 @@
         [ObservableProperty]
         string statusMessage;
 
+
+        string tstMsg = "You Can Proceed Using The App! ";
+
+        public void DisplayToast(string tstMsg)
+        {
+            Toast.Make(tstMsg, CommunityToolkit.Maui.Core.ToastDuration.Long, 10).Show();
+        }
+        
     }
 }

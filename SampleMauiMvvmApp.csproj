@@ -64,6 +64,8 @@
 	  <None Remove="Resources\Images\no_notes_icon.png" />
 	  <None Remove="Resources\Images\onboarding_icon.png" />
 	  <None Remove="Resources\Images\pencil_icon.jpg" />
+	  <None Remove="Resources\Images\reset2_icon.png" />
+	  <None Remove="Resources\Images\reset_icon.png" />
 	  <None Remove="Resources\Images\scan_db_icon.png" />
 	  <None Remove="Resources\Images\success_icon.jpg" />
 	  <None Remove="Resources\Images\uncapturedlocation_logo.png" />

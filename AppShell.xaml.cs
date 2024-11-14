@@ -94,8 +94,10 @@ public partial class AppShell : Shell
                 string userId = jsonToken.Claims.First(claim => claim.Type == "sub").Value;
                 string email = jsonToken.Claims.First(claim => claim.Type == "email").Value;
 
-                lblUsername.Text = email;
+                string userSite = Preferences.Default.Get("userSite", "");
 
+                lblUsername.Text = email;
+                lblUserSite.Text = userSite;
                 IsBusy = false;
                 //await GoToMainPage();
             }

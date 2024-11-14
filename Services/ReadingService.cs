@@ -990,7 +990,18 @@ namespace SampleMauiMvvmApp.Services
                     }
                     else
                     {
-                        var response = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetReading);
+                        string userSite = Preferences.Default.Get("userSite", "");
+
+                        // Construct the URL with the query parameter
+                        string baseUrl = SampleMauiMvvmApp.API_URL_s.Constants.GetReading; // e.g., "https://localhost:7231/api/Reading"
+                        string requestUrl = $"{baseUrl}?billingSite={Uri.EscapeDataString(userSite)}";
+
+                        // Log the constructed URL for debugging purposes
+                        Console.WriteLine($"Constructed Request URL: {requestUrl}");
+
+                        // Make the HTTP GET request
+                        var response = await _httpClient.GetAsync(requestUrl);
+
 
                         if (response.IsSuccessStatusCode)
                         {
@@ -1030,13 +1041,21 @@ namespace SampleMauiMvvmApp.Services
                                     // Update the matching records
                                     foreach (var record in matchingRecords)
                                     {
+                                        if(readingDto.METER_NUMBER == null)
+                                        {
+                                            readingDto.METER_NUMBER = "";
+                                        }
+                                        if (readingDto.AREA == null)
+                                        {
+                                            readingDto.AREA = "";
+                                        }
                                         record.WaterReadingExportDataID = readingDto.WaterReadingExportDataID;
-                                        record.METER_NUMBER = readingDto.METER_NUMBER.Trim();
+                                        record.METER_NUMBER = readingDto.METER_NUMBER.Trim() ?? "";
                                         record.PREVIOUS_READING = readingDto.PREVIOUS_READING;
                                         record.CURRENT_READING = (decimal)readingDto.CURRENT_READING;
-                                        record.AREA = readingDto.AREA;
+                                        record.AREA = readingDto.AREA ?? "";
                                         record.ReadingDate = readingDto.ReadingDate;
-                                        record.METER_READER = readingDto.METER_READER;
+                                        record.METER_READER = readingDto.METER_READER ?? "";
                                         
                                         if (readingDto.CURRENT_READING > 0)
                                         {

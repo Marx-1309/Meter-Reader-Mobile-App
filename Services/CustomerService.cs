@@ -133,13 +133,25 @@ namespace SampleMauiMvvmApp.Services
         List<Customer> CustomerList;
         public async Task<List<Customer>> GetListOfCustomerFromSql()
         {
-            if (CustomerList == null)
+            string initialize = null;
+            if (initialize == null)
             {
                 try
                 {
+                    string userSite = Preferences.Default.Get("userSite", "");
                     // 1. Retrieve the list of customers & readings from SQL Server and compare to get a list of customers that have existing readings in SQL..
                     var response = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetCustomer);
-                    var response2 = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetReading);
+
+                    // Construct the URL with the query parameter
+                    string baseUrl = SampleMauiMvvmApp.API_URL_s.Constants.GetReading; // e.g., "https://localhost:7231/api/Reading"
+                    string requestUrl = $"{baseUrl}?billingSite={Uri.EscapeDataString(userSite)}";
+
+                    // Log the constructed URL for debugging purposes
+                    Console.WriteLine($"Constructed Request URL: {requestUrl}");
+
+                    // Make the HTTP GET request
+                    var response2 = await _httpClient.GetAsync(requestUrl);
+
 
                     if (response.IsSuccessStatusCode)
                     {

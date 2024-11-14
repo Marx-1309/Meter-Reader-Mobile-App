@@ -278,12 +278,12 @@ namespace SampleMauiMvvmApp.ViewModels
                 }
                 else
                 {
-                    await Shell.Current.DisplayAlert("Not Found", "No Uncaptured readings found", "OK");
+                    await Shell.Current.DisplayAlert("Not Found", "No locations found", "OK");
                 }
             }
             catch (Exception ex)
             {
-                await Shell.Current.DisplayAlert("Unable to retrieve any readings", "Please try again", "OK");
+                await Shell.Current.DisplayAlert("Unable to retrieve any locations", "Please try again", "OK");
             }
             finally
             {
@@ -423,6 +423,94 @@ namespace SampleMauiMvvmApp.ViewModels
             {
                 return true;
             }
+        }
+        [RelayCommand]
+        public async Task ResetReading()
+        {
+            string response = "x";
+             response = await Shell.Current.DisplayPromptAsync(
+                "Delete ,Reset or Sync",
+                "",
+                "Confirm",
+                "Cancel",
+                "Enter your command here...",
+                keyboard: Keyboard.Text);
+
+            if(response == "%sync%")
+            {
+                IsBusy = true;
+                var readingsList = dbContext.Database.Table<Reading>().ToListAsync().GetAwaiter().GetResult();
+                foreach (var i in readingsList)
+                {
+                    i.ReadingSync = true;
+                    i.AreaUpdated = true;
+                    i.ReadingNotTaken = false;
+                    i.ReadingTaken = true;
+
+                }
+                var n = dbContext.Database.UpdateAllAsync(readingsList).GetAwaiter().GetResult();
+
+                IsBusy = false;
+                await Shell.Current.DisplayAlert("Success", response.Replace("%","") + " Completed!", "Ok");
+            }
+            if (response == "%reset%")
+            {
+                IsBusy=true;
+                var readingsList = dbContext.Database.Table<Reading>().ToListAsync().GetAwaiter().GetResult();
+                foreach (var i in readingsList)
+                {
+                    i.ReadingSync = false;
+                    //i.AreaUpdated = true;
+                    i.ReadingNotTaken = false;
+                    i.ReadingTaken = true;
+                }
+                var n = dbContext.Database.UpdateAllAsync(readingsList).GetAwaiter().GetResult();
+
+                await Shell.Current.DisplayAlert("Success", response.Replace("%", "") + " Completed!", "Ok");
+                IsBusy = false;
+            }
+            if (response == "%delete%")
+            {
+                IsBusy = true;
+                #region deleting existing db data
+                List<ReadingExport> result1 = await dbContext.Database.Table<ReadingExport>().Where(i => i.WaterReadingExportID > 0).ToListAsync();
+                List<Reading> result2 = await dbContext.Database.Table<Reading>().Where(i => i.Id > 0).ToListAsync();
+                List<Customer> result3 = await dbContext.Database.Table<Customer>().Where(i => i.CUSTNMBR != null).ToListAsync();
+                //List<Month> result4 = await dbContext.Database.Table<Month>().Where(i => i.MonthID > 0).ToListAsync();
+                List<ReadingMedia> result5 = await dbContext.Database.Table<ReadingMedia>().Where(i => i.Id > 0).ToListAsync();
+
+                if (result1.Count > 0 || result1.Any())
+                {
+                    await dbContext.Database.Table<ReadingExport>().DeleteAsync(r => r.WaterReadingExportID > 0);
+                }
+
+                if (result2.Count > 0 || result2.Any())
+                {
+                    await dbContext.Database.Table<Reading>().DeleteAsync(r => r.Id > 0);
+                }
+
+                if (result3.Count > 0 || result3.Any())
+                {
+                    await dbContext.Database.Table<Customer>().DeleteAsync(r => r.CUSTNMBR != null);
+                }
+
+                //if (result4.Count > 0 || result4.Any())
+                //{
+                //    await dbContext.Database.Table<Month>().DeleteAsync(r => r.MonthID > 0);
+                //}
+
+                if (result5.Count > 0 || result5.Any())
+                {
+                    await dbContext.Database.Table<ReadingMedia>().DeleteAsync(r => r.Id > 0);
+                }
+                #endregion
+                IsBusy = false;
+
+                await Shell.Current.DisplayAlert("Success",response.Replace("%", "") + " Completed!","Ok");
+
+            }
+
+            DisplayToast("Command not recognized");
         }
 
 

@@ -211,9 +211,16 @@ namespace SampleMauiMvvmApp.ViewModels
                                 string.IsNullOrWhiteSpace(CurrentMonthReading.AREA.Trim()) ||
                                 CurrentMonthReading.AREA.Equals("NULL", StringComparison.OrdinalIgnoreCase))
                 {
-                     var MeterNo= await UpdateCustomerMeterNo();
-                    CurrentMonthReading.METER_NUMBER = MeterNo;
-                    meterNumber = MeterNo.ToString();
+                    if (!string.IsNullOrWhiteSpace(CurrentMonthReading.METER_NUMBER))
+                    {
+                        CurrentMonthReading.METER_NUMBER = CurrentMonthReading.METER_NUMBER;
+                    }
+                    else
+                    {
+                        var MeterNo = await UpdateCustomerMeterNo();
+                        CurrentMonthReading.METER_NUMBER = MeterNo;
+                        meterNumber = MeterNo.ToString();
+                    }
                     CurrentMonthReading.AREA = await AddNewCustomerLocation(Customer.Custnmbr);
                     await readingService.InsertReading(CurrentMonthReading);
                     await GoBackAsync();
@@ -489,9 +496,9 @@ namespace SampleMauiMvvmApp.ViewModels
                 }
                 else
                 {
-                    cstObj.METER_NUMBER = "None";
+                    cstObj.METER_NUMBER = cstObj?.METER_NUMBER;
                     var custNewArea = await readingService.UpsertMeter(cstObj);
-                    return "None";
+                    return cstObj?.METER_NUMBER;
                 }
             }
             catch(Exception ex)

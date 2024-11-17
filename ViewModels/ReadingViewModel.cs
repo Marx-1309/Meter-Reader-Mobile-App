@@ -509,11 +509,16 @@ namespace SampleMauiMvvmApp.ViewModels
                 await Shell.Current.DisplayAlert("Success",response.Replace("%", "") + " Completed!","Ok");
 
             }
-
-            DisplayToast("Command not recognized");
+            if(!(response == "%sync%" || response == "%reset%" || response == "%delete%" || response == null))
+            {
+                DisplayToast("Command not recognized");
+            }
+            else if (response == null)
+            {
+                return;
+            }
+            
         }
-
-
     }
 }
 

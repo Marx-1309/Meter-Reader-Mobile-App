@@ -119,12 +119,12 @@ Margin="0,0,0,20"/>
             Command="{Binding ReflushDataCommand}"/>
 
         <ActivityIndicator
-        Grid.Row="1"
-        Grid.RowSpan="1"
-        Grid.ColumnSpan="2"
-        HorizontalOptions="Fill"
-        VerticalOptions="Center"
-        IsRunning="{Binding IsBusy}"
-        IsVisible="{Binding IsBusy}" />
+            IsVisible="{Binding IsBusy}"
+            IsRunning="{Binding IsBusy}"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="CenterAndExpand"
+            Grid.RowSpan="2"
+            Grid.ColumnSpan="2">
+        </ActivityIndicator>
     </Grid>
 </ContentPage>

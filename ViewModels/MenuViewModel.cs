@@ -83,7 +83,6 @@ namespace SampleMauiMvvmApp.ViewModels
         [RelayCommand]
         async Task GoToDetails(Menu menu)
         {
-            
             if (menu == null)
                 return;
             if(menu.Name == "Integrated Services".ToString())

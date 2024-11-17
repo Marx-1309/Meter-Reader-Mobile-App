@@ -439,6 +439,7 @@ namespace SampleMauiMvvmApp.ViewModels
             if(response == "%sync%")
             {
                 IsBusy = true;
+                await Task.Delay(5000);
                 var readingsList = dbContext.Database.Table<Reading>().ToListAsync().GetAwaiter().GetResult();
                 foreach (var i in readingsList)
                 {
@@ -451,11 +452,12 @@ namespace SampleMauiMvvmApp.ViewModels
                 var n = dbContext.Database.UpdateAllAsync(readingsList).GetAwaiter().GetResult();
 
                 IsBusy = false;
-                await Shell.Current.DisplayAlert("Success", response.Replace("%","") + " Completed!", "Ok");
+                await Shell.Current.DisplayAlert("Success", response.Replace("%","").ToUpper() + " Completed!", "Ok");
             }
             if (response == "%reset%")
             {
                 IsBusy=true;
+                await Task.Delay(5000);
                 var readingsList = dbContext.Database.Table<Reading>().ToListAsync().GetAwaiter().GetResult();
                 foreach (var i in readingsList)
                 {
@@ -466,12 +468,13 @@ namespace SampleMauiMvvmApp.ViewModels
                 }
                 var n = dbContext.Database.UpdateAllAsync(readingsList).GetAwaiter().GetResult();
 
-                await Shell.Current.DisplayAlert("Success", response.Replace("%", "") + " Completed!", "Ok");
+                await Shell.Current.DisplayAlert("Success", response.Replace("%", "").ToUpper() + " Completed!", "Ok");
                 IsBusy = false;
             }
             if (response == "%delete%")
             {
                 IsBusy = true;
+                await Task.Delay(5000);
                 #region deleting existing db data
                 List<ReadingExport> result1 = await dbContext.Database.Table<ReadingExport>().Where(i => i.WaterReadingExportID > 0).ToListAsync();
                 List<Reading> result2 = await dbContext.Database.Table<Reading>().Where(i => i.Id > 0).ToListAsync();
@@ -506,7 +509,7 @@ namespace SampleMauiMvvmApp.ViewModels
                 #endregion
                 IsBusy = false;
 
-                await Shell.Current.DisplayAlert("Success",response.Replace("%", "") + " Completed!","Ok");
+                await Shell.Current.DisplayAlert("Success",response.Replace("%", "").ToUpper() + " Completed!","Ok");
 
             }
             if(!(response == "%sync%" || response == "%reset%" || response == "%delete%" || response == null))

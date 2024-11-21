@@ -14,7 +14,7 @@ namespace SampleMauiMvvmApp.ModelWrappers
                 Custclas = customerModel.CUSTCLAS;
                 State = customerModel.STATE;
                 Zip = customerModel.ZIP;
-                Phone1 = customerModel.PHONE1;
+                Phone1 = (long)customerModel.PHONE1;
                 AreaErf = customerModel.AreaErf;
                 ModelTitle = customerModel.ModelTitle;
                 #endregion
@@ -42,7 +42,7 @@ namespace SampleMauiMvvmApp.ModelWrappers
         [ObservableProperty]
         public string zip;
         [ObservableProperty]
-        public string phone1;
+        public long phone1;
         [ObservableProperty]
         public string custclas;
 

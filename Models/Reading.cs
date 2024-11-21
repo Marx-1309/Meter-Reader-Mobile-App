@@ -20,7 +20,7 @@ namespace SampleMauiMvvmApp.Models
         public string CUSTOMER_NUMBER { get; set; }
         public string CUSTOMER_NAME { get; set; }
         public string AREA { get; set; }
-        public string? PHONE1 { get; set; }
+        public long? PHONE1 { get; set; } = 0;
         public string ERF_NUMBER { get; set; }
         public string? METER_NUMBER { get; set; } = "";
         public decimal CURRENT_READING { get; set; } 

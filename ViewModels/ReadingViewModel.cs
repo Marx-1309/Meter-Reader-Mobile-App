@@ -173,6 +173,7 @@ namespace SampleMauiMvvmApp.ViewModels
                 await Shell.Current.DisplayAlert("Error", "Failed getting customer details", "OK");
                 return;
             }
+            
 
             await Shell.Current.GoToAsync($"{nameof(CustomerDetailPage)}", true,
                 new Dictionary<string, object>()

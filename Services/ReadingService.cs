@@ -1190,8 +1190,12 @@ namespace SampleMauiMvvmApp.Services
             }
             try
             {
+                string userSite = Preferences.Default.Get("userSite", "");
+                string baseUrl = SampleMauiMvvmApp.API_URL_s.Constants.GetReading; // e.g., "https://localhost:7231/api/Reading"
+                string requestUrl = $"{baseUrl}?billingSite={Uri.EscapeDataString(userSite)}";
+
                 //Get lists from APi
-                var responseSql = await _httpClient.GetAsync(SampleMauiMvvmApp.API_URL_s.Constants.GetReading);
+                var responseSql = await _httpClient.GetAsync(requestUrl);
 
                 //Get Lists if readings 
                 var readingList = await dbContext.Database.Table<Reading>().ToListAsync();

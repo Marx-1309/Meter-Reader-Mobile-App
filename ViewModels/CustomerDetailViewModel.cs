@@ -20,7 +20,7 @@ namespace SampleMauiMvvmApp.ViewModels
         [ObservableProperty]
         string custStateErf;
         [ObservableProperty]
-        string custphone1;
+        long custphone1;
         [ObservableProperty]
         decimal custPrevReading;
         [ObservableProperty]
@@ -89,7 +89,7 @@ namespace SampleMauiMvvmApp.ViewModels
                 CustCurrentReading = (decimal)reading.CURRENT_READING;
                 MeterNumber = reading.METER_NUMBER;
                 RouteNumber = reading.RouteNumber;
-                Custphone1 = reading.PHONE1;
+                Custphone1 = (long)reading.PHONE1;
                 TotalUsage = $"{((decimal?)reading.CURRENT_READING >= (decimal?)reading.PREVIOUS_READING ? (decimal?)reading.CURRENT_READING - (decimal?)reading.PREVIOUS_READING : 0)}";
                 bool isCurrentReading = IsCurrentReadingCaptured(reading.CURRENT_READING);
                 
@@ -392,7 +392,7 @@ namespace SampleMauiMvvmApp.ViewModels
         }
 
         #region CustomerLocations
-        string items1 = "OGONGO";
+        string items1 = "ONESI";
         //string items2 = "OKALONGO";
         //string items3 = "OGONGO";
         string items4 = "UNCLASSIFIED";

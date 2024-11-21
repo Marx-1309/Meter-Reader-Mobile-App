@@ -102,13 +102,14 @@ namespace SampleMauiMvvmApp.ViewModels
                 else DisplayToast("This service is not available");
                 return;
             }
+            //if (menu.Name == "Scan For New Customer(s)")
+            //{
+            //    DisplayToast("This service is not available");
+            //    return;
+            //}
             await Shell.Current.GoToAsync(menu.Url?.ToString());
         }
 
-        private async Task DisplayPromptAsync(string Title,string Expression,string init,int length,string keyboardType)
-        {
-            throw new NotImplementedException();
-        }
 
         [RelayCommand]
         async Task ConfirmLogout()

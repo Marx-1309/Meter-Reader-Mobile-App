@@ -21,7 +21,7 @@ namespace SampleMauiMvvmApp.Models
         public string? ZIP { get; set; }
 
         [JsonPropertyName("PHONE1")]
-        public string? PHONE1 { get; set; }
+        public long? PHONE1 { get; set; } = 0;
 
 
         [OneToMany]

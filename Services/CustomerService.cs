@@ -146,9 +146,6 @@ namespace SampleMauiMvvmApp.Services
                     string baseUrl = SampleMauiMvvmApp.API_URL_s.Constants.GetReading; // e.g., "https://localhost:7231/api/Reading"
                     string requestUrl = $"{baseUrl}?billingSite={Uri.EscapeDataString(userSite)}";
 
-                    // Log the constructed URL for debugging purposes
-                    Console.WriteLine($"Constructed Request URL: {requestUrl}");
-
                     // Make the HTTP GET request
                     var response2 = await _httpClient.GetAsync(requestUrl);
 

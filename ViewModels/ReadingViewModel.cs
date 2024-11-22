@@ -29,6 +29,10 @@ namespace SampleMauiMvvmApp.ViewModels
         string area;
         [ObservableProperty]
         bool isAllLocationsCaptured;
+        [ObservableProperty]
+        int capturedReadingsCount;
+        [ObservableProperty]
+        int uncapturedReadingsCount;
 
         public ObservableCollection<Reading> AllReadings { get; set; } = new();
         public ObservableCollection<LocationReadings> AllLocation { get; set; } = new();
@@ -78,9 +82,10 @@ namespace SampleMauiMvvmApp.ViewModels
                     ReadingsListForSearch.Clear();
                     Task.Delay(50);
                     ReadingsListForSearch.AddRange(listOfCapturedReadings);
+                    CapturedReadingsCount = listOfCapturedReadings.Count();
                     // Set IsBusy to false after adding all readings
-                    
-                    
+
+
                 }
                 else
                 {
@@ -111,11 +116,12 @@ namespace SampleMauiMvvmApp.ViewModels
             try
             {
                 IsBusy = true;
-                var listOfCapturedReadings = await readingService.GetAllUncapturedReadings();
-                if (listOfCapturedReadings != null && listOfCapturedReadings.Count > 0)
+                var listOfUnCapturedReadings = await readingService.GetAllUncapturedReadings();
+                if (listOfUnCapturedReadings != null && listOfUnCapturedReadings.Count > 0)
                 {
                     AllReadings.Clear(); // Clear the list before adding readings
-                    foreach (var reading in listOfCapturedReadings)
+          
+                    foreach (var reading in listOfUnCapturedReadings)
                     {
                         if (reading.CURRENT_READING >= 1)
                         {
@@ -132,13 +138,14 @@ namespace SampleMauiMvvmApp.ViewModels
 
                     }
                   
-                    foreach (var reading in listOfCapturedReadings)
+                    foreach (var reading in listOfUnCapturedReadings)
                     {
                         Readings.Add(reading);
                     }
                     ReadingsListForSearch.Clear();
                     Task.Delay(50);
-                    ReadingsListForSearch.AddRange(listOfCapturedReadings);
+                    ReadingsListForSearch.AddRange(listOfUnCapturedReadings);
+                    UncapturedReadingsCount = listOfUnCapturedReadings.Count();
                     // Set IsBusy to false after adding all readings
 
                 }

@@ -23,6 +23,8 @@ namespace SampleMauiMvvmApp.Models
         [JsonPropertyName("PHONE1")]
         public long? PHONE1 { get; set; } = 0;
 
+        [JsonPropertyName("ERFNO")]
+        public string? ERFNO { get; set; } = "";
 
         [OneToMany]
         public List<Reading>? Readings { get; set; }

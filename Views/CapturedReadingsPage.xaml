@@ -5,7 +5,7 @@
              xmlns:viewmodel="clr-namespace:SampleMauiMvvmApp.ViewModels"
              xmlns:searchHandlers="clr-namespace:SampleMauiMvvmApp.SearchHandlers"
              x:Class="SampleMauiMvvmApp.Views.CapturedReadingsPage"
-             Title="Captured Readings"
+             Title="{Binding CapturedReadingsCount}"
              x:DataType="viewmodel:ReadingViewModel">
 
 

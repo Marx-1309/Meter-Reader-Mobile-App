@@ -1056,7 +1056,8 @@ namespace SampleMauiMvvmApp.Services
                                         record.AREA = readingDto.AREA ?? "";
                                         record.ReadingDate = readingDto.ReadingDate;
                                         record.METER_READER = readingDto.METER_READER ?? "";
-                                        
+                                        record.ERF_NUMBER = readingDto.ERF_NUMBER ?? "";
+
                                         if (readingDto.CURRENT_READING > 0)
                                         {
                                             record.ReadingSync = true;

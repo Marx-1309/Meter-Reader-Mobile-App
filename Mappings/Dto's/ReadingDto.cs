@@ -7,6 +7,7 @@ namespace SampleMauiMvvmApp.Mappings.Dto_s
         public int WaterReadingExportDataID { get; set; }
         public string CUSTOMER_NUMBER { get; set; }
         public string? AREA { get; set; }
+        public string? ERF_NUMBER { get; set; }
         public string? METER_NUMBER { get; set; }
         public decimal? CURRENT_READING { get; set; }
         public decimal? PREVIOUS_READING { get; set; }

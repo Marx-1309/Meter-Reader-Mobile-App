@@ -33,6 +33,14 @@ namespace SampleMauiMvvmApp.ViewModels
         int capturedReadingsCount;
         [ObservableProperty]
         int uncapturedReadingsCount;
+        [ObservableProperty]
+        int zeroReadingsCount;
+        [ObservableProperty]
+        int abnormalCount;
+        [ObservableProperty]
+        string uncapturedTitle;
+        [ObservableProperty]
+        string capturedTitle;
 
         public ObservableCollection<Reading> AllReadings { get; set; } = new();
         public ObservableCollection<LocationReadings> AllLocation { get; set; } = new();
@@ -83,7 +91,12 @@ namespace SampleMauiMvvmApp.ViewModels
                     Task.Delay(50);
                     ReadingsListForSearch.AddRange(listOfCapturedReadings);
                     CapturedReadingsCount = listOfCapturedReadings.Count();
+                    AbnormalCount = listOfCapturedReadings
+                    .Where(r => r != null && (r.CURRENT_READING - r.PREVIOUS_READING) > 20)
+                    .Count();
+                    ZeroReadingsCount = listOfCapturedReadings.Where(r => r?.CURRENT_READING == r.PREVIOUS_READING).Count();
                     // Set IsBusy to false after adding all readings
+                    CapturedTitle = $"Captured readings : {CapturedReadingsCount} , Zero readings : {ZeroReadingsCount} , Abnormal readings : {AbnormalCount}";
 
 
                 }
@@ -144,10 +157,13 @@ namespace SampleMauiMvvmApp.ViewModels
                     }
                     ReadingsListForSearch.Clear();
                     Task.Delay(50);
-                    ReadingsListForSearch.AddRange(listOfUnCapturedReadings);
-                    UncapturedReadingsCount = listOfUnCapturedReadings.Count();
-                    // Set IsBusy to false after adding all readings
+                    var uncapturedReadings = listOfUnCapturedReadings.Where(r => r != null).ToList();
+                    ReadingsListForSearch.AddRange(uncapturedReadings);
 
+                    int uncapturedReadingsCount = uncapturedReadings.Count;
+                    int zeroReadingsCount = uncapturedReadings.Count(r => r.CURRENT_READING == r.PREVIOUS_READING);
+
+                    UncapturedTitle = $"Uncaptured Readings : {uncapturedReadingsCount}, Meters not in use : {zeroReadingsCount}";
                 }
                 else
                 {
